@@ -136,6 +136,14 @@ class Modal extends React.Component<ModalProps, ModalState> {
     this.onOutsideClickHandler = this.onOutsideClickHandler.bind(this);
   }
 
+  componentDidMount(){
+    document.addEventListener("keydown", (e: KeyboardEvent)=>{
+      if(e.key === 'Escape'){
+        this.onOutsideClickHandler(e);
+      }
+    });
+  }
+
   componentDidUpdate(prevProps: ModalProps) {
     if (prevProps.open !== this.props.open) {
       if (this.props.open) {
@@ -172,6 +180,8 @@ class Modal extends React.Component<ModalProps, ModalState> {
       else if (typeof backdropClose === 'function') backdropClose(event, 'OutsideClick');
     }
   }
+
+
 
   render() {
     const { animate, open, zIndex } = this.state;
