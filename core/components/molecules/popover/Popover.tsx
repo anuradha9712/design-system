@@ -117,9 +117,16 @@ export const Popover = (props: PopoverProps) => {
     className
   );
 
+  const animateClasses = classNames({
+    ['fade-in']: true,
+    ['opacity-0']: true,
+    ['animation-fill-forward']: true,
+    ['animation-delay-80']: true,
+  });
+
   const PopoverWrapper = (
     <div data-test="DesignSystem-Popover" className={classes} data-layer={true}>
-      {children}
+      <div className={animateClasses}>{children}</div>
     </div>
   );
 
