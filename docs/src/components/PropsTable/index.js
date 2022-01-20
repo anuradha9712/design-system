@@ -151,7 +151,11 @@ const StoryComp = ({
   return (
     <>
       <div className='pb-8 pt-4 d-flex w-100 m-auto flex-column align-items-center'>
-        <LiveProvider code={jsxCode} scope={imports} transformCode={snippet => snippet.replace(/:.*?=/, '=')} >
+        <LiveProvider 
+        code={jsxCode} 
+        scope={imports} 
+        //transformCode={snippet => snippet.replace(/:.*?=/, '=')} 
+        >
           <Card
             shadow='none'
             className='w-100 overflow-hidden'
