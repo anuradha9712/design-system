@@ -1,9 +1,9 @@
 import * as React from 'react';
-import Pills from '../../pills';
+import Pills from '../Pills';
 
 export const subtleWarning = () => (
   <Pills appearance="warning" subtle={true}>
-    {'Pills'}
+    {'99+'}
   </Pills>
 );
 

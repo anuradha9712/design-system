@@ -1,9 +1,9 @@
 import * as React from 'react';
-import Pills from '..';
+import Pills from '../Pills';
 
 export const alert = () => (
   <Pills appearance="alert" subtle={false}>
-    {'Pills'}
+    10
   </Pills>
 );
 

@@ -13,7 +13,7 @@ export interface PillsProps extends BaseProps {
    */
   subtle?: boolean;
   /**
-   * Text to be added inside `Pills`
+   * Number to be added inside `Pills`
    */
   children: React.ReactText;
 }
