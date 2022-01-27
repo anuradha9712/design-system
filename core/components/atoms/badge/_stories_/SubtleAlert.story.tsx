@@ -3,7 +3,7 @@ import Badge from '../Badge';
 
 export const subtleAlert = () => (
   <Badge appearance="alert" subtle={true}>
-    {'1.41'}
+    {'Alert'}
   </Badge>
 );
 

@@ -1,15 +1,12 @@
 import * as React from 'react';
-import { text } from '@storybook/addon-knobs';
-import Badge from '../../Badge';
+import Badge from '../Badge';
 import Text from '@/components/atoms/text';
 import { AccentAppearance } from '@/common.type';
 
 // CSF format story
-export const appearance = () => {
-  const subtle = false;
+export const subtle = () => {
+  const ButtonSubtle = true;
   const weight = 'strong';
-
-  const children = text('children', 'Badge');
 
   const appearances: AccentAppearance[] = [
     'primary',
@@ -28,8 +25,8 @@ export const appearance = () => {
       {appearances.map((appear, ind) => {
         return (
           <div key={ind} className="mr-9">
-            <Badge appearance={appear} subtle={subtle}>
-              {children}
+            <Badge appearance={appear} subtle={ButtonSubtle}>
+              {'Badge'}
             </Badge>
             <br />
             <Text weight={weight}>{appear.charAt(0).toUpperCase() + appear.slice(1)}</Text>
@@ -41,7 +38,7 @@ export const appearance = () => {
 };
 
 export default {
-  title: 'Components/Badge/Variants/Appearance',
+  title: 'Components/Badge/Subtle',
   component: Badge,
   parameters: {
     docs: {
