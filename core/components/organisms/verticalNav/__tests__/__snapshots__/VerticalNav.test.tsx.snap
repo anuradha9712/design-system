@@ -156,6 +156,7 @@ exports[`Vertical Navigation component
         <span
           class="Pills Badge--secondary MenuItem-count"
           data-test="DesignSystem-VerticalNav--Pills"
+          role="status"
         >
           10
         </span>
@@ -269,6 +270,7 @@ exports[`Vertical Navigation component
         <span
           class="Pills Badge--subtle-secondary MenuItem-count MenuItem-count--disabled"
           data-test="DesignSystem-VerticalNav--Pills"
+          role="status"
         >
           99+
         </span>

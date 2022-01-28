@@ -34,6 +34,7 @@ exports[`Horizontal Navigation component
         <span
           class="Pills Badge--secondary HorizontalNav-pills"
           data-test="DesignSystem-HorizontalNav--Pills"
+          role="status"
         >
           10
         </span>

@@ -1,15 +1,12 @@
 import * as React from 'react';
-import { text } from '@storybook/addon-knobs';
-import Pills from '../../Pills';
+import Pills from '../Pills';
 import Text from '@/components/atoms/text';
 import { AccentAppearance } from '@/common.type';
 
 // CSF format story
-export const subtle = () => {
-  const ButtonSubtle = true;
+export const appearance = () => {
+  const subtle = false;
   const weight = 'strong';
-
-  const children = text('children', 'Pills');
 
   const appearances: AccentAppearance[] = [
     'primary',
@@ -22,13 +19,14 @@ export const subtle = () => {
     'accent3',
     'accent4',
   ];
+
   return (
     <div className="d-flex">
       {appearances.map((appear, ind) => {
         return (
           <div key={ind} className="mr-9">
-            <Pills appearance={appear} subtle={ButtonSubtle}>
-              {children}
+            <Pills appearance={appear} subtle={subtle} ariaLabel="10 records added">
+              10
             </Pills>
             <br />
             <Text weight={weight}>{appear.charAt(0).toUpperCase() + appear.slice(1)}</Text>
@@ -40,12 +38,16 @@ export const subtle = () => {
 };
 
 export default {
-  title: 'Components/Pills/Variants/Subtle',
+  title: 'Components/Pills/Appearance',
   component: Pills,
   parameters: {
     docs: {
       docPage: {
         title: 'Pills',
+        description: 'Pills are used to highlight number of items. For status and text, use a Badge.',
+        a11yProps: ` 
+        **ariaLabel:** Add \`ariaLabel='10 records added'\` to describe the numeric value in Pill. 
+         `,
       },
     },
   },
