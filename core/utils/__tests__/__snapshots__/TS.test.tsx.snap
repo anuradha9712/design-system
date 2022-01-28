@@ -1031,6 +1031,7 @@ exports[`TS renders children 1`] = `
   <span
     class="Pills Badge--secondary"
     data-test="DesignSystem-Pills"
+    role="status"
   >
     Hello World!
   </span>

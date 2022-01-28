@@ -16,10 +16,14 @@ export interface PillsProps extends BaseProps {
    * Number to be added inside `Pills`
    */
   children: React.ReactText;
+  /**
+   * Used to provide descriptive explanation of the numeric value.
+   */
+  ariaLabel?: string;
 }
 
 export const Pills = (props: PillsProps) => {
-  const { appearance, children, subtle, className } = props;
+  const { appearance, children, subtle, className, ariaLabel } = props;
 
   const baseProps = extractBaseProps(props);
 
@@ -33,7 +37,7 @@ export const Pills = (props: PillsProps) => {
   );
 
   return (
-    <span data-test="DesignSystem-Pills" {...baseProps} className={classes}>
+    <span role="status" aria-label={ariaLabel} data-test="DesignSystem-Pills" {...baseProps} className={classes}>
       {children}
     </span>
   );

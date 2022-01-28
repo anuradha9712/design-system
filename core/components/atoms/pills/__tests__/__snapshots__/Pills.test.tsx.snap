@@ -8,6 +8,7 @@ exports[`Pills component
     <span
       class="Pills Badge--accent1"
       data-test="DesignSystem-Pills"
+      role="status"
     >
       Pills
     </span>
@@ -23,6 +24,7 @@ exports[`Pills component
     <span
       class="Pills Badge--subtle-accent1"
       data-test="DesignSystem-Pills"
+      role="status"
     >
       Pills
     </span>
@@ -38,6 +40,7 @@ exports[`Pills component
     <span
       class="Pills Badge--accent2"
       data-test="DesignSystem-Pills"
+      role="status"
     >
       Pills
     </span>
@@ -53,6 +56,7 @@ exports[`Pills component
     <span
       class="Pills Badge--subtle-accent2"
       data-test="DesignSystem-Pills"
+      role="status"
     >
       Pills
     </span>
@@ -68,6 +72,7 @@ exports[`Pills component
     <span
       class="Pills Badge--accent3"
       data-test="DesignSystem-Pills"
+      role="status"
     >
       Pills
     </span>
@@ -83,6 +88,7 @@ exports[`Pills component
     <span
       class="Pills Badge--subtle-accent3"
       data-test="DesignSystem-Pills"
+      role="status"
     >
       Pills
     </span>
@@ -98,6 +104,7 @@ exports[`Pills component
     <span
       class="Pills Badge--accent4"
       data-test="DesignSystem-Pills"
+      role="status"
     >
       Pills
     </span>
@@ -113,6 +120,7 @@ exports[`Pills component
     <span
       class="Pills Badge--subtle-accent4"
       data-test="DesignSystem-Pills"
+      role="status"
     >
       Pills
     </span>
@@ -128,6 +136,7 @@ exports[`Pills component
     <span
       class="Pills Badge--alert"
       data-test="DesignSystem-Pills"
+      role="status"
     >
       Pills
     </span>
@@ -143,6 +152,7 @@ exports[`Pills component
     <span
       class="Pills Badge--subtle-alert"
       data-test="DesignSystem-Pills"
+      role="status"
     >
       Pills
     </span>
@@ -158,6 +168,7 @@ exports[`Pills component
     <span
       class="Pills Badge--primary"
       data-test="DesignSystem-Pills"
+      role="status"
     >
       Pills
     </span>
@@ -173,6 +184,7 @@ exports[`Pills component
     <span
       class="Pills Badge--subtle-primary"
       data-test="DesignSystem-Pills"
+      role="status"
     >
       Pills
     </span>
@@ -188,6 +200,7 @@ exports[`Pills component
     <span
       class="Pills Badge--success"
       data-test="DesignSystem-Pills"
+      role="status"
     >
       Pills
     </span>
@@ -203,6 +216,7 @@ exports[`Pills component
     <span
       class="Pills Badge--subtle-success"
       data-test="DesignSystem-Pills"
+      role="status"
     >
       Pills
     </span>
@@ -218,6 +232,7 @@ exports[`Pills component
     <span
       class="Pills Badge--warning"
       data-test="DesignSystem-Pills"
+      role="status"
     >
       Pills
     </span>
@@ -233,6 +248,7 @@ exports[`Pills component
     <span
       class="Pills Badge--subtle-warning"
       data-test="DesignSystem-Pills"
+      role="status"
     >
       Pills
     </span>
