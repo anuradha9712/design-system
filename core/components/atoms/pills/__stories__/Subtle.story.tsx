@@ -43,6 +43,7 @@ export default {
     docs: {
       docPage: {
         title: 'Pills',
+        description: 'Pills are used to highlight number of items. For status and text, use a Badge.',
       },
     },
   },
