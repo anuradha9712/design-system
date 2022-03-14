@@ -97,6 +97,9 @@ const Meta = ({ docTitle, docDescription, pageKeywords, titleType, frontmatter, 
       <link rel='icon' href={favicon} />
       <link rel='icon' href={faviconLarge} />
       <link rel='icon' href={faviconApple} />
+      <link rel="preload" href="../../node_modules/@innovaccer/design-system/css/material-design-icons/iconfont/material-icons.css" />
+      {/* <link rel="preload" href="ComicSans.woff2" as="font" type="font/woff2" crossorigin> */}
+
     </Helmet>
   );
 };
