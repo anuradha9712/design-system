@@ -13,7 +13,7 @@ import {
   Hits,
   Configure
 } from 'react-instantsearch-dom';
-import { CustomHits } from '../AlgoliaSearch/searchPreview';
+import { CustomHits, CustomSearchBox } from '../AlgoliaSearch/searchPreview';
 
 const Header = ({ relativePagePath }) => {
   const [isToggledOn, setIsToggledOn] = useState(false);
@@ -85,7 +85,7 @@ const Header = ({ relativePagePath }) => {
             <Configure 
             // hitsPerPage={10}
              />
-            <SearchBox
+            {/* <SearchBox
               className="searchbox"
               class="ais-SearchBox-input"
               submit={<></>}
@@ -97,7 +97,8 @@ const Header = ({ relativePagePath }) => {
                 setHasInput(event.currentTarget.value !== '')
                 // setHasInput(true)
               }}
-            />
+            /> */}
+            <CustomSearchBox />
             {/* forcefeed className because component does not accept natively as prop */}
             <div className={!hasInput ? 'input-empty' : 'input-value'}>
               <CustomHits hitComponent={Hits} />
