@@ -1,0 +1,8 @@
+.search-result{
+  height: 400px;
+}
+
+.algolia-search{
+  right:0;
+  padding-top: var(--spacing-l);
+}
