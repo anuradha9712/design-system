@@ -23,8 +23,7 @@ export default function Search({ indices }) {
 
   return (
     <div
-      className="position-absolute algolia-search"
-      // className="position-relative m-4" 
+      className="position-absolute algolia-search mr-6"
       ref={rootRef}>
       <InstantSearch
         searchClient={searchClient}
@@ -35,6 +34,7 @@ export default function Search({ indices }) {
         <SearchResult
           show={query && query.length > 0 && hasFocus}
           indices={indices}
+          query={query}
         />
       </InstantSearch>
     </div>

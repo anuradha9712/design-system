@@ -7,8 +7,9 @@ import {
   Index,
   Snippet,
   PoweredBy,
+  connectHits
 } from "react-instantsearch-dom";
-import { Popover } from '@innovaccer/design-system';
+import { Popover, Subheading, Text, Icon } from '@innovaccer/design-system';
 import searchBox from "./searchBox";
 import './search.css';
 
@@ -22,75 +23,125 @@ const HitCount = connectStateResults(({ searchResults }) => {
   ) : null
 })
 
-const PageHit = ({ hit }) => {
-  console.log('hittt', hit);
+let SearchQuery;
+
+const CustomResultEntry = ({ data }) => {
+  return (
+    <Link to={`/${data.slug}`} className="search-result-link">
+      <div className="search-result-entry px-5 pt-3">
+        <div className="py-2 d-flex align-items-center overflow-hidden">
+          <Text weight="medium" >
+            <Highlight attribute="title" hit={data} tagName="b" />
+          </Text>
+          {
+            data.slug.includes('mobile') ?
+              <Icon className="ml-4" appearance='subtle' size={16} name='phone_iphone' /> :
+              <Icon className="ml-4" appearance='subtle' size={16} name='desktop_windows' />
+          }
+        </div>
+        <div className="pb-6">
+          <Text>
+            <Highlight attribute="description" hit={data} tagName="b" />
+          </Text>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+const ShowResults = ({ name, list }) => {
   return (
     <div>
-      <Link to={hit.slug}>
-        <h4>
-          <Highlight attribute="title" hit={hit} tagName="mark" />
-        </h4>
-        <Snippet attribute="description" hit={hit} tagName="mark" />
-
-      </Link>
+      <Subheading className="pb-4 px-5" appearance="subtle">{name}</Subheading>
+      {list.map((data) => <CustomResultEntry data={data} />)}
     </div>
   )
 }
 
-// const PageHit = ({hit}) => {
-//   // const { hit } = props;
-//   // console.log('hittt', hit, 'vv', props);
-//   return (<div>
-//     {/* <h1>Patterns</h1> */}
-//     {/* {
-//       hit.filter((item) => item.slug.includes('pattern')).map((data) => {
-//         return (
-//           <p>{data.title}</p>
-//         )
-//       })
-//     } */}
-//     <div>
-//       <Link to={hit.slug}>
-//         <h4>
-//           <Highlight attribute="title" hit={hit} tagName="mark" />
-//         </h4>
-//         <Snippet attribute="description" hit={hit} tagName="mark" />
-//       </Link>
-//     </div>
-//   </div>
-//   )
-// }
+const removeDuplicate = (arr) => {
+  const result = arr.reduce((unique, o) => {
+    if (!unique.some(obj => obj.title === o.title && obj.description === o.description)) {
+      unique.push(o);
+    }
+    return unique;
+  }, []);
+  return result;
+}
+
+const PageHit = ({ hits }) => {
+  console.log('hittt', hits);
+  if (hits.length == 0) {
+    return (
+      <div className="p-7 d-flex align-items-center overflow-hidden">
+        <Icon className="mr-6" appearance='subtle' size={24} name='search_off' />
+        <Text weight="medium">
+          {`No results found for ${SearchQuery}`}
+        </Text>
+      </div>
+    )
+  }
+  const components = [],
+    patterns = [],
+    foundations = [],
+    content = [],
+    resources = [],
+    introduction = [],
+    mobile = [],
+    web = [];
+
+  hits.forEach((item) => {
+    item.slug.includes('mobile') && mobile.push(item);
+    !item.slug.includes('mobile') && web.push(item);
+  });
+
+  const updatedWebList = removeDuplicate(web);
+  const updatedMobileList = removeDuplicate(mobile);
+
+  hits.forEach((item) => {
+    item.slug.includes('components') && components.push(item);
+    item.slug.includes('patterns') && patterns.push(item);
+    item.slug.includes('foundations') && foundations.push(item);
+    item.slug.includes('content') && content.push(item);
+    item.slug.includes('resources') && resources.push(item);
+    item.slug.includes('introduction') && introduction.push(item);
+  });
+
+  return (
+    <div>
+      {components.length > 0 && <ShowResults name="Components" list={components} />}
+      {patterns.length > 0 && <ShowResults name="Patterns" list={patterns} />}
+      {foundations.length > 0 && <ShowResults name="Foundations" list={foundations} />}
+      {content.length > 0 && <ShowResults name="Content" list={content} />}
+      {resources.length > 0 && <ShowResults name="Resources" list={resources} />}
+      {introduction.length > 0 && <ShowResults name="Introduction" list={introduction} />}
+    </div>
+  )
+}
+const CustomHits = connectHits(PageHit);
 
 const HitsInIndex = ({ index }) => (
   <Index indexName={index.name}>
-    <HitCount />
-    <Hits className="Hits" hitComponent={PageHit} />
+    {/* <HitCount /> */}
+    {/* <Hits className="Hits" hitComponent={PageHit} /> */}
+    <CustomHits />
   </Index>
 )
 
-// const SearchResult = ({ indices, className }) => (
-//   <div className={className}>
-//     {indices.map(index => (
-//       <HitsInIndex index={index} key={index.name} />
-//     ))}
-//     <PoweredBy />
-//   </div>
-// )
-
-const SearchResult = ({ indices, className, show }) => {
-  // console.log('indices', indices);
+const SearchResult = ({ indices, className, show, query }) => {
+  console.log('query', query);
+  SearchQuery = query;
   return (
     <Popover
       position="bottom-start"
       open={show}
-      className="p-4 overflow-auto search-result"
+      className="py-4 overflow-auto search-result"
     // appendToBody={true}
     // trigger={searchBox}
     >
       {indices.map(index => (
         <HitsInIndex index={index} key={index.name} />
       ))}
-      <PoweredBy />
+      {/* <PoweredBy /> */}
     </Popover>
   )
 }

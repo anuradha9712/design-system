@@ -1,8 +1,17 @@
 .search-result{
   height: 400px;
+  width: 475px;
 }
 
 .algolia-search{
   right:0;
   padding-top: var(--spacing-l);
+}
+
+.search-result-entry:hover{
+  background-color: var(--secondary-lightest);
+}
+
+.search-result-link{
+  text-decoration: none !important;
 }

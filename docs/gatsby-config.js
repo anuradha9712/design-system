@@ -176,6 +176,7 @@ module.exports = {
         appId: process.env.GATSBY_ALGOLIA_APP_ID,
         apiKey: process.env.GATSBY_ALGOLIA_ADMIN_KEY,
         queries,
+        concurrentQueries: false, // default: true
         //indexName: process.env.GATSBY_ALGOLIA_INDEX_NAME,
         // chunkSize: 10000,
         // settings: {
@@ -185,7 +186,6 @@ module.exports = {
         // enablePartialUpdates: true, // default: false
         // // Adding matchFields is useful to decide whether an object has been changed since the last time it was indexed. 
         // //matchFields: ['slug', 'modified'], // Array<String> default: ['modified']
-        // concurrentQueries: false, // default: true
         // //skipIndexing: true, // default: false, useful for e.g. preview deploys or local development
         // continueOnFailure: false, // default: false, don't fail the build if algolia indexing fails
         // algoliasearchOptions: undefined, // default: { timeouts: { connect: 1, read: 30, write: 30 } }, pass any different options to the algoliasearch constructor
