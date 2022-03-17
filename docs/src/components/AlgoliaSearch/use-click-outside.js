@@ -13,11 +13,13 @@ export default (ref, onClickOutside) => {
 
   useEffect(() => {
     for (const event of events) {
-      document.addEventListener(event, onClick)
+      // document.addEventListener(event, onClick)
     }
 
     return () => {
-      for (const event of events) document.removeEventListener(event, onClick)
+      for (const event of events) {
+        //document.removeEventListener(event, onClick)
+      }
     }
   })
 }
