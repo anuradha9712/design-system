@@ -35,6 +35,7 @@ export default function Search({ indices }) {
           show={query && query.length > 0 && hasFocus}
           indices={indices}
           query={query}
+          parentRef={rootRef}
         />
       </InstantSearch>
     </div>

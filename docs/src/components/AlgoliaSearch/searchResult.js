@@ -127,7 +127,7 @@ const HitsInIndex = ({ index }) => (
   </Index>
 )
 
-const SearchResult = ({ indices, className, show, query }) => {
+const SearchResult = ({ indices, show, query, parentRef }) => {
   console.log('query', query);
   SearchQuery = query;
   return (
@@ -135,6 +135,7 @@ const SearchResult = ({ indices, className, show, query }) => {
       position="bottom-start"
       open={show}
       className="py-4 overflow-auto search-result"
+      boundaryElement={parentRef}
     // appendToBody={true}
     // trigger={searchBox}
     >
