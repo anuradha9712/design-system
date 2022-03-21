@@ -7,9 +7,10 @@ import {
   Index,
   Snippet,
   PoweredBy,
-  connectHits
+  connectHits,
+  connectInfiniteHits
 } from "react-instantsearch-dom";
-import { Popover, Subheading, Text, Icon } from '@innovaccer/design-system';
+import { Popover, Subheading, Text, Icon, Badge } from '@innovaccer/design-system';
 import './search.css';
 import { removeDuplicate, getHeadingUrl } from "./helpers";
 
@@ -44,6 +45,12 @@ const CustomResultEntry = ({ data }) => {
               data.slug.includes('mobile') ?
                 <Icon className="ml-4" appearance='subtle' size={16} name='phone_iphone' /> :
                 <Icon className="ml-4" appearance='subtle' size={16} name='desktop_windows' />
+            }
+            {
+              data.tabs?.length > 0 && data.slug.substring(data.slug.lastIndexOf('/') + 1, data.slug.length).length > 0 &&
+              <Badge className="ml-4" appearance="primary" subtle={true}>
+                {data.slug.substring(data.slug.lastIndexOf('/') + 1, data.slug.length)}
+              </Badge>
             }
           </div>
           <div>
@@ -106,17 +113,47 @@ const PageHit = ({ hits }) => {
     !item.slug.includes('mobile') && web.push(item);
   });
 
-  const updatedWebList = removeDuplicate(web);
-  const updatedMobileList = removeDuplicate(mobile);
+  // const updatedWebList = removeDuplicate(web);
+  // const updatedMobileList = removeDuplicate(mobile);
 
   hits.forEach((item) => {
-    item.slug.includes('components') && components.push(item);
-    item.slug.includes('patterns') && patterns.push(item);
-    item.slug.includes('foundations') && foundations.push(item);
-    item.slug.includes('content') && content.push(item);
-    item.slug.includes('resources') && resources.push(item);
-    item.slug.includes('introduction') && introduction.push(item);
-  });
+    const slugPath = item.slug.split('/');
+    let category = '';
+    if (slugPath[0] === 'mobile') {
+      category = slugPath[1];
+    } else {
+      category = slugPath[0];
+    }
+
+    switch (category) {
+      case 'components':
+        components.push(item);
+        break;
+
+      case 'patterns':
+        patterns.push(item);
+        break;
+
+      case 'foundations':
+        foundations.push(item);
+        break;
+
+      case 'content':
+        content.push(item);
+        break;
+
+      case 'resources':
+        resources.push(item);
+        break;
+
+      case 'introduction':
+        introduction.push(item);
+        break;
+
+      default:
+        break;
+    }
+  })
 
   return (
     <div>
@@ -147,16 +184,12 @@ const SearchResult = ({ indices, show, query, parentRef }) => {
       open={show}
       className="py-4 overflow-auto search-result"
       boundaryElement={parentRef}
-    // appendToBody={true}
-    // trigger={searchBox}
     >
       {indices.map(index => (
         <HitsInIndex index={index} key={index.name} />
       ))}
-      {/* <PoweredBy /> */}
     </Popover>
   )
 }
-
 
 export default SearchResult;

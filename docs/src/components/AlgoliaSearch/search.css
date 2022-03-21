@@ -15,3 +15,13 @@
 .search-result-link{
   text-decoration: none !important;
 }
+
+.search-result::-webkit-scrollbar-thumb{
+  background: var(--secondary-dark);
+  border-radius: 6px;
+}
+
+.search-result::-webkit-scrollbar{
+  background: var(--white);
+  width: var(--spacing-l);
+}

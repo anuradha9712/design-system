@@ -22,9 +22,11 @@ const transformAlgoliaData = (pageQuery) => {
   const result = pageQuery.allMdx.edges.map(({ node: { id, headings, frontmatter, slug, ...rest } }) => {
     let customTitle = '';
     let customDescription = '';
+    let customTabs = '';
 
     const originalTitle = frontmatter.title;
     const originalDescription = frontmatter.description;
+    const originalTabs = frontmatter.tabs;
 
     // To handle MDX files without frontmatter
     if (originalTitle == originalDescription) {
@@ -36,9 +38,11 @@ const transformAlgoliaData = (pageQuery) => {
       });
       customDescription = data[0]?.node.frontmatter.description;
       customTitle = data[0]?.node.frontmatter.title;
+      customTabs = data[0]?.node.frontmatter.tabs;
     } else {
       customDescription = originalDescription;
       customTitle = originalTitle;
+      customTabs = originalTabs;
     }
 
     const customHeadings = headings.map((item) => item.value);
@@ -46,7 +50,7 @@ const transformAlgoliaData = (pageQuery) => {
       objectID: id,
       title: customTitle,
       description: customDescription,
-      tabs: frontmatter.tabs,
+      tabs: customTabs,
       slug: slug,
       headings: customHeadings,
       ...rest,
