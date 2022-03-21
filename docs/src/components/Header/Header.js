@@ -4,7 +4,7 @@ import { useHeaderItems } from '../../util/HeaderItems';
 import './Header.css';
 import { Link as MDSLink } from '@innovaccer/design-system';
 import Search from '../AlgoliaSearch';
-const searchIndices = [{ name: `Algolia-Search`, title: `Algolia-Search` }]
+const searchIndices = [{ name: process.env.GATSBY_ALGOLIA_INDEX_NAME, title: process.env.GATSBY_ALGOLIA_INDEX_NAME }]
 
 const Header = ({ relativePagePath }) => {
   const items = useHeaderItems();

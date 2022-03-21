@@ -7,36 +7,62 @@ const pageQuery = `{
         frontmatter {
           title
           description
+          tabs
         }
+        headings {
+          value
+        }
+        excerpt(pruneLength: 5000)
       }
     }
   }
 }`
 
-// const queries = [
-//   {
-//     query: pageQuery,
-//     transformer: ({ data }) => data.allMdx.edges.map(({ node }) => node),
-//     indexName: process.env.GATSBY_ALGOLIA_INDEX_NAME || 'Algolia-Search',
-//     // matchFields: ['slug', 'modified'],
-//   }
-// ];
-// module.exports = queries;
+const transformAlgoliaData = (pageQuery) => {
+  const result = pageQuery.allMdx.edges.map(({ node: { id, headings, frontmatter, slug, ...rest } }) => {
+    let customTitle = '';
+    let customDescription = '';
 
-function pageToAlgoliaRecord({ node: { id, frontmatter, ...rest } }) {
-  return {
-    objectID: id,
-    ...frontmatter,
-    ...rest,
-  }
+    const originalTitle = frontmatter.title;
+    const originalDescription = frontmatter.description;
+
+    // To handle MDX files without frontmatter
+    if (originalTitle == originalDescription) {
+      const componentName = slug.slice(1, slug.lastIndexOf('/'));
+
+      //Replace the default frontmatter(title & description) with their siblings markdown files
+      const data = pageQuery.allMdx.edges.filter(item => {
+        return item.node.slug.includes(componentName) && item.node.frontmatter.title != item.node.frontmatter.description
+      });
+      customDescription = data[0]?.node.frontmatter.description;
+      customTitle = data[0]?.node.frontmatter.title;
+    } else {
+      customDescription = originalDescription;
+      customTitle = originalTitle;
+    }
+
+    const customHeadings = headings.map((item) => item.value);
+    return {
+      objectID: id,
+      title: customTitle,
+      description: customDescription,
+      tabs: frontmatter.tabs,
+      slug: slug,
+      headings: customHeadings,
+      ...rest,
+    }
+  });
+  return result;
 }
+
 const queries = [
   {
     query: pageQuery,
-    transformer: ({ data }) => data.allMdx.edges.map(pageToAlgoliaRecord),
+    transformer: ({ data }) => transformAlgoliaData(data),
     indexName: process.env.GATSBY_ALGOLIA_INDEX_NAME || 'Algolia-Search',
-    //tells Algolia you will want to generate “snippets” of context around your hits in the 'title' & 'description' attribute.
-    settings: { attributesToSnippet: ['title', 'description'] },
+
+    //tells Algolia you will want to generate “snippets” of context around your hits in the following attributes.
+    settings: { attributesToSnippet: ['title', 'description', 'headings', 'excerpt'] },
   },
 ]
-module.exports = queries
+module.exports = queries;

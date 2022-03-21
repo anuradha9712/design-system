@@ -10,8 +10,8 @@ import {
   connectHits
 } from "react-instantsearch-dom";
 import { Popover, Subheading, Text, Icon } from '@innovaccer/design-system';
-import searchBox from "./searchBox";
 import './search.css';
+import { removeDuplicate, getHeadingUrl } from "./helpers";
 
 const HitCount = connectStateResults(({ searchResults }) => {
   const hitCount = searchResults && searchResults.nbHits
@@ -26,26 +26,48 @@ const HitCount = connectStateResults(({ searchResults }) => {
 let SearchQuery;
 
 const CustomResultEntry = ({ data }) => {
+  console.log('dataaa', data)
+  const selectedHeadings = data.headings.filter((item) => item.toLowerCase().includes(SearchQuery.toLowerCase()))
+  const headingList = selectedHeadings.map((heading) => {
+    return { name: heading, link: getHeadingUrl(data.slug, heading) }
+  });
+
   return (
-    <Link to={`/${data.slug}`} className="search-result-link">
-      <div className="search-result-entry px-5 pt-3">
-        <div className="py-2 d-flex align-items-center overflow-hidden">
-          <Text weight="medium" >
-            <Highlight attribute="title" hit={data} tagName="b" />
-          </Text>
-          {
-            data.slug.includes('mobile') ?
-              <Icon className="ml-4" appearance='subtle' size={16} name='phone_iphone' /> :
-              <Icon className="ml-4" appearance='subtle' size={16} name='desktop_windows' />
-          }
+    <div className="pb-6">
+      <Link to={`/${data.slug}`} className="search-result-link">
+        <div className="search-result-entry px-5 pt-3">
+          <div className="py-2 d-flex align-items-center overflow-hidden">
+            <Text weight="medium" >
+              <Highlight attribute="title" hit={data} tagName="b" />
+            </Text>
+            {
+              data.slug.includes('mobile') ?
+                <Icon className="ml-4" appearance='subtle' size={16} name='phone_iphone' /> :
+                <Icon className="ml-4" appearance='subtle' size={16} name='desktop_windows' />
+            }
+          </div>
+          <div>
+            <Text>
+              <Highlight attribute="description" hit={data} tagName="b" />
+            </Text>
+          </div>
         </div>
-        <div className="pb-6">
-          <Text>
-            <Highlight attribute="description" hit={data} tagName="b" />
-          </Text>
-        </div>
+      </Link>
+      <div className="px-5 pt-3">
+        {headingList && headingList.map((item) => {
+          return (
+            <Link
+              to={`/${item.link}`}
+              className="search-result-link">
+              <div className="p-4 search-result-entry d-flex align-items-center">
+                <Icon className="mx-4" appearance='subtle' size={16} name='tag' />
+                <Text>{item.name}</Text>
+              </div>
+            </Link>
+          )
+        })}
       </div>
-    </Link>
+    </div>
   )
 }
 
@@ -56,16 +78,6 @@ const ShowResults = ({ name, list }) => {
       {list.map((data) => <CustomResultEntry data={data} />)}
     </div>
   )
-}
-
-const removeDuplicate = (arr) => {
-  const result = arr.reduce((unique, o) => {
-    if (!unique.some(obj => obj.title === o.title && obj.description === o.description)) {
-      unique.push(o);
-    }
-    return unique;
-  }, []);
-  return result;
 }
 
 const PageHit = ({ hits }) => {
@@ -128,7 +140,6 @@ const HitsInIndex = ({ index }) => (
 )
 
 const SearchResult = ({ indices, show, query, parentRef }) => {
-  console.log('query', query);
   SearchQuery = query;
   return (
     <Popover
