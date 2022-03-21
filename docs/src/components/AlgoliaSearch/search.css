@@ -5,7 +5,7 @@
 
 .algolia-search{
   right:0;
-  padding-top: var(--spacing-l);
+  margin-top: var(--spacing-2);
 }
 
 .search-result-entry:hover{

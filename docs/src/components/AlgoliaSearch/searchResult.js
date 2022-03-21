@@ -34,11 +34,11 @@ const CustomResultEntry = ({ data }) => {
   });
 
   return (
-    <div className="pb-6">
+    <div className="pb-3">
       <Link to={`/${data.slug}`} className="search-result-link">
-        <div className="search-result-entry px-5 pt-3">
-          <div className="py-2 d-flex align-items-center overflow-hidden">
-            <Text weight="medium" >
+        <div className="search-result-entry px-5 py-4">
+          <div className="d-flex align-items-center overflow-hidden">
+            <Text>
               <Highlight attribute="title" hit={data} tagName="b" />
             </Text>
             {
@@ -54,26 +54,26 @@ const CustomResultEntry = ({ data }) => {
             }
           </div>
           <div>
-            <Text>
+            <Text appearance='subtle'>
               <Highlight attribute="description" hit={data} tagName="b" />
             </Text>
           </div>
         </div>
       </Link>
-      <div className="px-5 pt-3">
-        {headingList && headingList.map((item) => {
-          return (
+      {headingList && headingList.map((item) => {
+        return (
+          <div className="px-4">
             <Link
               to={`/${item.link}`}
               className="search-result-link">
               <div className="p-4 search-result-entry d-flex align-items-center">
                 <Icon className="mx-4" appearance='subtle' size={16} name='tag' />
-                <Text>{item.name}</Text>
+                <Text appearance='subtle'>{item.name}</Text>
               </div>
             </Link>
-          )
-        })}
-      </div>
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -91,7 +91,7 @@ const PageHit = ({ hits }) => {
   console.log('hittt', hits);
   if (hits.length == 0) {
     return (
-      <div className="p-7 d-flex align-items-center overflow-hidden">
+      <div className="px-7 py-6 d-flex align-items-center overflow-hidden">
         <Icon className="mr-6" appearance='subtle' size={24} name='search_off' />
         <Text weight="medium">
           {`No results found for ${SearchQuery}`}
