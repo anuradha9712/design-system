@@ -3,20 +3,40 @@ import { Link } from 'gatsby';
 import { useHeaderItems } from '../../util/HeaderItems';
 import './Header.css';
 import { Link as MDSLink } from '@innovaccer/design-system';
+// import { useSearchItems } from '../../util/Search';
+import '../Search/search';
+import { StaticQuery, graphql } from "gatsby"
 
 const Header = ({ relativePagePath }) => {
   const items = useHeaderItems();
+  // const searchData = useSearchItems();
   const checkActive = (label) => {
     const pagePath = relativePagePath.split('/');
-    if(pagePath[1]===label.toLowerCase() || pagePath[2]===label.toLowerCase()) return true; 
-    return false; 
+    if (pagePath[1] === label.toLowerCase() || pagePath[2] === label.toLowerCase()) return true;
+    return false;
   }
+
   return (
     <div
       id="mainHeader"
       className='header bg-light d-flex w-100 position-sticky px-5'
     >
-      <Link to='/' className='HeaderLink ml-0'>
+      <StaticQuery
+    query={graphql`
+      query SearchIndexQuery {
+        siteSearchIndex {
+          index
+        }
+      }
+    `}
+    render={data => (
+      <div>
+        ... header stuff...
+        <Search searchIndex={data.siteSearchIndex.index} />
+      </div>
+    )}
+  />
+      {/* <Link to='/' className='HeaderLink ml-0'>
         <img src="/images/headerLogo.png" width="290px" height="28px" />
       </Link>
       <div >
@@ -42,15 +62,15 @@ const Header = ({ relativePagePath }) => {
               key={index}
               to={link}
               className={`HeaderLink  ${checkActive(label)
-                  ? 'HeaderLink--active'
-                  : 'HeaderLink--default'
+                ? 'HeaderLink--active'
+                : 'HeaderLink--default'
                 }`}
             >
               {label}
             </Link>
           );
         })}
-      </div>
+      </div> */}
     </div>
   );
 };
