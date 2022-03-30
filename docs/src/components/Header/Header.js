@@ -1,16 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'gatsby';
 import { useHeaderItems } from '../../util/HeaderItems';
 import './Header.css';
 import { Link as MDSLink } from '@innovaccer/design-system';
+import { useFlexSearch } from 'react-use-flexsearch'
+import { useSearchItems } from '../../util/Search';
+import {Index} from 'flexsearch';
 
 const Header = ({ relativePagePath }) => {
+
+  const [query, setQuery] = useState('button');
   const items = useHeaderItems();
+  const searchResult = useSearchItems();
+  const store = searchResult.localSearchPages.store;
+  const index = new Index();
+  const results = useFlexSearch(query, index, store)
+
+
+  console.log('searchresult', results);
+
   const checkActive = (label) => {
     const pagePath = relativePagePath.split('/');
     if(pagePath[1]===label.toLowerCase() || pagePath[2]===label.toLowerCase()) return true; 
     return false; 
   }
+
   return (
     <div
       id="mainHeader"
