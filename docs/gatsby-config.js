@@ -158,7 +158,7 @@ module.exports = {
         ],
         plugins: [`gatsby-remark-images`],
         defaultLayouts: {
-          default: require.resolve('./src/components/templates/Default.js'),
+          default: require.resolve('./src/components/templates/Markdown.js'),
           home: require.resolve('./src/components/templates/Homepage.js'),
         },
       },
@@ -186,7 +186,13 @@ module.exports = {
         protocol: "https",
         hostname: "design-dev.innovaccer.com",
       },
-    }
+    },
+    {
+      resolve: `gatsby-plugin-layout`,
+      options: {
+        component: require.resolve('./src/components/templates/Default.js'),
+      },
+    },
   ]
 }
 
