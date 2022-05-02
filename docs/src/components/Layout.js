@@ -11,13 +11,24 @@ import './css/style.css';
 import { useFrontmatter } from '../util/Frontmatter';
 import MDXPage from './PageLayout/MDXPage';
 
-const Layout = (props) => {
-  const { pageContext, children, location } = props;
-  const { frontmatter = {}, titleType, relativePagePath } = pageContext;
-  const { title, description, keywords, tabs, logos, showMobile = false } = frontmatter;
-  const is404Page = children && children.key === null;
-  const newFrontmatter = useFrontmatter(relativePagePath);
-  const showAnimation = location.state?.animation === false ? false : true;
+const Layout = ({
+  titleType,
+  title,
+  description,
+  keywords,
+  relativePagePath,
+  showMobile,
+  frontmatter,
+  showAnimation,
+  is404Page,
+  children
+}) => {
+  // const { pageContext, children, location } = props;
+  // const { frontmatter = {}, titleType, relativePagePath } = pageContext;
+  // const { title, description, keywords, tabs, logos, showMobile = false } = frontmatter;
+  // const is404Page = children && children.key === null;
+  // const newFrontmatter = useFrontmatter(relativePagePath);
+  //const showAnimation = location.state?.animation === false ? false : true;
 
   return (
     <>
@@ -42,8 +53,8 @@ const Layout = (props) => {
         />
 
         <Column className={`${showAnimation ? "page-animation" : ''} page-scroll h-100`} id="main-container">
-          {/* {children} */}
-          <MDXPage
+          {children}
+          {/* <MDXPage
             newFrontmatter={newFrontmatter}
             relativePagePath={relativePagePath}
             description={description}
@@ -53,7 +64,7 @@ const Layout = (props) => {
             is404Page={is404Page}
             location={location}
             logos={logos}
-          />
+          /> */}
           <Footer relativePagePath={relativePagePath} />
         </Column>
       </Row>

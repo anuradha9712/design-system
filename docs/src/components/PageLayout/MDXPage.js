@@ -9,6 +9,8 @@ import {
 import { MDXProvider } from "@mdx-js/react";
 import TableOfContent from '../TableOfContent/TableOfContent';
 import { MDXComponents } from './utility';
+import { MDXRenderer } from "gatsby-plugin-mdx";
+
 import { copyMessage, copyMessageSuccess } from "../../util/constants.js";
 import ProductLogos from '../Logos/Logos';
 import ProductColors from '../Colors/Colors';
@@ -19,16 +21,16 @@ import Layout from "../Layout";
 
 const MDXPage = (
   {
-  relativePagePath,
-  description,
-  newFrontmatter,
-  title,
-  tabs,
-  children,
-  is404Page,
-  location,
-  logos
-}) => {
+    relativePagePath,
+    description,
+    newFrontmatter,
+    title,
+    tabs,
+    children,
+    is404Page,
+    location,
+    logos
+  }) => {
   const [isToastActive, setIsToastActive] = useState(false);
   const [codeCopyText, setCodeCopyText] = useState('')
   const [toastTitle, setToastTitle] = useState('');
@@ -132,7 +134,7 @@ const MDXPage = (
               frontmatter={newFrontmatter}
             >
               <MDXProvider components={DSComponents}>
-                {children}
+                <MDXRenderer>{children}</MDXRenderer>
               </MDXProvider>
             </Container>
           )}
@@ -145,7 +147,7 @@ const MDXPage = (
               frontmatter={newFrontmatter}
             >
               <MDXProvider components={DSComponents}>
-                {children}
+                <MDXRenderer>{children}</MDXRenderer>
               </MDXProvider>
             </ComponentsContainer>
           )}

@@ -22,7 +22,7 @@ export function useFrontmatter(relativePagePath) {
     }   
   `);
 
-  const componentName = relativePagePath.slice(1, relativePagePath.lastIndexOf('/'));
+  const componentName = relativePagePath && relativePagePath.slice(1, relativePagePath.lastIndexOf('/'));
 
   const data = edges.filter(item => {
     const { slug, frontmatter } = item.node;

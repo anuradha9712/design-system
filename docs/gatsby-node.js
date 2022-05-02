@@ -18,60 +18,51 @@ exports.onPreBootstrap = ({ store, reporter }) => {
   });
 };
 
-// We need to provide the actual file that created a specific page to append links for EditLink.
-// We can't do page queries from MDX templates, so we'll add the page's relative path to context after it's created.
-// The context object **is** supplied to MDX templates through the pageContext prop.
-exports.onCreatePage = (
-  { page, actions, getNodesByType, ...rest },
-  pluginOptions
-) => {
-  // Don't override if it's already been provided
-  if (!page.context.MdxNode) {
-    // Find the MdxNode that created our page
-    const MdxNode = getNodesByType('Mdx').find(
-      ({ fileAbsolutePath }) => fileAbsolutePath === page.component
-    );
-    let frontmatter = {
-      ...page.context.frontmatter,
-    };
-
-    const { titleType = 'page' } = pluginOptions;
-    const { createPage, deletePage } = actions;
-    const [relativePagePath] = page.componentPath
-      .split('src/pages')
-      .splice('-1');
-
-    // Inject titles and descriptions for pages that don't include them
-    if (!frontmatter.title) {
-      const title = page.path
-        .split('/')
-        .filter((part) => part)
-        // .map((part) => startCase(part))
-        .join(' / ');
-
-      frontmatter = {
-        description: title,
-        ...frontmatter,
-        title,
-      };
+exports.createPages = async ({ actions, graphql, reporter }, pluginOptions) => {
+  const result = await graphql(`
+    query {
+      allMdx {
+        nodes {
+          body
+          frontmatter {
+            date
+            description
+            logos
+            showMobile
+            tabs
+            title
+          }
+          slug
+        }
+      }
     }
+  `);
 
-    if (MdxNode) {
-      Object.assign(MdxNode, { frontmatter });
-    }
+  if (result.errors) {
+    reporter.panic("failed to create posts ", result.errors);
+  }
 
-    deletePage(page);
-    createPage({
-      ...page,
-     // component: require.resolve("./src/components/templates/Homepage.js"),
+  const pages = result.data.allMdx.nodes;
+
+  // The context object **is** supplied to MDX templates through the pageContext prop.
+
+  pages.forEach((page) => {
+    // console.log('==============',page)
+    // actions.deletePage(page);
+    actions.createPage({
+      path: page.slug,
+      //component: require.resolve("./src/templates/Default.js"),
+      component: require.resolve("./src/components/templates/Default.js"),
       context: {
-        ...page.context,
-        relativePagePath,
+        slug: page.slug,
         body: page.body,
-        titleType,
-        frontmatter,
-        MdxNode,
+        frontmatter: page.frontmatter,
+        titleType: 'page',
+        relativePagePath: '/components/overview/all-components/',
+        // relativePagePath: page.componentPath?.split('src/pages').splice('-1')
+        // children:
+        //relativePagePath: page.slug
       },
     });
-  }
+  });
 };

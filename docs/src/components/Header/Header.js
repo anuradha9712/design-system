@@ -7,7 +7,7 @@ import { Link as MDSLink } from '@innovaccer/design-system';
 const Header = ({ relativePagePath }) => {
   const items = useHeaderItems();
   const checkActive = (label) => {
-    const pagePath = relativePagePath.split('/');
+    const pagePath = relativePagePath && relativePagePath.split('/');
     if(pagePath[1]===label.toLowerCase() || pagePath[2]===label.toLowerCase()) return true; 
     return false; 
   }
