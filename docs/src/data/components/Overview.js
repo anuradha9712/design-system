@@ -39,15 +39,14 @@ function Overview({ data, mode, path = 'components' }) {
         onChange={({ target }) => onSearchHandler(target)}
       />
 
-      <Row>
+      <div className='d-flex flex-wrap justify-content-between'>
         {
           previewList.length > 0 ?
             previewList.map(({ image = () => (<img alt='' />), name, status, link = '' }) => {
               return (
-                <Column
-                  size={4}
+                <div
                   key={name}
-                  className="pr-6 pb-6"
+                  className='overview-container pb-6'
                 >
 
                   <Link
@@ -75,7 +74,7 @@ function Overview({ data, mode, path = 'components' }) {
                       </CardBody>
                     </Card>
                   </Link>
-                </Column>
+                </div>
               )
             }) :
             <div className="d-flex justify-content-center" style={{ transform: "translate(50%,64px)" }}>
@@ -87,7 +86,7 @@ function Overview({ data, mode, path = 'components' }) {
               />
             </div>
         }
-      </Row>
+      </div>
     </div>
   )
 }
