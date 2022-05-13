@@ -7,5 +7,9 @@
 }
 
 .live-provider {
-  overflow-x: scroll;
+  /* overflow-x: auto; */
+  /* width: 50vw;
+  min-width: fit-content; */
+  width: 75vw;
+  max-width: fit-content;
 }

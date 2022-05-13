@@ -148,8 +148,9 @@ const PreviewWithPropTable = ({ name }) => {
   }
 
   return (
-    <div className="overflow-x-scroll">
-      <ArgsTable rows={data} />
+    <div className="overflow-x-scroll" >
+      <iframe src="http://localhost:5000/iframe.html?id=components-modal-all--all&viewMode=docs&panel=true&nav=false&addons=1&stories=0&embed=prop-table" frameBorder={0} width="100%" height={100}/>
+      {/* <ArgsTable rows={data} /> */}
     </div>
   );
 };
