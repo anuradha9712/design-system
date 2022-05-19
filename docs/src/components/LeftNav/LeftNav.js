@@ -40,20 +40,38 @@ const LeftNav = (props) => {
     localStorage.setItem('leftNavScrollPosition', position);
   };
 
+  // useEffect(() => {
+  //   const active = isBrowser ? getActiveNavItem() : '';
+  //   const obj = { link: active }
+  //   setActive(obj);
+
+  //   const ele = document.getElementById('navbar-container');
+
+  //   const scrollPosition = localStorage.getItem('leftNavScrollPosition');
+  //   ele.scrollTop = scrollPosition;
+
+  //   ele.addEventListener('scroll', setPosition(ele.scrollTop));
+  //   return () => ele.removeEventListener('scroll', setPosition(ele.scrollTop));
+
+  // }, []);
+
   useEffect(() => {
     const active = isBrowser ? getActiveNavItem() : '';
     const obj = { link: active }
     setActive(obj);
-
-    const ele = document.getElementById('navbar-container');
-
-    const scrollPosition = localStorage.getItem('leftNavScrollPosition');
-    ele.scrollTop = scrollPosition;
-
-    ele.addEventListener('scroll', setPosition(ele.scrollTop));
-    return () => ele.removeEventListener('scroll', setPosition(ele.scrollTop));
-
   }, []);
+
+  useEffect(() => {
+    const activeElement = document.getElementsByClassName('MenuItem--active');
+    if (activeElement) {
+      activeElement[0]?.scrollIntoView({behavior: 'smooth'});
+      //const rect = activeElement[0]?.getBoundingClientRect();
+      // console.log('ele', activeElement, activeElement[0], rect);
+      // const ele = document.getElementById('navbar-container');
+      // ele.scrollTop = rect?.top - 140;
+    }
+  }, [active]);
+
 
   const onClickHandler = (menu) => {
     navigate(menu.link);
