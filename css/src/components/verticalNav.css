@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  transition: var(--duration--fast-01) var(--standard-productive-curve);
+  transition: var(--duration--moderate-02) var(--standard-expressive-curve);
   width: var(--spacing-9);
 }
 
@@ -109,4 +109,8 @@
 
 .MenuItem-count--disabled {
   opacity: 0.6;
+}
+
+.MenuItem--subMenuAnimate {
+  transition: opacity 240ms cubic-bezier(0.2, 0, 0.38, 0.9);
 }
