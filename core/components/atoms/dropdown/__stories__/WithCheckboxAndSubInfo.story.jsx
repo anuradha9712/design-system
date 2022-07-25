@@ -3,12 +3,12 @@ import { Dropdown } from '@/index';
 import { Uncontrolled, Controlled } from './_common_/types';
 
 // CSF format story
-export const dropdownItemsWithCheckboxAndSubinfo = () =>{
+export const dropdownItemsWithCheckboxAndSubinfo = () => {
   const options = [
     {
       label: 'Below 18',
       value: 'below_18',
-      subInfo: 'People bewlow 18 years old',
+      subInfo: 'People below 18 years old',
     },
     {
       label: '19 - 35',
@@ -26,9 +26,7 @@ export const dropdownItemsWithCheckboxAndSubinfo = () =>{
       subInfo: 'People above 56 years old',
     },
   ];
-  return (
-  <Dropdown options={options} withCheckbox={true} className="w-25" placeholder="Select" />
-  );
+  return <Dropdown options={options} withCheckbox={true} className="w-25" placeholder="Select" />;
 };
 
 export default {

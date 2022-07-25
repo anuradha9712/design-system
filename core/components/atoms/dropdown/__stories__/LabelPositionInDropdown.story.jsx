@@ -4,7 +4,7 @@ import { Uncontrolled, Controlled } from './_common_/types';
 import Label from '../../label';
 
 // CSF format story
-export const labelPositionInDropdown = () =>{
+export const labelPositionInDropdown = () => {
   const options = [
     {
       label: 'All',
@@ -37,15 +37,15 @@ export const labelPositionInDropdown = () =>{
     },
   ];
   return (
-  <div>
-    <div className="w-25 mb-9">
-      <Label withInput={true}>Status</Label>
-      <Dropdown options={options} className="w-100" withCheckbox={true} />
+    <div>
+      <div className="w-25 mb-9">
+        <Label withInput={true}>Status</Label>
+        <Dropdown options={options} className="w-100" withCheckbox={true} />
+      </div>
+      <Dropdown options={options} className="w-25" inlineLabel="Status" withCheckbox={true} />
     </div>
-    <Dropdown options={options} className="w-25" inlineLabel="Status" withCheckbox={true} />
-  </div>
   );
-}
+};
 
 export default {
   title: 'Components/Dropdown/Label Position In Dropdown',
