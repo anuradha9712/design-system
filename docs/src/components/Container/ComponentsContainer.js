@@ -33,7 +33,7 @@ const ComponentsContainer = ({ children, pageTitle, relativePagePath, tabs, page
 
   return (
     <>
-      <Heading size="xl" className="my-5">
+      <Heading size="xl" className="my-5" data-test='Docs-PageTitle'>
         {isSiblingTab ? frontmatter?.title : pageTitle}
       </Heading>
       <Paragraph>{isSiblingTab ? frontmatter?.description : pageDescription}</Paragraph>

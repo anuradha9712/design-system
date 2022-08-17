@@ -74,7 +74,7 @@ const StoryComp = ({ componentData, dataProvider }) => {
         })
         .catch((err) => {
           setJsxCode(
-            `<Message className="my-7" appearance="alert" title="${err}" description="We are working to get it up for you to interact with." />`
+            `<Message data-test="live-error" className="my-7" appearance="alert" title="${err}" description="We are working to get it up for you to interact with." />`
           );
         });
     }
