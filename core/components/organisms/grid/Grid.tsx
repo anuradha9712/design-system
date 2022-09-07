@@ -284,6 +284,10 @@ export interface GridProps extends BaseProps {
    * Show filters in Head Cell
    */
   showFilters: boolean;
+  /**
+   * RowRenderer
+   */
+  RowRenderer?: any;
 }
 
 export interface GridState {
@@ -487,7 +491,7 @@ export class Grid extends React.Component<GridProps, GridState> {
 
     const { init, prevPageInfo } = this.state;
 
-    const { type, size, showHead, className, page, loading, loaderSchema } = this.props;
+    const { type, size, showHead, className, page, loading, loaderSchema, RowRenderer } = this.props;
 
     const schema = getSchema(this.props.schema, loading, loaderSchema);
 
@@ -531,6 +535,7 @@ export class Grid extends React.Component<GridProps, GridState> {
               prevPageInfo={prevPageInfo}
               updatePrevPageInfo={this.updatePrevPageInfo.bind(this)}
               onSelect={this.onSelect.bind(this)}
+              RowRenderer={RowRenderer}
             />
           </GridProvider>
         )}

@@ -10,6 +10,7 @@ export interface GridBodyProps {
   onSelect: onSelectFn;
   prevPageInfo: GridState['prevPageInfo'];
   updatePrevPageInfo: updatePrevPageInfoFunction;
+  RowRenderer: any;
 }
 
 export const GridBody = (props: GridBodyProps) => {
@@ -21,7 +22,7 @@ export const GridBody = (props: GridBodyProps) => {
     return errorTemplate ? (typeof errorTemplate === 'function' ? errorTemplate({}) : errorTemplate) : null;
   }
 
-  const { schema, prevPageInfo, updatePrevPageInfo, onSelect } = props;
+  const { schema, prevPageInfo, updatePrevPageInfo, onSelect, RowRenderer } = props;
 
   React.useEffect(() => {
     const gridBodyEl = ref!.querySelector('.Grid-body');
@@ -52,12 +53,14 @@ export const GridBody = (props: GridBodyProps) => {
 
   const renderRow = (rowIndex: number, item: object) => {
     return (
+      // <RowRenderer />
       <GridRow
         key={rowIndex}
         rowIndex={rowIndex}
         data={!item ? data[rowIndex] : item}
         schema={schema}
         onSelect={onSelect}
+        RowRenderer={RowRenderer}
       />
     );
   };

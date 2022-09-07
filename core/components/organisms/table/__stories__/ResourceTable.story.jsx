@@ -149,6 +149,10 @@ export const resourceTable = () => {
     },
   ];
 
+  const CustomRowRenderer = () => {
+    return <div>hello world</div>;
+  };
+
   return (
     <Card>
       <Table
@@ -184,6 +188,7 @@ export const resourceTable = () => {
         paginationType="basic"
         pageSize={4}
         onPageChange={(newPage) => action(`on-page-change:- ${newPage}`)()}
+        RowRenderer={CustomRowRenderer}
       />
     </Card>
   );
@@ -276,9 +281,14 @@ const customCode = `
     }
   ];
 
+  const CustomRowRenderer = () => {
+    return <div>hello world</div>;
+  };
+
   return (
     <Card>
       <Table
+      RowRenderer={CustomRowRenderer}
         showMenu={false}
         type="resource"
         data={data}

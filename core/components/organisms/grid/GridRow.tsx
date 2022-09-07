@@ -13,6 +13,7 @@ export interface GridRowProps {
   rowIndex: number;
   onSelect: GridBodyProps['onSelect'];
   className?: string;
+  RowRenderer?: any;
 }
 
 export const GridRow = (props: GridRowProps) => {
@@ -20,7 +21,7 @@ export const GridRow = (props: GridRowProps) => {
 
   const { type, onRowClick, loading, withCheckbox, nestedRows } = context;
 
-  const { schema, data, rowIndex: rI, onSelect, className } = props;
+  const { schema, data, rowIndex: rI, onSelect, className, RowRenderer } = props;
 
   const rowRef = React.useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = React.useState<boolean>(false);
@@ -106,7 +107,7 @@ export const GridRow = (props: GridRowProps) => {
     <div className={wrapperClasses}>
       {/* TODO(a11y)  */}
       {/* eslint-disable-next-line */}
-      <div className={rowClasses} onClick={onClickHandler} ref={rowRef}>
+      {/* <div className={rowClasses} onClick={onClickHandler} ref={rowRef}>
         {renderSchema(leftPinnedSchema, !!leftPinnedSchema.length, 'left')}
         {renderSchema(unpinnedSchema, !leftPinnedSchema.length && !!unpinnedSchema.length)}
         {renderSchema(rightPinnedSchema, false, 'right')}
@@ -115,7 +116,8 @@ export const GridRow = (props: GridRowProps) => {
         <div className="Grid-nestedRow">
           <GridNestedRow data={data} rowIndex={rI} />
         </div>
-      )}
+      )} */}
+      <RowRenderer />
     </div>
   );
 };

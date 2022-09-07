@@ -189,6 +189,10 @@ interface SharedTableProps extends BaseProps {
    */
   nestedRowRenderer?: GridProps['nestedRowRenderer'];
   /**
+   * Row Renderer
+   */
+  RowRenderer?: any;
+  /**
    * Set to use `Header`
    */
   withHeader?: boolean;
@@ -680,6 +684,7 @@ export class Table extends React.Component<TableProps, TableState> {
       errorTemplate,
       className,
       filterPosition,
+      RowRenderer,
     } = this.props;
 
     const baseProps = extractBaseProps(this.props);
@@ -740,6 +745,7 @@ export class Table extends React.Component<TableProps, TableState> {
             errorTemplate={errorTemplate && errorTemplate({ errorType: this.state.errorType })}
             onRowClick={onRowClick}
             showFilters={filterPosition === 'GRID'}
+            RowRenderer={RowRenderer}
           />
         </div>
         {withPagination && !this.state.loading && !this.state.error && totalPages > 1 && (
