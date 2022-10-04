@@ -63,7 +63,7 @@ const queries = [
   {
     query: pageQuery,
     transformer: ({ data }) => transformAlgoliaData(data),
-    indexName: process.env.GATSBY_ALGOLIA_INDEX_NAME || 'Algolia-Search',
+    indexName: process.env.GATSBY_ALGOLIA_INDEX_NAME || 'Algolia-Global-Search',
 
     //tells Algolia you will want to generate “snippets” of context around your hits in the following attributes.
     settings: { attributesToSnippet: ['title', 'description', 'headings', 'excerpt'] },
