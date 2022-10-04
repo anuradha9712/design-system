@@ -101,6 +101,11 @@ export const MenuItem = (props: MenuItemProps) => {
     ['MenuItem--subMenuAnimate']: isChildren,
   });
 
+  const IconClass = classNames({
+    ['MenuItem--icon']: expanded,
+    // ['mr-4']: expanded,
+  });
+
   const renderSubMenu = () => {
     if (hasSubmenu) {
       return <MenuIcon isChildrenVisible={isChildrenVisible} isActive={isActive} disabled={menu.disabled} />;
@@ -133,7 +138,7 @@ export const MenuItem = (props: MenuItemProps) => {
         {menu.icon && (
           <Icon
             data-test="DesignSystem-VerticalNav--Icon"
-            className={expanded ? 'mr-4' : ''}
+            className={IconClass}
             name={menu.icon}
             appearance={getIconAppearance(isActive, menu.disabled)}
           />
