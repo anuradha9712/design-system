@@ -25,6 +25,7 @@ interface MenuLabelProps {
   label: string;
   disabled?: boolean;
   isActive: boolean;
+  className?: string;
 }
 
 interface MenuIconProps {
@@ -34,9 +35,9 @@ interface MenuIconProps {
 }
 
 const MenuLabel = (props: MenuLabelProps) => {
-  const { label, disabled, isActive } = props;
+  const { label, disabled, isActive, className } = props;
   return (
-    <Text data-test="DesignSystem-VerticalNav--Text" color={getTextColor(isActive, disabled)}>
+    <Text className={className} data-test="DesignSystem-VerticalNav--Text" color={getTextColor(isActive, disabled)}>
       {label}
     </Text>
   );
@@ -101,9 +102,8 @@ export const MenuItem = (props: MenuItemProps) => {
     ['MenuItem--subMenuAnimate']: isChildren,
   });
 
-  const IconClass = classNames({
-    ['MenuItem--icon']: expanded,
-    // ['mr-4']: expanded,
+  const LabelClasss = classNames({
+    ['fade-out']: true,
   });
 
   const renderSubMenu = () => {
@@ -134,16 +134,18 @@ export const MenuItem = (props: MenuItemProps) => {
     // TODO(a11y)
     // eslint-disable-next-line
     <Link componentType="a" className={ItemClass} {...baseProps}>
-      <div className="d-flex align-items-center overflow-hidden">
+      <div className="MenuItem-Wrapper d-flex align-items-center overflow-hidden">
         {menu.icon && (
           <Icon
             data-test="DesignSystem-VerticalNav--Icon"
-            className={IconClass}
+            className={expanded ? 'mr-4' : ''}
             name={menu.icon}
             appearance={getIconAppearance(isActive, menu.disabled)}
           />
         )}
-        {expanded && <MenuLabel label={menu.label} disabled={menu.disabled} isActive={isActive} />}
+        {expanded && (
+          <MenuLabel className={LabelClasss} label={menu.label} disabled={menu.disabled} isActive={isActive} />
+        )}
       </div>
       {expanded && renderSubMenu()}
     </Link>

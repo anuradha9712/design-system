@@ -25,7 +25,8 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  transition: width var(--duration--moderate-02) var(--standard-expressive-curve);
+  /* transition: width var(--duration--moderate-02) var(--standard-expressive-curve); */
+  /* transition: var(--duration--moderate-02) var(--standard-expressive-curve); */
   width: var(--spacing-9);
 }
 
@@ -111,10 +112,11 @@
   opacity: 0.6;
 }
 
-.MenuItem--subMenuAnimate {
+/* .MenuItem--subMenuAnimate {
   transition: opacity 240ms cubic-bezier(0.2, 0, 0.38, 0.9);
 }
+ */
 
-.MenuItem--icon {
+.MenuItem-Wrapper {
   transition: var(--duration--moderate-02) var(--standard-expressive-curve);
 }
