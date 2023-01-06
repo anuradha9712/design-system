@@ -125,7 +125,7 @@
     "typescript-transform-paths": "^1.1.14"
   },
   "dependencies": {
-    "classnames": "^2.3.1",
+    "classnames": "^2.3.2",
     "core-js": "^3.9.1",
     "js-beautify": "1.14.1",
     "react-dom": "^16.8.6",
