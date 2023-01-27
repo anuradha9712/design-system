@@ -28,6 +28,7 @@ export const all = () => {
       size={size}
       label={label}
       onChange={onChangeHandler}
+      error={true}
     />
   );
 };
