@@ -129,6 +129,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props
     ['Checkbox-wrapper']: true,
     ['Checkbox-wrapper--default']: !error,
     ['Checkbox-wrapper--error']: error,
+    // ['Checkbox-wrapper-active--error']: error && checked,
   });
 
   const CheckboxLabelClass = classNames({
