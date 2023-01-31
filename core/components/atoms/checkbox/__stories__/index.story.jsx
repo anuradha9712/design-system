@@ -22,7 +22,7 @@ export const all = () => {
 
   return (
     <Checkbox
-      checked={checked}
+      checked={true}
       indeterminate={indeterminate}
       disabled={disabled}
       size={size}
