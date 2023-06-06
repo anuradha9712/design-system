@@ -87,6 +87,22 @@ export const compareDate = (
 ): boolean => {
   if (d) {
     const { year: limitYear, month: limitMonth, date: limitDate } = getDateInfo(d);
+    console.log(
+      'operator',
+      operator,
+      'limitYear',
+      limitYear,
+      'currYear',
+      currYear,
+      'limitMonth',
+      limitMonth,
+      'currMonth',
+      currMonth,
+      'limitDate',
+      limitDate,
+      'currDate',
+      currDate
+    );
 
     switch (operator) {
       case 'less':
@@ -174,3 +190,5 @@ export const translateToDate = (format: string, val: string, validators: Validat
     return undefined;
   }
 };
+
+export const isDateInRange = () => {};

@@ -929,10 +929,26 @@ export class Calendar extends React.Component<CalendarProps, CalendarState> {
               inRangeLast = compareDate(hoverDate, 'equal', yearNavVal, monthNavVal, date);
               active = !disabled && (startActive || endActive);
               if (startDate && endDate) {
-                inRange =
-                  !disabled &&
-                  (compareDate(startDate, 'less', yearNavVal, monthNavVal, date) || startActive) &&
-                  (compareDate(endDate, 'more', yearNavVal, monthNavVal, date) || endActive);
+                const dateInString = date <= 0 ? prevMonthDayRange + date : date > dayRange ? date - dayRange : date;
+                const monthInString =
+                  date <= 0
+                    ? monthNavVal === 0
+                      ? monthNavVal + monthBlock
+                      : ((monthNavVal - 1) % monthBlock) + 1
+                    : date > dayRange
+                    ? ((monthNavVal + 1) % monthBlock) + 1
+                    : monthNavVal + 1;
+                const yearInString =
+                  date <= 0 && monthNavVal + 1 === 1
+                    ? yearNavVal - 1
+                    : date > dayRange && monthNavVal + 1 === 12
+                    ? yearNavVal + 1
+                    : yearNavVal;
+                const a = compareDate(startDate, 'less', currYear, currMonth, dateInString) || startActive;
+                const b = compareDate(endDate, 'more', currYear, currMonth, dateInString) || endActive;
+                inRange = !disabled && a && b;
+
+                console.log('inRange in ifff', inRange, 'startDate', startDate, 'endDate', endDate, 'aaa', a, 'bbb', b);
               } else if (startDate) {
                 inRange =
                   !disabled &&
@@ -975,7 +991,7 @@ export class Calendar extends React.Component<CalendarProps, CalendarState> {
               dateInString.length === 2 ? dateInString : `0${dateInString}`
             }/${yearInString}`;
             const isEventExist = events && typeof events === 'object' && events.hasOwnProperty(completeDateString);
-
+            console.log('inRange->>', inRange, 'completeDateString', completeDateString);
             const wrapperClass = classNames({
               'Calendar-valueWrapper': true,
               'Calendar-valueWrapper--inRange': inRange || (rangePicker && active),
