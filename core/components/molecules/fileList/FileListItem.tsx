@@ -94,9 +94,11 @@ export const FileListItem = (props: FileListItemProps) => {
           </Text>
         </div>
         <div className="FileItem-actions">
+          {/* <div className="FileItem-size"> */}
           <Text className="FileItem-size" appearance={'subtle'} data-test="DesignSystem-FileListItem--Size">
             {fileSize || file.size}
           </Text>
+          {/* </div> */}
           {!!actions && actions}
         </div>
       </div>
