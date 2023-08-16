@@ -393,6 +393,7 @@ export const defaultProps = {
   searchDebounceDuration: 750,
   pageJumpDebounceDuration: 750,
   errorTemplate: defaultErrorTemplate,
+  selectedRow: [],
 };
 
 /**
@@ -492,6 +493,7 @@ export class Table extends React.Component<TableProps, TableState> {
 
     if (prevState.page !== this.state.page) {
       const { onPageChange } = this.props;
+      console.log('prevState', prevState, 'this.state', this.state);
       if (onPageChange) onPageChange(this.state.page);
     }
 
@@ -511,6 +513,7 @@ export class Table extends React.Component<TableProps, TableState> {
         // this.setState({
         //   errorType: errorCount > 1 ? "FAILED_TO_FETCH" : errorType
         // });
+        console.log('update data');
         const searchUpdate = prevState.searchTerm !== this.state.searchTerm;
         this.updateData(searchUpdate);
       }
@@ -603,6 +606,7 @@ export class Table extends React.Component<TableProps, TableState> {
     }
   };
 
+  // here
   onSelect: onSelectFn = (rowIndexes, selected) => {
     const { data } = this.state;
 
