@@ -425,6 +425,7 @@ export const defaultProps = {
 export class Table extends React.Component<TableProps, TableState> {
   static defaultProps = defaultProps;
   debounceUpdate: () => void;
+  selectedRowsRef: React.MutableRefObject<any> = React.createRef<number[] | null>();
 
   constructor(props: TableProps) {
     super(props);
@@ -513,6 +514,7 @@ export class Table extends React.Component<TableProps, TableState> {
         // });
         const searchUpdate = prevState.searchTerm !== this.state.searchTerm;
         this.updateData(searchUpdate);
+        console.log('this.selectedRowsRef.current', this.selectedRowsRef.current);
       }
     }
   }
@@ -624,6 +626,13 @@ export class Table extends React.Component<TableProps, TableState> {
         data: newData,
         selectAll: getSelectAll(newData, this.props.selectDisabledRow),
       });
+
+      let newRowData = [data[rowIndexes]?.id];
+      if (this.selectedRowsRef.current) {
+        newRowData = [data[rowIndexes]?.id, ...this.selectedRowsRef.current];
+      }
+      this.selectedRowsRef.current = newRowData;
+      console.log('newRowData', newRowData);
     }
 
     if (onSelect) {

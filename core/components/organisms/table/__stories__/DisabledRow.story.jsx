@@ -18,6 +18,7 @@ export const disabledRow = () => {
       className: 'File not found',
       errorMessage: 'Cannot fetch files',
       disabled: true,
+      id: 'brooke',
     },
     {
       firstName: 'Frazer',
@@ -28,6 +29,7 @@ export const disabledRow = () => {
       status: 'Completed',
       statusType: 'Done',
       className: 'Executed',
+      id: 'frazer',
     },
     {
       firstName: 'Lemmie',
@@ -39,6 +41,7 @@ export const disabledRow = () => {
       statusType: 'Done',
       className: 'Executed',
       disabled: true,
+      id: 'lemmie',
     },
     {
       firstName: 'Randy',
@@ -49,6 +52,7 @@ export const disabledRow = () => {
       status: 'Completed',
       statusType: 'Done',
       className: 'Executed',
+      id: 'randy',
     },
     {
       firstName: 'Rolando',
@@ -61,6 +65,7 @@ export const disabledRow = () => {
       errorCode: 2204,
       className: 'File not found',
       errorMessage: 'Cannot fetch files',
+      id: 'rolando',
     },
   ];
 
@@ -147,38 +152,41 @@ const customCode = `() => {
 
   const data = [
     {
-      "firstName": "Brooke",
-      "lastName": "Heeran",
-      lastRun: "Yesterday 3:14 PM",
-      "name": "Risk Analysis",
-      "type": "Batch Execution",
-      status: "Failed",
-      statusType: "Error",
+      firstName: 'Brooke',
+      lastName: 'Heeran',
+      lastRun: 'Yesterday 3:14 PM',
+      name: 'Risk Analysis',
+      type: 'Batch Execution',
+      status: 'Failed',
+      statusType: 'Error',
       errorCode: 2204,
-      className: "File not found",
-      errorMessage: "Cannot fetch files",
+      className: 'File not found',
+      errorMessage: 'Cannot fetch files',
       disabled: true,
+      id: 'brooke',
     },
     {
-      "firstName": "Frazer",
-      "lastName": "Cathro",
-      lastRun: "Yesterday 11:15 AM",
-      "name": "Quality",
-      "type": "Batch Execution",
-      status: "Completed",
-      statusType: "Done",
-      className: "Executed",
+      firstName: 'Frazer',
+      lastName: 'Cathro',
+      lastRun: 'Yesterday 11:15 AM',
+      name: 'Quality',
+      type: 'Batch Execution',
+      status: 'Completed',
+      statusType: 'Done',
+      className: 'Executed',
+      id: 'frazer',
     },
     {
-      "firstName": "Lemmie",
-      "lastName": "Ciric",
-      lastRun: "Yesterday 9:17 PM",
-      "name": "Claims",
-      "type": "Test Function",
-      status: "Completed",
-      statusType: "Done",
-      className: "Executed",
+      firstName: 'Lemmie',
+      lastName: 'Ciric',
+      lastRun: 'Yesterday 9:17 PM',
+      name: 'Claims',
+      type: 'Test Function',
+      status: 'Completed',
+      statusType: 'Done',
+      className: 'Executed',
       disabled: true,
+      id: 'lemmie',
     },
     {
       firstName: 'Randy',
@@ -189,6 +197,7 @@ const customCode = `() => {
       status: 'Completed',
       statusType: 'Done',
       className: 'Executed',
+      id: 'randy',
     },
     {
       firstName: 'Rolando',
@@ -201,6 +210,7 @@ const customCode = `() => {
       errorCode: 2204,
       className: 'File not found',
       errorMessage: 'Cannot fetch files',
+      id: 'rolando',
     },
   ];
 
@@ -274,7 +284,8 @@ const customCode = `() => {
           onSelect={(rowIndex, selected, selectedList, selectAll) =>
             console.log(\`on-select:- rowIndex: \${rowIndex} selected: \${selected} selectedList: \${JSON.stringify(selectedList)} selectAll: \${selectAll}\`)
           }
-          withPagination={false}
+          withPagination={true}
+          pageSize={2}
         />
       </Card>
   );
