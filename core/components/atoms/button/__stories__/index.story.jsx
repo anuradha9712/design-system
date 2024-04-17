@@ -17,6 +17,7 @@ export const all = () => {
 export default {
   title: 'Actions/Button/All',
   component: Button,
+  tags: ['autodocs'],
   parameters: {
     docs: {
       docPage: {
