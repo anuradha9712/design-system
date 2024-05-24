@@ -2,8 +2,7 @@ import React from 'react';
 import { Combobox, Spinner, Label } from '@/index';
 import { OptionType } from '@/common.type';
 
-export const Test = () => {
-  // import { Spinner, Combobox, Label } from '@innovaccer/design-system';
+export const KeyboardEvents = () => {
   function useFetchOption() {
     const medicineList = [
       { label: 'Acetaminophen', value: 'Acetaminophen' },
@@ -113,7 +112,7 @@ export const Test = () => {
 };
 
 export default {
-  title: 'Components/Combobox/Test',
+  title: 'Components/Combobox/Keyboard Events',
   component: Combobox,
   subcomponents: { 'Combobox.List': Combobox.List, 'Combobox.Option': Combobox.Option },
   parameters: {

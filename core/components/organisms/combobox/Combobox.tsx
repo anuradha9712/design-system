@@ -69,7 +69,13 @@ export interface ComboboxProps extends BaseProps {
    * Callback function when user clicks the clear button
    */
   onClear?: (event: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>) => void;
+  /**
+   * Callback function to be called when key is pressed
+   */
   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  /**
+   * Callback function to be called when key is released
+   */
   onKeyUp?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   /**
    * Material icon name to be displayed in trigger
