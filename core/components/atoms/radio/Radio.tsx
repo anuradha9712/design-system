@@ -2,7 +2,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import Text from '@/components/atoms/text';
 import { BaseProps, OmitNativeProps } from '@/utils/types';
-import uidGenerator from '@/utils/uidGenerator';
+// import uidGenerator from '@/utils/uidGenerator';
 import { ChangeEvent } from '@/common.type';
 import styles from '@css/components/radio.module.css';
 
@@ -98,7 +98,7 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>((props, forw
     [styles['Radio-Label']]: true,
   });
 
-  const id = `${name}-${label}-${uidGenerator()}`;
+  // const id = `${name}-${label}-${uidGenerator()}`;
   return (
     <div className={RadioClass} data-test="DesignSystem-Radio">
       <div className={RadioOuterWrapper} data-test="DesignSystem-Radio-OuterWrapper">
@@ -114,14 +114,14 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>((props, forw
           value={value}
           onChange={onChange}
           className={styles['Radio-input']}
-          id={id}
+          // id={id}
           data-test="DesignSystem-Radio-Input"
         />
         <span data-test="DesignSystem-Radio-wrapper" className={RadioWrapper} />
       </div>
       <div className={styles['Radio-labelWrapper']}>
         {label && (
-          <label className={RadioLabelClass} htmlFor={id} data-test="DesignSystem-Radio-Label">
+          <label className={RadioLabelClass} htmlFor={'id'} data-test="DesignSystem-Radio-Label">
             <Text size={size === 'tiny' ? 'small' : 'regular'} appearance={disabled ? 'disabled' : 'default'}>
               {label}
             </Text>

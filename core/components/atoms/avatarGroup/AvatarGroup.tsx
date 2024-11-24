@@ -1,10 +1,10 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { BaseProps, extractBaseProps } from '@/utils/types';
-import { Popover } from '@/index';
-import { AvatarProps, PopoverProps } from '@/index.type';
+// import { Popover } from '@/index';
+import { AvatarProps } from '@/index.type';
 import { AvatarSize } from '@/common.type';
-import AvatarCount from './AvatarCount';
+// import AvatarCount from './AvatarCount';
 import Avatars from './Avatars';
 import AvatarPopperBody from './AvatarPopperBody';
 import styles from '@css/components/avatarGroup.module.css';
@@ -21,11 +21,11 @@ export interface AvatarData extends Record<string, any> {
 
 interface AvatarPopoverProps {
   popperRenderer?: (names: AvatarData[]) => JSX.Element;
-  appendToBody?: PopoverProps['appendToBody'];
-  dark?: PopoverProps['dark'];
-  position?: PopoverProps['position'];
+  // appendToBody?: PopoverProps['appendToBody'];
+  // dark?: PopoverProps['dark'];
+  // position?: PopoverProps['position'];
   popperClassName?: string;
-  on?: PopoverProps['on'];
+  // on?: PopoverProps['on'];
   maxHeight?: number | string;
   minHeight?: number | string;
   width?: number | string;
@@ -93,26 +93,26 @@ export interface AvatarGroupProps extends BaseProps {
   /**
    * Position to place the tooltip on `Avatars` shown before +x
    */
-  tooltipPosition: PopoverProps['position'];
+  // tooltipPosition: PopoverProps['position'];
 }
 
 export const AvatarGroup = (props: AvatarGroupProps) => {
-  const { max, borderColor, popoverOptions, tooltipPosition, list, className, size } = props;
+  const { max, borderColor, popoverOptions, list, className, size } = props;
 
   const {
     popperRenderer,
     maxHeight = 256,
     width = 176,
     minHeight,
-    position = 'bottom',
-    on = 'hover',
-    appendToBody = true,
+    // position = 'bottom',
+    // on = 'hover',
+    // appendToBody = true,
     popperClassName = '',
   } = popoverOptions;
 
   const baseProps = extractBaseProps(props);
 
-  const hiddenAvatarCount = list.length > max ? Math.min(list.length - max, 99) : 0;
+  // const hiddenAvatarCount = list.length > max ? Math.min(list.length - max, 99) : 0;
 
   const style = {
     backgroundColor: `${borderColor}`,
@@ -137,15 +137,17 @@ export const AvatarGroup = (props: AvatarGroupProps) => {
 
   return (
     <div data-test="DesignSystem-AvatarGroup" {...baseProps} className={AvatarGroupClass}>
-      <Avatars size={size} avatarList={avatarList} avatarStyle={avatarStyle} tooltipPosition={tooltipPosition} />
+      <Avatars size={size} avatarList={avatarList} avatarStyle={avatarStyle} 
+      // tooltipPosition={tooltipPosition} 
+      />
       {list.length - max > 0 && list.length !== 3 && (
-        <Popover
-          on={on}
-          trigger={<AvatarCount on={on} size={size} hiddenAvatarCount={hiddenAvatarCount} avatarStyle={avatarStyle} />}
-          position={position}
-          appendToBody={appendToBody}
-          offset="medium"
-        >
+        // <Popover
+        //   on={on}
+        //   trigger={<AvatarCount on={on} size={size} hiddenAvatarCount={hiddenAvatarCount} avatarStyle={avatarStyle} />}
+        //   position={position}
+        //   appendToBody={appendToBody}
+        //   offset="medium"
+        // >
           <AvatarPopperBody
             hiddenAvatarList={list.slice(max, list.length)}
             popperRenderer={popperRenderer}
@@ -154,7 +156,7 @@ export const AvatarGroup = (props: AvatarGroupProps) => {
             width={width}
             popperClassName={popperClassName}
           />
-        </Popover>
+        // </Popover>
       )}
     </div>
   );

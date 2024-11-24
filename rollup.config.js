@@ -203,7 +203,7 @@ const tsConfig = {
     }),
   ],
   output: {
-    dir: 'dist/ts',
+    dir: 'dist',
     format: 'umd',
     name: `inno`,
     globals: globals(),

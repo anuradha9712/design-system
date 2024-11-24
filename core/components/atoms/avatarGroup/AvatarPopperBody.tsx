@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, Listbox, Tooltip } from '@/index';
+// import { Text, Tooltip } from '@/index';
 import classNames from 'classnames';
 import { AvatarData } from './AvatarGroup';
 import styles from '@css/components/avatarGroup.module.css';
@@ -30,7 +30,7 @@ const AvatarPopperBody = (props: AvatarPopperProps) => {
 
   return (
     <div style={{ width, minHeight, maxHeight }} className={popperClass} data-test="DesignSystem-AvatarGroup--Popover">
-      <Listbox
+      {/* <Listbox
         showDivider={false}
         type="description"
         size="compressed"
@@ -57,7 +57,7 @@ const AvatarPopperBody = (props: AvatarPopperProps) => {
             </Tooltip>
           );
         })}
-      </Listbox>
+      </Listbox> */}
     </div>
   );
 };

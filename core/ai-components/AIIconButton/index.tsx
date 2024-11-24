@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { TIconPosition, TButtonType, TSize2Hierarchy, TBaseHtmlProps } from '../common.type';
-import { Tooltip } from '@/index';
+// import { Tooltip } from '@/index';
 import SaraIcon from './SaraIcon';
 import styles from '@css/ai-components/iconButton.module.css';
 
@@ -95,7 +95,7 @@ export const AIIconButton = (props: AIIconButtonProps) => {
   };
 
   return (
-    <Tooltip tooltip={tooltip} showTooltip={!!tooltip && !disabled}>
+    // <Tooltip tooltip={tooltip} showTooltip={!!tooltip && !disabled}>
       <button
         className={buttonClassNames}
         data-test="DesignSystem-AI-IconButton"
@@ -108,7 +108,7 @@ export const AIIconButton = (props: AIIconButtonProps) => {
         </i>
         <SaraIcon {...saraIconProps} />
       </button>
-    </Tooltip>
+    // </Tooltip>
   );
 };
 

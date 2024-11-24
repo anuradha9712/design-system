@@ -1,8 +1,8 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { Text, Tooltip, Icon } from '@/index';
+import { Text, Icon } from '@/index';
 import { BaseProps, extractBaseProps } from '@/utils/types';
-import { TooltipProps } from '@/index.type';
+// import { TooltipProps } from '@/index.type';
 import { AccentAppearance, AvatarSize, AvatarShape } from '@/common.type';
 import AvatarIcon from './avatarIcon';
 import AvatarImage from './avatarImage';
@@ -33,7 +33,7 @@ export interface AvatarProps extends BaseProps {
   /**
    * Position to place the tooltip
    */
-  tooltipPosition: TooltipProps['position'];
+  // tooltipPosition: TooltipProps['position'];
   /**
    * Label to be displayed inside tooltip after name
    */
@@ -67,7 +67,7 @@ const colors = ['accent4', 'primary', 'accent3', 'alert', 'accent2', 'warning', 
 export const Avatar = (props: AvatarProps) => {
   const {
     withTooltip,
-    tooltipPosition,
+    // tooltipPosition,
     size,
     children,
     firstName,
@@ -76,7 +76,7 @@ export const Avatar = (props: AvatarProps) => {
     appearance,
     shape,
     disabled,
-    tooltipSuffix,
+    // tooltipSuffix,
     tabIndex,
     role = 'presentation',
   } = props;
@@ -88,13 +88,13 @@ export const Avatar = (props: AvatarProps) => {
       ? children.trim().slice(0, initialsLength)
       : `${firstName ? firstName.trim()[0] : ''}${lastName ? lastName.trim()[0] : ''}`;
 
-  const getTooltipName = () => {
-    if (children && typeof children === 'string') {
-      return `${children} ${tooltipSuffix || ''}`;
-    }
+  // const getTooltipName = () => {
+  //   if (children && typeof children === 'string') {
+  //     return `${children} ${tooltipSuffix || ''}`;
+  //   }
 
-    return `${firstName || ''} ${lastName || ''} ${tooltipSuffix || ''}` || '';
-  };
+  //   return `${firstName || ''} ${lastName || ''} ${tooltipSuffix || ''}` || '';
+  // };
 
   const AvatarAppearance =
     appearance || colors[(initials.charCodeAt(0) + (initials.charCodeAt(1) || 0)) % 8] || DefaultAppearance;
@@ -184,9 +184,9 @@ export const Avatar = (props: AvatarProps) => {
   const renderTooltip = () => {
     if (withTooltip && initials) {
       return (
-        <Tooltip tooltip={getTooltipName()} position={tooltipPosition} triggerClass={'flex-grow-0'}>
-          {renderAvatar()}
-        </Tooltip>
+        // <Tooltip tooltip={getTooltipName()} position={tooltipPosition} triggerClass={'flex-grow-0'}>
+        <>  {renderAvatar()}</>
+        // </Tooltip>
       );
     }
 

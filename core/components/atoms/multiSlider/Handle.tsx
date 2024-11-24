@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import * as Keys from '@/utils/Keys';
+// import * as Keys from '@/utils/Keys';
 import { formatPercentage, clamp } from './SliderUtils';
 import sliderStyles from '@css/components/slider.module.css';
 import tooltipStyles from '@css/components/tooltip.module.css';
@@ -112,29 +112,29 @@ export class Handle extends React.Component<InternalHandleProps, HandleState> {
     this.changeValue(value);
   };
 
-  handleKeyDown = (event: React.KeyboardEvent<HTMLSpanElement>) => {
+  handleKeyDown = () => {
     if (this.props.disabled) return;
 
-    const { stepSize, value } = this.props;
-    const { keyCode } = event;
+    // const { stepSize, value } = this.props;
+    // const { keyCode } = event;
 
     // TODO(a11y): add ARROW_DOWN & ARROW_UP too
-    if (keyCode === Keys.ARROW_LEFT) {
-      this.changeValue(value - stepSize);
-      event.preventDefault();
-    } else if (keyCode === Keys.ARROW_RIGHT) {
-      this.changeValue(value + stepSize);
-      event.preventDefault();
-    }
+    // if (keyCode === Keys.ARROW_LEFT) {
+    //   this.changeValue(value - stepSize);
+    //   event.preventDefault();
+    // } else if (keyCode === Keys.ARROW_RIGHT) {
+    //   this.changeValue(value + stepSize);
+    //   event.preventDefault();
+    // }
   };
 
-  handleKeyUp = (event: React.KeyboardEvent<HTMLSpanElement>) => {
+  handleKeyUp = () => {
     if (this.props.disabled) return;
 
-    if ([Keys.ARROW_LEFT, Keys.ARROW_RIGHT].indexOf(event.keyCode) >= 0) {
-      const { onRelease } = this.props;
-      if (onRelease) onRelease(this.props.value);
-    }
+    // if ([Keys.ARROW_LEFT, Keys.ARROW_RIGHT].indexOf(event.keyCode) >= 0) {
+    //   const { onRelease } = this.props;
+    //   if (onRelease) onRelease(this.props.value);
+    // }
   };
 
   getHandleMidpointAndOffset = (handleElement: HTMLElement | null, useOppositeDimension = false) => {

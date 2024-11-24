@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InlineMessage, Text } from '@/index';
+import { Text } from '@/index';
 import classNames from 'classnames';
 import { BaseProps, extractBaseProps } from '@/utils/types';
 
@@ -28,7 +28,8 @@ export const HelpText = (props: HelpTextProps) => {
   if (!message) return null;
 
   if (error) {
-    return <InlineMessage size="small" className={classes} appearance="alert" description={message} />;
+    // return <InlineMessage size="small" className={classes} appearance="alert" description={message} />;
+    return ``;
   }
 
   return (

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, Icon, Spinner, Tooltip } from '@/index';
+import { Text, Icon, Spinner } from '@/index';
 import classNames from 'classnames';
 import { BaseProps, BaseHtmlProps } from '@/utils/types';
 import { IconType } from '@/common.type';
@@ -190,9 +190,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, r
   const { icon, tooltip, children } = props;
 
   return icon && tooltip && !children ? (
-    <Tooltip tooltip={tooltip}>
+    // <Tooltip tooltip={tooltip}>
       <ButtonElement {...props} ref={ref} />
-    </Tooltip>
+    // </Tooltip>
   ) : (
     <ButtonElement {...props} ref={ref} />
   );

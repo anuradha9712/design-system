@@ -1,7 +1,7 @@
 import * as React from 'react';
 import GenericText from '../_text';
 import classNames from 'classnames';
-import { Text, Icon, Tooltip } from '@/index';
+import { Text, Icon } from '@/index';
 import { BaseHtmlProps, BaseProps, extractBaseProps } from '@/utils/types';
 import styles from '@css/components/label.module.css';
 
@@ -70,9 +70,9 @@ export const Label = (props: LabelProps) => {
     return null;
   };
 
-  const renderIndicator = (info: string) => {
+  const renderIndicator = () => {
     return (
-      <Tooltip tooltip={info}>
+      // <Tooltip tooltip={info}>
         <Icon
           data-test="DesignSystem-Label--Info"
           name="info"
@@ -80,7 +80,7 @@ export const Label = (props: LabelProps) => {
           appearance="subtle"
           className="ml-3 cursor-pointer d-flex align-items-center"
         />
-      </Tooltip>
+      // </Tooltip>
     );
   };
 
@@ -89,7 +89,7 @@ export const Label = (props: LabelProps) => {
       <GenericText data-test="DesignSystem-Label--Text" className={classes} componentType="label" {...rest}>
         {children}
         {renderInfo(required, optional)}
-        {info && renderIndicator(info)}
+        {info && renderIndicator()}
       </GenericText>
     </div>
   );

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { Tooltip, Icon, Text } from '@/index';
+import { Icon, Text } from '@/index';
 import { IconProps } from '@/index.type';
 import { BaseHtmlProps, BaseProps, extractBaseProps } from '@/utils/types';
 import { AutoComplete, IconType } from '@/common.type';
@@ -276,9 +276,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>((props, forw
       {disabled ? (
         ''
       ) : info ? (
-        <Tooltip position="bottom" tooltip={info}>
+        // <Tooltip position="bottom" tooltip={info}>
           {trigger}
-        </Tooltip>
+        // </Tooltip>
       ) : actionIcon && (value || defaultValue) ? (
         actionIcon
       ) : (

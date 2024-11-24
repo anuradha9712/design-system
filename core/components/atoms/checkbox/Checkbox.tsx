@@ -2,7 +2,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import Text from '@/components/atoms/text';
 import { BaseProps, OmitNativeProps } from '@/utils/types';
-import uidGenerator from '@/utils/uidGenerator';
+// import uidGenerator from '@/utils/uidGenerator';
 import { ChangeEvent } from '@/common.type';
 import CheckboxIcon from './CheckboxIcon';
 import styles from '@css/components/checkbox.module.css';
@@ -85,7 +85,8 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props
     className,
     checked: checkedProp,
     helpText,
-    id = `${name}-${label}-${uidGenerator()}`,
+    // id = `${name}-${label}-${uidGenerator()}`,
+    id="id",
     labelRef,
     ...rest
   } = props;
