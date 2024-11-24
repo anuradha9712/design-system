@@ -1,7 +1,7 @@
 import { DateObject, DateType, Day } from './types';
 import config from './config';
-import { Validators } from '@/utils/types';
-import { isValid } from '@/utils/validators';
+// import { Validators } from '@/utils/types';
+// import { isValid } from '@/utils/validators';
 
 type Operator = 'less' | 'more' | 'equal';
 
@@ -36,8 +36,8 @@ export const getDateInfo = (d?: DateType): Record<string, any> => {
 
 export const convertToDate = (
   d?: DateType | DateObject,
-  format?: string,
-  validators?: Validators
+  // format?: string,
+  // validators?: Validators
 ): Date | undefined => {
   let dateVal;
 
@@ -45,7 +45,8 @@ export const convertToDate = (
     if (typeof d === 'number') {
       dateVal = new Date(d);
     } else if (typeof d === 'string') {
-      return format ? translateToDate(format, d, validators) : undefined;
+      return undefined;
+      // return format ? translateToDate(format, d, validators) : undefined;
     } else if (!(d instanceof Date)) {
       const { year, month, date } = d as DateObject;
       dateVal = new Date(year, month, date, 0, 0, 0);
@@ -147,33 +148,35 @@ export const translateToString = (format: string, d?: Date): string => {
   return '';
 };
 
-export const translateToDate = (format: string, val: string, validators: Validators = []): Date | undefined => {
-  if (isValid(validators, val, format)) {
-    const separator = format.includes('/') ? '/' : '-';
+// export const translateToDate = (format: string, val: string, validators: Validators = []): Date | undefined => {
+//   // if (isValid(validators, val, format)) {
+//   //   const separator = format.includes('/') ? '/' : '-';
 
-    let year = -1,
-      month = -1,
-      date = -1;
-    const v = val.split(separator);
-    format.split(separator).forEach((f, i) => {
-      switch (f) {
-        case 'mm':
-          month = +v[i] - 1;
-          break;
-        case 'yyyy':
-          year = +v[i];
-          break;
-        case 'dd':
-          date = +v[i];
-          break;
-      }
-    });
-    const d = convertToDate({ year, month, date });
-    return d;
-  } else {
-    return undefined;
-  }
-};
+//   //   let year = -1,
+//   //     month = -1,
+//   //     date = -1;
+//   //   const v = val.split(separator);
+//   //   format.split(separator).forEach((f, i) => {
+//   //     switch (f) {
+//   //       case 'mm':
+//   //         month = +v[i] - 1;
+//   //         break;
+//   //       case 'yyyy':
+//   //         year = +v[i];
+//   //         break;
+//   //       case 'dd':
+//   //         date = +v[i];
+//   //         break;
+//   //     }
+//   //   });
+//   //   const d = convertToDate({ year, month, date });
+//   //   return d;
+//   // } else {
+//   //   return undefined;
+//   // }
+// };
+
+export const translateToDate = () => {}
 
 export const dateComparison = (
   date: Date | undefined,

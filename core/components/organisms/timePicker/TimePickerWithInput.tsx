@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { InputMask, Utils } from '@/index';
+// import { InputMask } from '@/index';
 import { InputMaskProps } from '@/index.type';
 import { Validators } from '@/utils/types';
 
-import { translateToTime, getOutputTimeString, placeholders, isPlaceholderPresent } from './utils';
+import { translateToTime } from './utils';
 
 export type AMPMType = 'AM' | 'PM';
 export type InputFormat = 'hh:mm AM' | 'hh:mm';
@@ -48,10 +48,10 @@ export interface TimePickerInputProps {
 }
 
 export const TimePickerWithInput = (props: TimePickerInputProps) => {
-  const { validators, inputOptions, inputFormat, outputFormat, onTimeChange, time: timeProp, error } = props;
+  const { inputOptions, inputFormat, time: timeProp } = props;
 
   const [time, setTime] = React.useState(timeProp);
-  const [init, setInit] = React.useState(false);
+  // const [init, setInit] = React.useState(false);
   const { placeholderChar = '_' } = inputOptions;
 
   React.useEffect(() => {
@@ -61,60 +61,62 @@ export const TimePickerWithInput = (props: TimePickerInputProps) => {
     setTime(updatedTime);
   }, [timeProp]);
 
-  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>, val = '') => {
-    const updatedTime = val?.toUpperCase();
-    setTime(updatedTime);
+  // const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>, val = '') => {
+  //   const updatedTime = val?.toUpperCase();
+  //   setTime(updatedTime);
 
-    if (inputOptions.onChange) {
-      inputOptions.onChange(e, val);
-    }
-  };
+  //   if (inputOptions.onChange) {
+  //     inputOptions.onChange(e, val);
+  //   }
+  // };
 
-  const onBlurHandler = (e: React.ChangeEvent<HTMLInputElement>, val = '') => {
-    const updatedTime = translateToTime(inputFormat, time);
-    setInit(true);
+  // const onBlurHandler = (e: React.ChangeEvent<HTMLInputElement>, val = '') => {
+  //   const updatedTime = translateToTime(inputFormat, time);
+  //   setInit(true);
 
-    if (onTimeChange) {
-      const outputTimeStr =
-        updatedTime && !isPlaceholderPresent(placeholderChar, updatedTime)
-          ? getOutputTimeString(inputFormat, outputFormat, updatedTime)
-          : undefined;
+  //   if (onTimeChange) {
+  //     const outputTimeStr =
+  //       updatedTime && !isPlaceholderPresent(placeholderChar, updatedTime)
+  //         ? getOutputTimeString(inputFormat, outputFormat, updatedTime)
+  //         : undefined;
 
-      onTimeChange(outputTimeStr);
-    }
+  //     onTimeChange(outputTimeStr);
+  //   }
 
-    if (inputOptions.onBlur) inputOptions.onBlur(e, val);
-  };
+  //   if (inputOptions.onBlur) inputOptions.onBlur(e, val);
+  // };
 
-  const onClearHandler = (e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
-    const updatedTime = '';
-    setInit(true);
+  // const onClearHandler = (e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
+  //   const updatedTime = '';
+  //   setInit(true);
 
-    if (onTimeChange) onTimeChange(updatedTime);
-    if (inputOptions.onClear) inputOptions.onClear(e);
-  };
+  //   if (onTimeChange) onTimeChange(updatedTime);
+  //   if (inputOptions.onClear) inputOptions.onClear(e);
+  // };
 
-  const inputValidator = (val: string): boolean => {
-    return Utils.validators.isValid(validators, val, inputFormat);
-  };
+  // const inputValidator = (): boolean => {
+  //   return true;
+  //   // return Utils.validators.isValid(validators, val, inputFormat);
+  // };
 
-  const mask = Utils.masks.time[inputFormat];
+  // const mask = Utils.masks.time[inputFormat];
   return (
-    <InputMask
-      placeholder={placeholders[inputFormat]}
-      placeholderChar={placeholderChar}
-      {...inputOptions}
-      mask={mask}
-      value={
-        time ? translateToTime(inputFormat, time) : init ? InputMask.utils.getDefaultValue(mask, placeholderChar) : ''
-      }
-      validators={inputValidator}
-      onChange={onChangeHandler}
-      onClear={onClearHandler}
-      onBlur={onBlurHandler}
-      error={error}
-      id="parent-TimePicker"
-    />
+    <div></div>
+    // <InputMask
+    //   placeholder={placeholders[inputFormat]}
+    //   placeholderChar={placeholderChar}
+    //   {...inputOptions}
+    //   // mask={mask}
+    //   value={
+    //     time ? translateToTime(inputFormat, time) : init ? InputMask.utils.getDefaultValue(mask, placeholderChar) : ''
+    //   }
+    //   validators={inputValidator}
+    //   onChange={onChangeHandler}
+    //   onClear={onClearHandler}
+    //   onBlur={onBlurHandler}
+    //   error={error}
+    //   id="parent-TimePicker"
+    // />
   );
 };
 
@@ -122,7 +124,7 @@ TimePickerWithInput.defaultProps = {
   inputFormat: 'hh:mm AM',
   outputFormat: 'hh:mm AM',
   inputOptions: {},
-  validators: [Utils.validators.time],
+  // validators: [Utils.validators.time],
 };
 
 TimePickerWithInput.displayName = 'TimePickerWithInput';

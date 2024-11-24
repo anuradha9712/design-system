@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { BaseProps, Validators, Mask } from '@/utils/types';
-import { Input, Utils, HelpText } from '@/index';
+import { Input, HelpText } from '@/index';
 import { InputProps } from '@/index.type';
 import { getDefaultValue } from './utilites';
 
@@ -244,7 +244,8 @@ const InputMask = React.forwardRef<HTMLInputElement, InputMaskProps>((props, for
     e.preventDefault();
     const pastedValue = e.clipboardData?.getData('Text');
     const sameFormat = isSameFormat(pastedValue, pastedValue.length);
-    const isValidDate = Utils.validators.isValid(validators, pastedValue);
+    // const isValidDate = Utils.validators.isValid(validators, pastedValue);
+    const isValidDate = true;
     if (sameFormat && onPaste && isValidDate) {
       onPaste(e, pastedValue);
       setValue(pastedValue);
@@ -287,12 +288,12 @@ const InputMask = React.forwardRef<HTMLInputElement, InputMaskProps>((props, for
         maskedVal[index] = getPlaceholderValue(index, index);
       }
 
-      const enteredValue = maskedVal.slice(0, mask.length).join('');
+      // const enteredValue = maskedVal.slice(0, mask.length).join('');
       if (
         updatedVal !== placeholderChar &&
         updatedVal !== '' &&
-        !updatedVal.includes(placeholderChar) &&
-        Utils.validators.isValid(validators, enteredValue)
+        !updatedVal.includes(placeholderChar)
+        // Utils.validators.isValid(validators, enteredValue)
       ) {
         cursorPosition += insertedStringLength;
       }
@@ -306,19 +307,19 @@ const InputMask = React.forwardRef<HTMLInputElement, InputMaskProps>((props, for
         cursorPosition = newCursorPosition;
       }
 
-      const newValue = maskedVal.slice(0, mask.length).join('');
+      // const newValue = maskedVal.slice(0, mask.length).join('');
       newSelectionPos.current = cursorPosition;
-      if (newValue !== oldValue && Utils.validators.isValid(validators, newValue)) {
-        if (defaultPlaceholderValue === '__:__ _M') {
-          setValue(newValue.toUpperCase());
-          onChange?.(e, newValue.toUpperCase());
-        } else {
-          setValue(newValue);
-          onChange?.(e, newValue);
-        }
-      } else {
-        window.requestAnimationFrame(() => setCursorPosition(newSelectionPos.current));
-      }
+      // if (newValue !== oldValue && Utils.validators.isValid(validators, newValue)) {
+      //   if (defaultPlaceholderValue === '__:__ _M') {
+      //     setValue(newValue.toUpperCase());
+      //     onChange?.(e, newValue.toUpperCase());
+      //   } else {
+      //     setValue(newValue);
+      //     onChange?.(e, newValue);
+      //   }
+      // } else {
+      //   window.requestAnimationFrame(() => setCursorPosition(newSelectionPos.current));
+      // }
     },
     [
       selectionPos.current,

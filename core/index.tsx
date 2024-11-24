@@ -1,4 +1,4 @@
-export * as Utils from './utils';
+// export * as Utils from './utils';
 
 export { Avatar } from './components/atoms/avatar';
 export { AvatarGroup } from './components/atoms/avatarGroup';

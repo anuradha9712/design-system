@@ -23,5 +23,6 @@
       "@/*": ["core/*"]
     }
   },
-  "exclude": ["dist", "build", "node_modules", ".github", ".husky", "docs", "types/types-tests.tsx", "examples"]
+  "include": ["core", "custom-crypto.d.ts"],
+  "exclude": ["dist", "build", "node_modules", ".github", ".husky", "docs", "types/types-tests.tsx", "examples", "node_modules/@types/node/crypto.d.ts"]
 }

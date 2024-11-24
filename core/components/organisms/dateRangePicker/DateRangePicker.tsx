@@ -7,7 +7,7 @@ import { Validators } from '@/utils/types';
 import { Trigger } from './Trigger';
 import { SingleInputTrigger } from './SingleInputTrigger';
 import { getDateInfo, convertToDate, compareDate, translateToString } from '../calendar/utility';
-import { Popover, Utils } from '@/index';
+import { Popover } from '@/index';
 import {
   getCurrentWeek,
   getPreviousWeek,
@@ -136,7 +136,7 @@ export class DateRangePicker extends React.Component<DateRangePickerProps, DateR
     position: 'bottom-start',
     inputFormat: 'mm/dd/yyyy',
     outputFormat: 'mm/dd/yyyy',
-    validators: [Utils.validators.date],
+    // validators: [Utils.validators.date],
     inputOptions: {
       label: 'Date',
     },
@@ -152,10 +152,10 @@ export class DateRangePicker extends React.Component<DateRangePickerProps, DateR
   constructor(props: DateRangePickerProps) {
     super(props);
 
-    const { inputFormat, validators } = props;
+    // const { inputFormat, validators } = props;
 
-    const startDate = convertToDate(props.startDate, inputFormat, validators);
-    const endDate = convertToDate(props.endDate, inputFormat, validators);
+    const startDate = convertToDate(props.startDate);
+    const endDate = convertToDate(props.endDate);
     const { startValue, endValue } = this.getDate(startDate, endDate);
 
     const { startError, endError } = this.getErrors(startDate, endDate);
@@ -178,9 +178,9 @@ export class DateRangePicker extends React.Component<DateRangePickerProps, DateR
 
   componentDidUpdate(prevProps: DateRangePickerProps, prevState: DateRangePickerState) {
     if (prevProps.startDate !== this.props.startDate) {
-      const { inputFormat, validators } = this.props;
+      const { inputFormat } = this.props;
 
-      const d = convertToDate(this.props.startDate, inputFormat, validators);
+      const d = convertToDate(this.props.startDate);
       const val = translateToString(inputFormat, d);
       this.setState({
         startDate: d,
@@ -189,9 +189,9 @@ export class DateRangePicker extends React.Component<DateRangePickerProps, DateR
     }
 
     if (prevProps.endDate !== this.props.endDate) {
-      const { inputFormat, validators } = this.props;
+      const { inputFormat } = this.props;
 
-      const d = convertToDate(this.props.endDate, inputFormat, validators);
+      const d = convertToDate(this.props.endDate);
       const val = translateToString(inputFormat, d);
       this.setState({
         endDate: d,
@@ -375,10 +375,10 @@ export class DateRangePicker extends React.Component<DateRangePickerProps, DateR
         {...rest}
         monthsInView={this.monthsInView}
         rangePicker={true}
-        startDate={convertToDate(startDate, inputFormat, validators)}
-        endDate={convertToDate(endDate, inputFormat, validators)}
-        disabledBefore={convertToDate(disabledBefore, inputFormat, validators)}
-        disabledAfter={convertToDate(disabledAfter, inputFormat, validators)}
+        startDate={convertToDate(startDate)}
+        endDate={convertToDate(endDate)}
+        disabledBefore={convertToDate(disabledBefore)}
+        disabledAfter={convertToDate(disabledAfter)}
         onRangeChange={this.onRangeChangeHandler}
         yearNav={yearNav}
         monthNav={monthNav}

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { InputMask, Row, Column, Label, Utils } from '@/index';
-import { compareDate, getDateInfo, translateToDate } from '../calendar/utility';
+import { Row, Column, Label } from '@/index';
+// import { compareDate, getDateInfo, translateToDate } from '../calendar/utility';
 import { DateRangePickerProps, DateRangePickerState } from './DateRangePicker';
 
 type TriggerProps = {
@@ -12,133 +12,133 @@ type TriggerProps = {
 };
 
 export const SingleInputTrigger = (props: TriggerProps) => {
-  const { inputFormat, inputOptions, validators, state, setState } = props;
+  const { inputOptions } = props;
 
-  const { init, startDate, endDate, startValue, endValue, startError, endError } = state;
+  // const { init, startDate, endDate, startValue, endValue, startError, endError } = state;
 
-  const mask = Utils.masks.rangeDate[inputFormat];
-  const showError = inputOptions.error || (inputOptions.required && (startError || endError) && init);
-  const errorMessage = inputOptions.caption === undefined ? 'Invalid value' : inputOptions.caption;
+  // const mask = Utils.masks.rangeDate[inputFormat];
+  // const showError = inputOptions.error || (inputOptions.required && (startError || endError) && init);
+  // const errorMessage = inputOptions.caption === undefined ? 'Invalid value' : inputOptions.caption;
   const { label } = inputOptions;
-  const { placeholderChar = '_' } = inputOptions;
-  const defaultValue = InputMask.utils.getDefaultValue(mask, placeholderChar).split(' - ');
-  const sValue = startValue || defaultValue[0];
-  const eValue = endValue || defaultValue[1];
-  const inputValidator = (val: string): boolean => {
-    const [startVal, endVal] = val.split(' - ');
+  // const { placeholderChar = '_' } = inputOptions;
+  // // const defaultValue = InputMask.utils.getDefaultValue(mask, placeholderChar).split(' - ');
+  // const sValue = startValue;
+  // const eValue = endValue;
+  // const inputValidator = (): boolean => {
+  //   // const [startVal, endVal] = val.split(' - ');
 
-    return (
-      Utils.validators.isValid(validators, startVal, inputFormat) &&
-      Utils.validators.isValid(validators, endVal, inputFormat)
-    );
-  };
+  //   return true;
+  //     // Utils.validators.isValid(validators, startVal, inputFormat) &&
+  //     // Utils.validators.isValid(validators, endVal, inputFormat)
+    
+  // };
 
-  const onPasteHandler = (_e: React.ClipboardEvent<HTMLInputElement>, val: string) => {
-    const { onPaste } = inputOptions;
+  // const onPasteHandler = (_e: React.ClipboardEvent<HTMLInputElement>, val: string) => {
+  //   const { onPaste } = inputOptions;
 
-    const date = val.split(' - ');
-    const startVal = date[0];
-    const endVal = date[1];
+  //   // const date = val.split(' - ');
+  //   // const startVal = date[0];
+  //   // const endVal = date[1];
 
-    const endD = translateToDate(inputFormat, endVal, validators);
-    const startD = translateToDate(inputFormat, startVal, validators);
+  //   // const endD = translateToDate(inputFormat, endVal, validators);
+  //   // const startD = translateToDate(inputFormat, startVal, validators);
 
-    setState({
-      startDate: startD,
-      endDate: endD,
-      startValue: startVal,
-      endValue: endVal,
-    });
+  //   // setState({
+  //   //   startDate: startD,
+  //   //   endDate: endD,
+  //   //   startValue: startVal,
+  //   //   endValue: endVal,
+  //   // });
 
-    if (onPaste) onPaste(_e, val);
-  };
+  //   if (onPaste) onPaste(_e, val);
+  // };
 
-  const onChangeHandler = (_e: React.ChangeEvent<HTMLInputElement>, val: string) => {
-    const date = val.split(' - ');
-    const startVal = date[0];
-    const endVal = date[1];
+  // const onChangeHandler = (_e: React.ChangeEvent<HTMLInputElement>, val: string) => {
+  //   const date = val.split(' - ');
+  //   const startVal = date[0];
+  //   const endVal = date[1];
 
-    if (startValue !== startVal && startVal && !startVal.includes(placeholderChar)) {
-      const startD = translateToDate(inputFormat, startVal, validators);
+  //   if (startValue !== startVal && startVal && !startVal.includes(placeholderChar)) {
+  //     // const startD = translateToDate(inputFormat, startVal, validators);
 
-      if (startD) {
-        const isEndDateValid = endValue && !endValue.includes(placeholderChar);
+  //     // if (startD) {
+  //     //   const isEndDateValid = endValue && !endValue.includes(placeholderChar);
 
-        setState({
-          startDate: startD,
-          endDate: isEndDateValid ? endDate : undefined,
-        });
+  //     //   setState({
+  //     //     startDate: startD,
+  //     //     endDate: isEndDateValid ? endDate : undefined,
+  //     //   });
 
-        if (endDate) {
-          const { year: eYear, month: eMonth, date: eDate } = getDateInfo(endDate);
-          if (compareDate(startDate, 'more', eYear, eMonth, eDate)) {
-            setState({ endDate: undefined });
-          }
-        }
-      }
-    }
+  //     //   if (endDate) {
+  //     //     const { year: eYear, month: eMonth, date: eDate } = getDateInfo(endDate);
+  //     //     if (compareDate(startDate, 'more', eYear, eMonth, eDate)) {
+  //     //       setState({ endDate: undefined });
+  //     //     }
+  //     //   }
+  //     // }
+  //   }
 
-    if (endValue !== endVal && endVal && !endVal.includes(placeholderChar)) {
-      const endD = translateToDate(inputFormat, endVal, validators);
-      const isStartDateValid = startValue && !startValue.includes(placeholderChar);
+  //   if (endValue !== endVal && endVal && !endVal.includes(placeholderChar)) {
+  //     // const endD = translateToDate(inputFormat, endVal, validators);
+  //     // const isStartDateValid = startValue && !startValue.includes(placeholderChar);
 
-      if (endD) {
-        setState({
-          endDate: endD,
-          startDate: isStartDateValid ? startDate : undefined,
-        });
-      }
-    }
+  //     // if (endD) {
+  //     //   setState({
+  //     //     endDate: endD,
+  //     //     startDate: isStartDateValid ? startDate : undefined,
+  //     //   });
+  //     // }
+  //   }
 
-    setState({
-      startValue: startVal,
-      endValue: endVal,
-    });
-  };
+  //   setState({
+  //     startValue: startVal,
+  //     endValue: endVal,
+  //   });
+  // };
 
-  const getErrorState = (currentVal: string, siblingVal: string) => {
-    const hasNumber = /\d/;
+  // const getErrorState = (currentVal: string, siblingVal: string) => {
+  //   const hasNumber = /\d/;
 
-    if (currentVal && siblingVal && !currentVal.includes(placeholderChar) && siblingVal.includes(placeholderChar)) {
-      return true;
-    } else if (currentVal && hasNumber.test(currentVal) && currentVal.includes(placeholderChar)) {
-      return true;
-    } else if ((currentVal && !hasNumber.test(currentVal)) || !currentVal) {
-      return false;
-    }
+  //   if (currentVal && siblingVal && !currentVal.includes(placeholderChar) && siblingVal.includes(placeholderChar)) {
+  //     return true;
+  //   } else if (currentVal && hasNumber.test(currentVal) && currentVal.includes(placeholderChar)) {
+  //     return true;
+  //   } else if ((currentVal && !hasNumber.test(currentVal)) || !currentVal) {
+  //     return false;
+  //   }
 
-    return null;
-  };
+  //   return null;
+  // };
 
-  const onBlurHandler = (_e: React.ChangeEvent<HTMLInputElement>, val: string) => {
-    setState({
-      init: true,
-    });
+  // const onBlurHandler = (_e: React.ChangeEvent<HTMLInputElement>, val: string) => {
+  //   setState({
+  //     init: true,
+  //   });
 
-    const date = val.split(' - ');
-    const startVal = date[0];
-    const endVal = date[1];
+  //   const date = val.split(' - ');
+  //   const startVal = date[0];
+  //   const endVal = date[1];
 
-    const startErr = getErrorState(startVal, endVal);
-    const endErr = getErrorState(endVal, startVal);
+  //   const startErr = getErrorState(startVal, endVal);
+  //   const endErr = getErrorState(endVal, startVal);
 
-    if (startErr !== null && endErr !== null) {
-      setState({ startError: startErr, endError: endErr });
-    }
+  //   if (startErr !== null && endErr !== null) {
+  //     setState({ startError: startErr, endError: endErr });
+  //   }
 
-    if (!startVal || startVal.includes(placeholderChar)) setState({ startDate: undefined });
-    if (!endVal || endVal.includes(placeholderChar)) setState({ endDate: undefined });
-  };
+  //   if (!startVal || startVal.includes(placeholderChar)) setState({ startDate: undefined });
+  //   if (!endVal || endVal.includes(placeholderChar)) setState({ endDate: undefined });
+  // };
 
-  const onClearHandler = () => {
-    setState({
-      init: true,
-      startDate: undefined,
-      endDate: undefined,
-      yearNav: undefined,
-      monthNav: undefined,
-    });
-  };
+  // const onClearHandler = () => {
+  //   setState({
+  //     init: true,
+  //     startDate: undefined,
+  //     endDate: undefined,
+  //     yearNav: undefined,
+  //     monthNav: undefined,
+  //   });
+  // };
 
   return (
     <Row data-test="DesignSystem-DateRangePicker-SingleInputTrigger">
@@ -148,7 +148,7 @@ export const SingleInputTrigger = (props: TriggerProps) => {
             {label}
           </Label>
         )}
-        <InputMask
+        {/* <InputMask
           icon="events"
           placeholder={`${inputFormat} - ${inputFormat}`}
           {...inputOptions}
@@ -168,7 +168,7 @@ export const SingleInputTrigger = (props: TriggerProps) => {
           caption={showError ? errorMessage : ''}
           validators={[inputValidator]}
           clearOnEmptyBlur={true}
-        />
+        /> */}
       </Column>
     </Row>
   );

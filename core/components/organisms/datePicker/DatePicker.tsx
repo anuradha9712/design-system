@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Calendar, SharedProps } from '../calendar/Calendar';
 import { DateType, DateFormat } from '../calendar/types';
-import { Popover, Utils, Chip } from '@/index';
+import { Popover, Chip } from '@/index';
 import { PopoverProps, InputMaskProps } from '@/index.type';
 import { Validators } from '@/utils/types';
 import { convertToDate, translateToString, compareDate, getDateInfo } from '../calendar/utility';
@@ -112,7 +112,7 @@ export class DatePicker extends React.Component<DatePickerProps, DatePickerState
     position: 'bottom-start',
     inputFormat: 'mm/dd/yyyy',
     outputFormat: 'mm/dd/yyyy',
-    validators: [Utils.validators.date],
+    // validators: [Utils.validators.date],
     inputOptions: {},
     closeOnSelect: true,
   };
@@ -120,9 +120,9 @@ export class DatePicker extends React.Component<DatePickerProps, DatePickerState
   constructor(props: DatePickerProps) {
     super(props);
 
-    const { inputFormat, validators } = props;
+    // const { inputFormat, validators } = props;
 
-    const date = convertToDate(props.date, inputFormat, validators);
+    const date = convertToDate(props.date);
     const error = this.getError(date);
 
     this.state = {
@@ -135,9 +135,9 @@ export class DatePicker extends React.Component<DatePickerProps, DatePickerState
 
   componentDidUpdate(prevProps: DatePickerProps, prevState: DatePickerState) {
     if (prevProps.date !== this.props.date) {
-      const { inputFormat, validators } = this.props;
+      // const { inputFormat, validators } = this.props;
 
-      const d = convertToDate(this.props.date, inputFormat, validators);
+      const d = convertToDate(this.props.date);
       this.setState({
         date: d,
       });
@@ -237,9 +237,9 @@ export class DatePicker extends React.Component<DatePickerProps, DatePickerState
     const { months } = config;
     const todayDate = new Date(Date.now());
     const todayMonthAndDate = `${months[todayDate.getMonth()]} ${todayDate.getDate()}`;
-    const currDate = convertToDate(date, inputFormat, validators);
-    const dateDisabledBefore = convertToDate(disabledBefore, inputFormat, validators);
-    const dateDisabledAfter = convertToDate(disabledAfter, inputFormat, validators);
+    const currDate = convertToDate(date);
+    const dateDisabledBefore = convertToDate(disabledBefore);
+    const dateDisabledAfter = convertToDate(disabledAfter);
 
     const isSameDay = (date1: Date, date2: Date) => {
       return (
@@ -300,7 +300,7 @@ export class DatePicker extends React.Component<DatePickerProps, DatePickerState
   }
 
   render() {
-    const { position, withInput, inputFormat, inputOptions, validators, popoverOptions } = this.props;
+    const { position, withInput, popoverOptions } = this.props;
 
     const { open } = this.state;
 
@@ -309,11 +309,11 @@ export class DatePicker extends React.Component<DatePickerProps, DatePickerState
         <Popover
           trigger={
             <Trigger
-              inputFormat={inputFormat}
-              inputOptions={inputOptions}
-              validators={validators}
-              state={this.state}
-              setState={this.setState.bind(this)}
+              // inputFormat={inputFormat}
+              // inputOptions={inputOptions}
+              // validators={validators}
+              // state={this.state}
+              // setState={this.setState.bind(this)}
             />
           }
           {...popoverOptions}
