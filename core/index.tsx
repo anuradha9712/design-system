@@ -102,4 +102,6 @@ export { AIIconButton } from './ai-components/AIIconButton';
 export { AIChip } from './ai-components/AIChip';
 export { AIResponse } from './ai-components/AIResponse';
 
+export { ChatBubble } from './components/molecules/chatBubble';
+
 export { version } from '../package.json';
