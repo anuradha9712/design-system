@@ -378,6 +378,10 @@ interface SharedTableProps extends BaseProps {
    * Defines position of checkbox in the row
    */
   checkboxAlignment?: 'top' | 'center' | 'bottom';
+  /**
+   * Enable row virtualization
+   */
+  enableRowVirtualization?: boolean;
 }
 
 export type SyncTableProps = SharedTableProps & TableSyncProps;
