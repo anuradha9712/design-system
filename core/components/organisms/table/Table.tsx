@@ -556,6 +556,47 @@ export class Table extends React.Component<TableProps, TableState> {
     }
   };
 
+  updateVirtualData = ({ page, pageSize }) => {
+    const { sortingList, filterList, searchTerm } = this.state;
+    const { fetchData } = this.props;
+
+    console.log(
+      'virtual data',
+      'page',
+      page,
+      'pageSize',
+      pageSize,
+      'sortinglist',
+      sortingList,
+      'filterList',
+      filterList,
+      'searchTerm',
+      searchTerm,
+      'fetchData',
+      fetchData
+    );
+    const opts: FetchDataOptions = {
+      page,
+      pageSize,
+      sortingList,
+      filterList,
+      searchTerm,
+    };
+
+    if (fetchData) {
+      fetchData(opts).then((res: any) => {
+        console.log('res', res);
+        console.log('res data-> ', res.data);
+        const newList = [...this.state.data, ...res.data];
+        console.log('<<<<newList>>>>', newList);
+        this.setState({
+          data: newList,
+          totalRecords: newList.length,
+        });
+      });
+    }
+  };
+
   updateDataFn = () => {
     const { fetchData, pageSize, withPagination, data: dataProp, onSearch, uniqueColumnName } = this.props;
 
@@ -571,7 +612,7 @@ export class Table extends React.Component<TableProps, TableState> {
       searchTerm,
     };
 
-    if (!this.props.withPagination) {
+    if (!this.props.withPagination && !this.props.enableRowVirtualization) {
       delete opts.page;
       delete opts.pageSize;
     }
@@ -978,6 +1019,7 @@ export class Table extends React.Component<TableProps, TableState> {
             errorTemplate={errorTemplate && errorTemplate({ errorType: this.state.errorType })}
             onRowClick={onRowClick}
             showFilters={filterPosition === 'GRID'}
+            updateVirtualData={this.updateVirtualData}
           />
         </div>
         {withPagination && !this.state.loading && !this.state.error && totalPages > 1 && (
