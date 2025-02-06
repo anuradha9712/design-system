@@ -139,17 +139,34 @@ const customCode = `
       expanded
     } = props;
 
+    const noteList = ['Call Note', 'Visit note', 'Generic note', 'Ad-hoc task'];
+
+    /*
+      // style.css
+        .SubList-wrapper {
+          margin-left: 40px;
+          background-color: #fcfafa;
+        }
+    */
+
     if (rowIndex % 2) {
       return false;
     }
+
     return (
       <div>
-        <Divider className='ml-5' />
-        <List
-          loading={loading}
-          schema={schema}
-          data={[data]}
-        />
+        <Divider />
+          
+        <Listbox type="description" className="SubList-wrapper mr-6 my-5 w-75">
+          {noteList.map((note, key) => {
+            return (
+              <Listbox.Item key={key} className="justify-content-between">
+                <Text>{note}</Text>
+                <Switch defaultChecked={true} size="tiny" />
+              </Listbox.Item>
+            );
+          })}
+        </Listbox>
       </div>
     );
   }
