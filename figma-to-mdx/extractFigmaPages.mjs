@@ -14,7 +14,7 @@ async function fetchFigmaPages() {
     });
 
     const pages = extractPages(response.data.document);
-    console.log('Pages:', pages);
+    // console.log('Pages:', pages);
 
     // Write the pages to a file
     fs.writeFileSync('figmaPages.txt', pages.join('\n'));

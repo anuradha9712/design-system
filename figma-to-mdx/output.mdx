@@ -6,328 +6,153 @@ Avatars
 
 Avatar is used to identify an entity through display pictures, icons or their initials.
 
-Usage
-
-Code
-
-Tab 3
-
-Tab 4
-
-Tab 5
-
-Appearances
+### Appearances
 
 Avatar comes in 9 appearances -
 
-zoom_in
+<Preview name="" />
 
-zoom_out
-
-refresh
-
-Show code
-
-refresh
-
-Story: Same as website
-
-Shapes
+### Shapes
 
 Avatar comes in 2 shapes - round and square.
 
-Round Avatar
+#### Round Avatar
 
 Round avatar represents a single entity i.e a user, bot or app.
 
-Image: 01 Round Avatar
+![]()
+<Caption></Caption>
 
-Caption: A round avatar
-
-Square Avatar
+#### Square Avatar
 
 Square avatar represents a group of entities or organization.
 
-Image: 02 Square Avatar
+![]()
+<Caption></Caption>
 
-Caption: A square avatar
-
-Sizes
+### Sizes
 
 Avatar comes in 2 sizes - small and regular.
 
-Story: 03 Sizes
+![]()
+<Caption></Caption>
 
-Caption: [Left] Regular size vs [Right] Small size
-
-States
+### States
 
 Avatar comes in 3 states - default, focus and disabled.
 
-Image: 04 States
+![]()
+<Caption></Caption>
 
-Caption: Default, Focus and Disabled states in Avatar
+### Variants
 
-Variants
+#### With Initials
 
-With Initials
+![]()
+<Caption></Caption>
 
-Image: 05 With initials
+#### With Icon
 
-Caption: Avatars with initials
+![]()
+<Caption></Caption>
 
-With Icon
+#### With Image
 
-Image: 06 With icon
+![]()
+<Caption></Caption>
 
-Caption: Avatars with icon
+### Structure
 
-With Image
+#### Round Avatar
 
-Image: 07 With image
+![]()
+<Caption></Caption>
 
-Caption: Avatars with image
+<table></table>
 
-Structure
+#### Square Avatar
 
-Round Avatar
+![]()
+<Caption></Caption>
 
-Image: 08 Round avatar - Structure
+<table></table>
 
-Caption: Structure of round avatar
+### Configurations
 
-Property
+#### Round Avatar
 
-Value(s)
+<table></table>
 
-Height
+#### Square Avatar
 
-24px (Small)
-32px (Regular)
+<table></table>
 
-Width
+### Usage
 
-24px (Small)
-32px (Regular)
-
-Square Avatar
-
-Image: 09 Square avatar - Structure
-
-Caption: Structure of square avatar
-
-Property
-
-Value(s)
-
-Height
-
-24px (Small)
-32px (Regular)
-
-Width
-
-24px (Small)
-32px (Regular)
-
-Corner radius
-
-4 px
-
-Configurations
-
-Round Avatar
-
-Property
-
-Value(s)
-
-Default value
-
-Appearance
-
-Jal
-Stone
-Neem
-Haldi
-Mirch
-Tawak
-Nimbu
-Neel 
-Jamun
-
--
-
-Size
-
-Small
-Regular
-
-Regular
-
-Image
-
-Image sub-component
-
--
-
-Icon
-
-Icon sub-component
-
--
-
-Presence (Optional)
-
-Active
-Away
-
-Active
-
-Status - Regular size (Optional)
-
-<Image/Icon> subcomponent
-
--
-
-First name
-
-<first_name>
-
--
-
-Last name
-
-<last_name>
-
--
-
-Square Avatar
-
-Property
-
-Value(s)
-
-Default value
-
-Appearance
-
-Jal
-Stone
-Neem
-Haldi
-Mirch
-Tawak
-Nimbu
-Neel 
-Jamun
-
--
-
-Size
-
-Small
-Regular
-
-Regular
-
-Image
-
-Image sub-component
-
--
-
-Icon
-
-Icon sub-component
-
--
-
-First name
-
-<first_name>
-
--
-
-Last name
-
-<last_name>
-
--
-
-Usage
-
-Color Assignment
+#### Color Assignment
 
 The background color of an avatar should be generated dynamically in such a way that at the time of its creation a random color (from the available options) is assigned. Once assigned, the color should stay the same as long as that particular avatar is in use.
 For example, an avatar generated for a user - Franklin Clinton, can look like following and it should look the same wherever it is used.
 
-Image: 10 Color Assignment
+![]()
+<Caption></Caption>
 
-Caption: Color assignment in avatars
-
-Displaying Name
+#### Displaying Name
 
 Since an avatar can either show an image, icon or the initials, there should be an option to show the full name of the entity. This is achieved by hovering over on the avatar to display a tooltip containing the full name.
 
-Image: 11 Displaying name
+![]()
+<Caption></Caption>
 
-Caption: Hovering over an avatar
-
-Square Avatar vs Round Avatar Group
+#### Square Avatar vs Round Avatar Group
 
 Square avatars and round avatar group are both used to group entities. Square avatar is ideal for presenting a group as a unified entity, while round avatar group facilitates an interactive and visually cohesive representation of individual members within the group.
 
-Fallback Hierarchy
+#### Fallback Hierarchy
 
 This is the fallback order defined for avatars:
 
-Image: 12 Fallback Hierarchy
+![]()
+<Caption></Caption>
 
-Caption: Fallback Hierarchy
-
-Avoid Square Avatar with Icon Button
+#### Avoid Square Avatar with Icon Button
 
 It is recommended to not use square avatar in conjunction with an icon button as users may mistake the avatar for a button.
 
-Image: 13 Square avatar with Icon button
-Caption: Not able to identify the square avatar clearly when used with icon button
+![]()
+<Caption></Caption>
 
-Using PNG and SVG in Avatar
+#### Using PNG and SVG in Avatar
 
 It is recommended to use stone light or a suitable background color that ensures enough contrast between the image and its backdrop when using PNG or SVG formats without a background. 
 
-Image: 14 Using PNG and SVG in Avatar
+![]()
+<Caption></Caption>
 
-Caption: Using PNG and SVG in Avatar
-
-Appending Suffix to the Name of an Entity
+#### Appending Suffix to the Name of an Entity
 
 In an avatar group, you can add a suffix to an entity's name that appears in tooltips and popovers. 
 
 Note: Adding a suffix for disabled states is recommended to keep users informed.
 
-Image: 15 Appending a suffix to the name of an entity
+![]()
+<Caption></Caption>
 
-Caption: Appending a suffix to the name of the disabled entity
-
-Presence in Round Avatar
+#### Presence in Round Avatar
 
 Regular and small round avatars can include presence indicators that visually represent the user’s availability , such as "active" and "away".
 
 Note: Disabled avatars can’t have a presence indicator.
 
-Image: 16 Presence in Round Avatar
+![]()
+<Caption></Caption>
 
-Caption: Presence in Round Avatar 
-
-Status in Regular Round Avatar 
+#### Status in Regular Round Avatar 
 
 Regular round avatars can include status indicators to represent user-defined or system-determined messages, providing context about the user's current activity or situation. A tooltip should be used to define the status.
 
 Note: The status is a customizable slot component that supports replacing it with an image or icon, ensure the icon size is accessible.
 
-Image: 17 Status in Round Avatar
-
-Caption: Presence in Round Avatar 
+![]()
+<Caption></Caption>
 

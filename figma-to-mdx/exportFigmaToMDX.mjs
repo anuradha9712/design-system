@@ -17,7 +17,7 @@ async function fetchFigmaContent() {
 
     const page = findPage(response.data.document, PAGE_NAME);
     if (page) {
-      console.log(`Page "${PAGE_NAME}" found:`, page);
+      // console.log(`Page "${PAGE_NAME}" found:`, page);
       const frame = findFrame(page, FRAME_ID);
       if (frame) {
         const mdxContent = formatToMDX(frame);
@@ -64,26 +64,39 @@ function findFrame(node, frameId) {
   return null;
 }
 
-// function formatToMDX(frame) {
-//   let mdxContent = `---\ntitle: ${frame.name}\n---\n\n`;
-//   console.log('frame.children>>> ', frame.children[0].children);
-//   frame.children.forEach((child) => {
-//     if (child.type === 'TEXT') {
-//       mdxContent += `${child.characters}\n\n`;
-//     }
-//   });
-//   return mdxContent;
-// }
-
 function formatToMDX(frame) {
   let mdxContent = `---\ntitle: ${frame.name}\n---\n\n`;
 
+  console.log('node text>>>>>>>>>>>>> ', frame);
+  fs.writeFileSync('node-layer.json', JSON.stringify(frame, null, 2));
   function traverseChildren(node) {
     if (node.type === 'TEXT') {
-      mdxContent += `${node.characters}\n\n`;
+      if (node.style.fontSize === 28 && node.style.fontWeight === 400) {
+        mdxContent += `### ${node.characters}\n\n`;
+      } else if (node.style.fontSize === 20 && node.style.fontWeight === 600) {
+        mdxContent += `#### ${node.characters}\n\n`;
+      } else if (node.style.fontSize === 16 && node.style.fontWeight === 700) {
+        mdxContent += `##### ${node.characters}\n\n`;
+      } else if (node.style.fontSize === 14 && node.style.fontWeight === 400) {
+        mdxContent += `${node.characters}\n\n`;
+      } else {
+        mdxContent += `${node.characters}\n\n`;
+      }
     }
-    if (node.children) {
+    if (
+      node.children &&
+      node.name !== '_Documentation_helpers' &&
+      node.name !== '_Example Template' &&
+      node.name !== '03 Table as a list- Template' &&
+      node.name !== 'Tabs'
+    ) {
       node.children.forEach(traverseChildren);
+    } else if (node.children && node.name === '_Documentation_helpers') {
+      mdxContent += `<Preview name="" />\n\n`;
+    } else if (node.children && node.name === '_Example Template') {
+      mdxContent += `![]()\n<Caption></Caption>\n\n`;
+    } else if (node.children && node.name === '03 Table as a list- Template') {
+      mdxContent += `<table></table>\n\n`;
     }
   }
 
