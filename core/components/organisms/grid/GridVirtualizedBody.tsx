@@ -134,9 +134,9 @@ export const GridVirtualizedBody = (props: GridBodyProps) => {
 
   return (
     <div className={styles['Grid-body']}>
-      {<ProgressBar state="indeterminate" className={styles['Grid-progress-bar']} size="small" />}
+      {isLoadingMore && <ProgressBar state="indeterminate" className={styles['Grid-progress-bar']} size="small" />}
       {memoizedVirtualScroll}
-      {<ProgressBar className="position-absolute bottom-0" state="indeterminate" size="small" />}
+      {isLoadingMore && <ProgressBar className="position-absolute bottom-0" state="indeterminate" size="small" />}
     </div>
   );
 };
