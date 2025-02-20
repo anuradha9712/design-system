@@ -267,7 +267,7 @@ export interface GridProps extends BaseProps {
    * Shows checkbox in the left most column
    */
   withCheckbox?: boolean;
-  /***
+  /**
    * Defines position of checkbox in the row
    */
   checkboxAlignment?: 'top' | 'center' | 'bottom';

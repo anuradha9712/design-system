@@ -1,7 +1,7 @@
 import * as React from 'react';
 import loaderSchema from '@/components/organisms/grid/__stories__/_common_/loaderSchema';
-import data from '@/components/organisms/grid/__stories__/_common_/infiniteList.ts';
-import schema from '@/components/organisms/grid/__stories__/_common_/schema';
+import data from '@/components/organisms/grid/__stories__/_common_/infiniteData/infiniteList';
+import schema from '@/components/organisms/grid/__stories__/_common_/infiniteData/infiniteSchema';
 import { Card, Table, Button } from '@/index';
 import { AsyncTable, SyncTable } from '../_common_/types';
 import { action } from '@/utils/action';
@@ -20,9 +20,7 @@ export const syncTable = () => {
       <Card className="h-100 overflow-hidden">
         <Table
           loaderSchema={loaderSchema}
-          data={[...Array(100)].map((_, index) => {
-            return data[index % 10];
-          })}
+          data={data}
           schema={schema}
           withHeader={true}
           withCheckbox={true}
@@ -46,8 +44,7 @@ export const syncTable = () => {
                 d.lastName.toLowerCase().match(searchTerm.toLowerCase())
             );
           }}
-          withPagination={true}
-          pageSize={50}
+          withPagination={false}
           onPageChange={(newPage) => action(`on-page-change:- ${newPage}`)()}
         />
       </Card>
@@ -60,11 +57,17 @@ const customCode = `() => {
 
   const schema = [
     {
+      name: 'empID',
+      displayName: 'ID',
+      resizable: true,
+      sorting: false,
+      width: '1%',
+    },
+    {
       name: 'name',
       displayName: 'Name',
-      width: '40%',
+      width: '24%',
       resizable: true,
-      separator: true,
       tooltip: true,
       translate: a => ({
         title: \`\${a.firstName} \${a.lastName}\`,
@@ -97,7 +100,7 @@ const customCode = `() => {
     {
       name: 'email',
       displayName: 'Email',
-      width: 350,
+      width: '30%',
       resizable: true,
       sorting: false,
       cellType: 'WITH_META_LIST'
@@ -105,7 +108,7 @@ const customCode = `() => {
     {
       name: 'gender',
       displayName: 'Gender',
-      width: 200,
+      width: '15%',
       resizable: true,
       comparator: (a, b) => a.gender.localeCompare(b.gender),
       cellType: 'STATUS_HINT',
@@ -127,7 +130,7 @@ const customCode = `() => {
     {
       name: 'icon',
       displayName: 'Icon',
-      width: 100,
+      width: '10%',
       resizable: true,
       align: 'center',
       cellType: 'ICON',
@@ -139,7 +142,7 @@ const customCode = `() => {
     {
       name: 'customCell',
       displayName: 'Custom Cell',
-      width: 200,
+      width: '20%',
       resizable: true,
       cellType: 'WITH_META_LIST',
       sorting: false,
