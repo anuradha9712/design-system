@@ -1,6 +1,6 @@
 import * as React from 'react';
 import loaderSchema from '@/components/organisms/grid/__stories__/_common_/loaderSchema';
-import data from '@/components/organisms/grid/__stories__/_common_/data';
+import data from '@/components/organisms/grid/__stories__/_common_/infiniteList.ts';
 import schema from '@/components/organisms/grid/__stories__/_common_/schema';
 import { Card, Table, Button } from '@/index';
 import { AsyncTable, SyncTable } from '../_common_/types';

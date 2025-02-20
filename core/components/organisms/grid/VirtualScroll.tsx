@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { BaseProps } from '@/utils/types';
 
-export const isInView = (container: HTMLElement, element: Element) => {
+export const isElementInView = (container: HTMLElement, element: Element) => {
   const containerTop = container.offsetTop;
   const elementRect = element.getBoundingClientRect();
   const elementTop = elementRect.top;
@@ -57,7 +57,6 @@ const VirtualScroll = (props: VirtualScrollProps) => {
 
   const updateOffset = useCallback(
     (prevOffset) => {
-      console.log('iiinside updateOffset', lastScrollTop, 'totalLength', totalLength);
       const offsetDiff = prevOffset - offset;
       if (listRef.current) {
         const el = listRef.current as HTMLElement;
@@ -68,7 +67,7 @@ const VirtualScroll = (props: VirtualScrollProps) => {
         const start = Math.min(offset, buffer);
         const end = start + offsetDiff;
         for (let i = Math.min(items.length, end) - 1; i >= start; i--) {
-          const inView = isInView(el, items[i]);
+          const inView = isElementInView(el, items[i]);
           if (inView) {
             currOffset--;
             const rowHeight = items[i].clientHeight;
@@ -112,7 +111,7 @@ const VirtualScroll = (props: VirtualScrollProps) => {
           if (offset < totalLength - length) {
             let heightAdded = 0;
             for (let i = start; i < items.length; i++) {
-              const inView = isInView(el, items[i]);
+              const inView = isElementInView(el, items[i]);
               const rowHeight = items[i].clientHeight;
               if (!inView) {
                 heightAdded += rowHeight;
@@ -154,7 +153,6 @@ const VirtualScroll = (props: VirtualScrollProps) => {
         // Check if user has scrolled to the threshold
         if (hasEndReached || hasThresholdReached) {
           if (!endReached.current && fetchNewData) {
-            console.log('>>> aaThreshold reached:', loadMoreThreshold);
             endReached.current = true;
             fetchNewData();
           }
