@@ -1,21 +1,33 @@
 import * as React from 'react';
 import loaderSchema from '@/components/organisms/grid/__stories__/_common_/loaderSchema';
 import data from '@/components/organisms/grid/__stories__/_common_/data';
-import { Card, Table } from '@/index';
+import { Card, Table, Button } from '@/index';
 import { AsyncTable, SyncTable } from './_common_/types';
 import { fetchData } from '@/components/organisms/grid/__stories__/_common_/fetchData';
 import { action } from '@/utils/action';
 
 export const asyncTable = () => {
+  const selectionActionRenderer = (selectedData, selectAll) => {
+    action('selectedData', selectedData, 'selectAll', selectAll)();
+    return (
+      <div className="d-flex align-items-center">
+        <Button size="tiny" className="mr-4">
+          Delete
+        </Button>
+        <Button size="tiny">Export</Button>
+      </div>
+    );
+  };
+
   return (
     <div>
       <Card className="h-100 overflow-hidden">
         <Table
           loaderSchema={loaderSchema}
-          uniqueColumnName="firstName"
           fetchData={fetchData}
           withHeader={true}
           withCheckbox={true}
+          uniqueColumnName="firstName"
           onSelect={(rowIndex, selected, selectedList, selectAll) =>
             action(
               `on-select:- rowIndex: ${rowIndex} selected: ${selected} selectedList: ${JSON.stringify(
@@ -26,6 +38,7 @@ export const asyncTable = () => {
           headerOptions={{
             withSearch: true,
             allowSelectAll: true,
+            selectionActionRenderer,
           }}
           withPagination={true}
           pageSize={5}
@@ -103,6 +116,7 @@ const customCode = `
   };
 
   const data = ${JSON.stringify(data.slice(0, 10), null, 4)};
+  const [formattedData, setFormattedData] = React.useState(data);
 
   const schema = [
     {
@@ -227,6 +241,7 @@ const customCode = `
     const filteredData = filterData(schema, data, filterList);
     const searchedData = filteredData.filter(d => onSearch(d, searchTerm));
     const sortedData = sortData(schema, searchedData, sortingList);
+    setFormattedData(sortedData);
 
     if (page && pageSize) {
       return new Promise(resolve => {
@@ -258,16 +273,36 @@ const customCode = `
 
   const loaderSchema = ${JSON.stringify(loaderSchema, null, 4)};
 
+  const onDataExport = (data) => {
+    console.log("Exporting data", data);
+  }
+
+  const globalActionTrigger = (data) => {
+    return (<Button onClick={() => onDataExport(data)}>Export</Button>);
+  } 
+
+  const selectionActionRenderer = (selectedData, selectAll) => {
+    console.log('selectedData in output', selectedData, 'selectAll', selectAll);
+    return (
+      <div className="d-flex align-items-center">
+        <Button size="tiny" className="mr-4">Delete</Button>
+        <Button size="tiny">Export</Button>
+      </div>
+    )
+  }
+
   return (
     <div>
       <Card className="h-100 overflow-hidden">
         <Table
           loaderSchema={loaderSchema}
           fetchData={fetchData}
-          uniqueColumnName="firstName"
           withHeader={true}
+          uniqueColumnName="firstName"
           headerOptions={{
+            selectionActionRenderer,
             withSearch: true,
+            globalActionRenderer : globalActionTrigger,
             allowSelectAll: true,
           }}
           withCheckbox={true}
@@ -283,15 +318,15 @@ const customCode = `
 `;
 
 export default {
-  title: 'Layout/Table/Async Table',
+  title: 'Components/Table/Async Table',
   component: Table,
   parameters: {
     docs: {
       docPage: {
         customCode,
+        title: 'Async Table',
         props: {
           components: { AsyncTable, SyncTable },
-          exclude: ['showHead'],
         },
       },
     },
