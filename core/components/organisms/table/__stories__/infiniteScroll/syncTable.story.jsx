@@ -3,7 +3,7 @@ import loaderSchema from '@/components/organisms/grid/__stories__/_common_/loade
 import data from '@/components/organisms/grid/__stories__/_common_/data';
 import schema from '@/components/organisms/grid/__stories__/_common_/schema';
 import { Card, Table, Button } from '@/index';
-import { AsyncTable, SyncTable } from './_common_/types';
+import { AsyncTable, SyncTable } from '../_common_/types';
 import { action } from '@/utils/action';
 
 export const syncTable = () => {
@@ -56,13 +56,7 @@ export const syncTable = () => {
 };
 
 const customCode = `() => {
-  const data = ${JSON.stringify(
-    [...Array(100)].map((_, index) => {
-      return data[index % 10];
-    }),
-    null,
-    4
-  )};
+  const data = ${JSON.stringify(data, null, 4)};
 
   const schema = [
     {
@@ -200,8 +194,7 @@ const customCode = `() => {
           }}
           withCheckbox={true}
           onSelect={(rowIndex, selected, selectedList, selectAll) => console.log(\`on-select:- rowIndex: \${rowIndex} selected: \${selected} selectedList: \${JSON.stringify(selectedList)} selectAll: \${selectAll}\`)}
-          withPagination={true}
-          pageSize={50}
+          withPagination={false}
           onPageChange={newPage => console.log(\`on-page-change:- \${newPage}\`)}
         />
       </Card>
@@ -211,7 +204,7 @@ const customCode = `() => {
 `;
 
 export default {
-  title: 'Components/Table/Sync Table',
+  title: 'Components/Table/Infinite Scroll/Sync Table',
   component: Table,
   parameters: {
     docs: {
