@@ -4,7 +4,7 @@ import { GridHead } from './GridHead';
 import { GridBody } from './GridBody';
 import { HeaderCellRendererProps } from './Cell';
 import { sortColumn, pinColumn, hideColumn, moveToIndex, getSchema } from './utility';
-import { BaseProps, extractBaseProps } from '@/utils/types';
+import { BaseProps } from '@/utils/types';
 import { NestedRowProps } from './GridNestedRow';
 import classNames from 'classnames';
 import { GridProvider } from './GridContext';
@@ -506,8 +506,6 @@ export class Grid extends React.Component<GridProps, GridState> {
   };
 
   render() {
-    const baseProps = extractBaseProps(this.props);
-
     const { init, prevPageInfo } = this.state;
 
     const { type, size, showHead, className, page, loading, loaderSchema } = this.props;
@@ -526,7 +524,7 @@ export class Grid extends React.Component<GridProps, GridState> {
     return (
       <div
         className={classes}
-        {...baseProps}
+        data-test={this.props['data-test'] || 'DesignSystem-Grid'}
         ref={(el) => {
           this.gridRef = el;
         }}
