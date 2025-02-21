@@ -7,16 +7,19 @@ import { GridProps } from '@/index.type';
 import VirtualScroll from './VirtualScroll';
 import { ProgressBar } from '@/index';
 
-export interface GridBodyProps {
+export interface GridVirtualBodyProps {
   schema: Schema;
   onSelect: onSelectFn;
   prevPageInfo: GridState['prevPageInfo'];
   updatePrevPageInfo: updatePrevPageInfoFunction;
-  virtualScrollOptions: GridProps['virtualScrollOptions'];
+  virtualRowOptions: GridProps['virtualRowOptions'];
+  preFetchOptions: GridProps['preFetchOptions'];
+  enablePreFetch?: GridProps['enablePreFetch'];
+  onScroll?: GridProps['onScroll'];
   updateVirtualData: GridProps['updateVirtualData'];
 }
 
-export const GridVirtualizedBody = (props: GridBodyProps) => {
+export const GridVirtualizedBody = (props: GridVirtualBodyProps) => {
   const context = React.useContext(GridContext);
 
   const { data, ref, loading, error, withPagination, page, pageSize, totalRecords, errorTemplate, size } = context;
@@ -25,13 +28,25 @@ export const GridVirtualizedBody = (props: GridBodyProps) => {
     return errorTemplate ? (typeof errorTemplate === 'function' ? errorTemplate({}) : errorTemplate) : null;
   }
 
-  const { schema, prevPageInfo, updatePrevPageInfo, onSelect, virtualScrollOptions, updateVirtualData } = props;
+  const {
+    schema,
+    prevPageInfo,
+    updatePrevPageInfo,
+    onSelect,
+    virtualRowOptions,
+    preFetchOptions,
+    enablePreFetch,
+    onScroll,
+    updateVirtualData,
+  } = props;
 
-  const { preFetchRows, buffer, visibleRows, loadMoreThreshold, onScroll } = virtualScrollOptions;
+  const { buffer, visibleRows } = virtualRowOptions;
 
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [hasMoreData, setHasMoreData] = React.useState(true);
+  const endReached = React.useRef(false);
+  const { fetchRowsCount, fetchThreshold } = preFetchOptions;
 
   // const currentPage = React.useRef(1);
 
@@ -59,8 +74,8 @@ export const GridVirtualizedBody = (props: GridBodyProps) => {
   }, []);
 
   React.useEffect(() => {
-    if (data.length === preFetchRows) {
-      console.log('>>>bbbb aaaa Fetching next rows', data.length);
+    if (data.length === fetchRowsCount) {
+      console.log('>>>bbbb aaaa Fetching next rows', data.length, data);
       fetchNextRows();
     }
   }, [data]);
@@ -74,6 +89,8 @@ export const GridVirtualizedBody = (props: GridBodyProps) => {
     : withPagination
     ? Math.min(totalRecords, pageSize)
     : totalRecords;
+
+  console.log('dataLength>>', dataLength, 'data', data);
 
   const renderRow = React.useCallback(
     (rowIndex: number, item?: object) => {
@@ -98,13 +115,20 @@ export const GridVirtualizedBody = (props: GridBodyProps) => {
   };
 
   const fetchNextRows = React.useCallback(async () => {
-    console.log('>>>aaa Fetching next rows');
+    console.log('>>>aaa Fetching next rows currentPage', currentPage, 'prevData', data);
+    const {
+      fetchRowsCount,
+      // fetchNewData
+    } = preFetchOptions || {};
+
+    // if (fetchNewData && !isLoadingMore && hasMoreData) {
     if (updateVirtualData && !isLoadingMore && hasMoreData) {
       setIsLoadingMore(true);
       try {
-        // const dataList = await updateVirtualData({ page: currentPage.current + 1, preFetchRows });
-        const dataList = await updateVirtualData({ page: currentPage + 1, preFetchRows });
-        if (dataList.length === 0) {
+        // const dataList = await fetchNewData({ page: currentPage.current + 1, fetchRowsCount });
+        // const dataList = await fetchNewData({ page: currentPage + 1, rowsCount: fetchRowsCount });
+        const dataList = await updateVirtualData?.({ page: currentPage + 1, rowsCount: fetchRowsCount });
+        if (dataList?.length === 0) {
           setHasMoreData(false);
         }
         setCurrentPage((prevPage) => prevPage + 1);
@@ -113,7 +137,40 @@ export const GridVirtualizedBody = (props: GridBodyProps) => {
         setIsLoadingMore(false);
       }
     }
-  }, [updateVirtualData, isLoadingMore, hasMoreData, currentPage, preFetchRows]);
+  }, [isLoadingMore, hasMoreData, currentPage, fetchRowsCount]);
+
+  const thresholdMapper: Record<typeof fetchThreshold, number> = {
+    early: 0.5,
+    balanced: 0.75,
+    lazy: 0.9,
+    'at-end': 0,
+  };
+
+  const onScrollHandler = (event: Event, listRef: HTMLElement) => {
+    if (enablePreFetch && preFetchOptions && !withPagination) {
+      const { fetchThreshold } = preFetchOptions;
+
+      const { scrollTop, scrollHeight, clientHeight } = listRef;
+
+      const hasEndReached = fetchThreshold === 'at-end' && scrollTop + clientHeight >= scrollHeight;
+      const hasThresholdReached =
+        fetchThreshold !== 'at-end' && scrollTop + clientHeight >= scrollHeight * thresholdMapper[fetchThreshold];
+
+      // Check if user has scrolled to the threshold
+      if (hasEndReached || hasThresholdReached) {
+        if (!endReached.current) {
+          endReached.current = true;
+          fetchNextRows();
+        }
+      } else if (!hasEndReached && !hasThresholdReached) {
+        endReached.current = false;
+      }
+    }
+
+    if (onScroll) {
+      onScroll(event);
+    }
+  };
 
   const memoizedVirtualScroll = React.useMemo(
     () => (
@@ -124,12 +181,20 @@ export const GridVirtualizedBody = (props: GridBodyProps) => {
         minItemHeight={minRowHeight[size]}
         totalLength={dataLength}
         renderItem={renderRow}
-        onScroll={onScroll}
-        loadMoreThreshold={loadMoreThreshold}
-        fetchNewData={fetchNextRows}
+        onScroll={onScrollHandler}
+        // enablePreFetch={enablePreFetch}
+        // preFetchOptions={preFetchOptions}
+        // fetchThreshold={fetchThreshold}
+        // fetchNewData={fetchNextRows}
       />
     ),
-    [dataLength, renderRow, fetchNextRows, minRowHeight, size]
+    [
+      dataLength,
+      renderRow,
+      // fetchNextRows,
+      minRowHeight,
+      size,
+    ]
   );
 
   return (

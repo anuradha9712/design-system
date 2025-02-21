@@ -157,33 +157,59 @@ export type GridSize = 'comfortable' | 'standard' | 'compressed' | 'tight';
 export type GridType = 'resource' | 'data';
 export type Data = RowData[];
 export type Schema = ColumnSchema[];
-export type thresholdTypes = 'early' | 'balanced' | 'lazy' | 'near-end';
+export type thresholdTypes = 'early' | 'balanced' | 'lazy' | 'at-end';
 
-export interface VirtualScrollProps {
-  /**
-   * Number of rows to Pre-fetch at a time in case of async table
-   */
-  preFetchRows: number;
-  /**
-   * Number of additional rows to render before and after the visible rows.
-   */
-  buffer?: number;
+// export interface VirtualScrollProps {
+//   /**
+//    * Number of rows to Pre-fetch at a time in case of async table
+//    */
+//   preFetchRows: number;
+//   /**
+//    * Number of additional rows to render before and after the visible rows.
+//    */
+//   buffer?: number;
+//   /**
+//    * Number of rows to be rendered within the visible viewport.
+//    */
+//   visibleRows?: number;
+//   /**
+//    * the distance from the end of the scrollable content at which new data should start fetching in case of async table.
+//    */
+//   loadMoreThreshold: thresholdTypes;
+//   /**
+//    * Callback to be called on scroll
+//    */
+//   onScroll?: (event: Event, scrollTop: number) => void;
+//   /**
+//    *
+//    */
+//   // maxDataLimit: number;
+// }
+
+export interface VirtualRowProps {
   /**
    * Number of rows to be rendered within the visible viewport.
    */
   visibleRows?: number;
   /**
+   * Number of additional rows to render before and after the visible rows.
+   */
+  buffer?: number;
+}
+
+export interface PreFetchProps {
+  /**
+   * Number of rows to Pre-fetch at a time in case of async table
+   */
+  fetchRowsCount: number;
+  /**
    * the distance from the end of the scrollable content at which new data should start fetching in case of async table.
    */
-  loadMoreThreshold: thresholdTypes;
+  fetchThreshold: thresholdTypes;
   /**
-   * Callback to be called on scroll
+   * Callback to be called to get the updated data
    */
-  onScroll?: (event: Event, scrollTop: number) => void;
-  /**
-   *
-   */
-  // maxDataLimit: number;
+  fetchNewData?: (props: { page: number; rowsCount: number }) => Promise<Data>;
 }
 
 export interface GridProps extends BaseProps {
@@ -329,13 +355,22 @@ export interface GridProps extends BaseProps {
    */
   enableRowVirtualization?: boolean;
   /**
-   * Fetch Data Function in case of async table to be called on scroll end
-   */
-  updateVirtualData?: (props: { page: number; preFetchRows: number }) => Promise<Data>;
-  /**
    * Virtual Scroll Options
    */
-  virtualScrollOptions: VirtualScrollProps;
+  virtualRowOptions: VirtualRowProps;
+  /**
+   * Enable pre-fetching of rows in case of async table & without pagination
+   */
+  enablePreFetch?: boolean;
+  /**
+   * Pre-fetching Options
+   */
+  preFetchOptions: PreFetchProps;
+  /**
+   * Callback to be triggered on scroll
+   */
+  onScroll?: (event: Event) => void;
+  updateVirtualData?: (props: { page: number; rowsCount: number }) => Promise<Data>;
 }
 
 export interface GridState {
@@ -551,7 +586,19 @@ export class Grid extends React.Component<GridProps, GridState> {
 
     const { init, prevPageInfo } = this.state;
 
-    const { type, size, showHead, className, page, loading, loaderSchema } = this.props;
+    const {
+      type,
+      size,
+      showHead,
+      className,
+      page,
+      loading,
+      loaderSchema,
+      virtualRowOptions,
+      preFetchOptions,
+      enablePreFetch,
+      enableRowVirtualization,
+    } = this.props;
 
     const schema = getSchema(this.props.schema, loading, loaderSchema);
 
@@ -589,7 +636,7 @@ export class Grid extends React.Component<GridProps, GridState> {
                 reorderColumn={this.reorderColumn.bind(this)}
               />
             )}
-            {!this.props.enableRowVirtualization ? (
+            {!enableRowVirtualization ? (
               <GridBody
                 key={`${page}`}
                 schema={schema}
@@ -604,7 +651,9 @@ export class Grid extends React.Component<GridProps, GridState> {
                 prevPageInfo={prevPageInfo}
                 updatePrevPageInfo={this.updatePrevPageInfo.bind(this)}
                 onSelect={this.onSelect.bind(this)}
-                virtualScrollOptions={this.props.virtualScrollOptions}
+                virtualRowOptions={virtualRowOptions}
+                preFetchOptions={preFetchOptions}
+                enablePreFetch={enablePreFetch}
                 updateVirtualData={this.props.updateVirtualData}
               />
             )}

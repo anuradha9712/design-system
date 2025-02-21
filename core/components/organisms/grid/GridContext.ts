@@ -6,7 +6,6 @@ import defaultProps from './defaultProps';
 type ContextProps = GridProps & {
   ref: GridRef;
 };
-
 const context = React.createContext<ContextProps>({
   ...defaultProps,
   ref: null,

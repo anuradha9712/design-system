@@ -196,6 +196,7 @@ const customCode = `() => {
             );
           }}
           withCheckbox={true}
+          enableRowVirtualization={true}
           onSelect={(rowIndex, selected, selectedList, selectAll) => console.log(\`on-select:- rowIndex: \${rowIndex} selected: \${selected} selectedList: \${JSON.stringify(selectedList)} selectAll: \${selectAll}\`)}
           withPagination={false}
           onPageChange={newPage => console.log(\`on-page-change:- \${newPage}\`)}

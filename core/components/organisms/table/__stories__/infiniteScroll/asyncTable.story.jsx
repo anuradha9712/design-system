@@ -41,7 +41,7 @@ export const asyncTable = () => {
           pageSize={50}
           page={1}
           enableRowVirtualization={true}
-          virtualScrollOptions={{ preFetchRows: 60, buffer: 5, visibleRows: 10 }}
+          virtualRowOptions={{ buffer: 5, visibleRows: 10 }}
           withPagination={false}
         />
       </Card>
@@ -301,6 +301,7 @@ const customCode = `
     <div className="vh-75">
       <Card className="h-100 overflow-hidden">
         <Table
+          schema={schema}
           loaderSchema={loaderSchema}
           fetchData={fetchData}
           withHeader={true}
@@ -312,12 +313,11 @@ const customCode = `
             allowSelectAll: true,
           }}
           withCheckbox={true}
-          pageSize={50}
-          page={1}
           enableRowVirtualization={true}
-          virtualScrollOptions={{preFetchRows: 60, buffer: 5, visibleRows: 10}}
-          onSelect={(rowIndex, selected, selectedList, selectAll) => console.log(\`on-select: - rowIndex: \${ rowIndex } selected: \${ selected } selectedList: \${ JSON.stringify(selectedList) } selectAll: \${ selectAll } \`)}
+          enablePreFetch={true}
           withPagination={false}
+          virtualRowOptions={{ buffer: 5, visibleRows: 10 }}
+          onSelect={(rowIndex, selected, selectedList, selectAll) => console.log(\`on-select: - rowIndex: \${ rowIndex } selected: \${ selected } selectedList: \${ JSON.stringify(selectedList) } selectAll: \${ selectAll } \`)}
           onPageChange={newPage => console.log(\`on-page-change:- \${newPage}\`)}
         />
       </Card>

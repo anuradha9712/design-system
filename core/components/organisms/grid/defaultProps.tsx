@@ -15,9 +15,13 @@ export const defaultProps: GridProps = {
   sortingList: [],
   filterList: {},
   showFilters: true,
-  virtualScrollOptions: {
-    preFetchRows: 50,
-    loadMoreThreshold: 'balanced',
+  preFetchOptions: {
+    fetchRowsCount: 50,
+    fetchThreshold: 'balanced',
+  },
+  virtualRowOptions: {
+    buffer: 10,
+    visibleRows: 20,
   },
 };
 
