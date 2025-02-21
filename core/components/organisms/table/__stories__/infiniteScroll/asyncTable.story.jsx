@@ -51,6 +51,8 @@ export const asyncTable = () => {
 
 const customCode = `
 () => {
+  const [errorState, setErrorState] = React.useState(false);
+
   const translateData = (schema, data) => {
     let newData = data;
 
@@ -226,6 +228,21 @@ const customCode = `
     },
   ];
 
+  const errorTemplate = () => {
+    return (
+      <EmptyState>
+        <EmptyState.Image src={"static/media/404-nothing-here-3.2871b1b3.svg"}></EmptyState.Image>
+        <EmptyState.Title>Failed to load data</EmptyState.Title>
+        <EmptyState.Description>
+          We are unable to fetch the data. Try again. If the issue persists, contact Innovaccer support.
+        </EmptyState.Description>
+        <EmptyState.Actions>
+          <Button icon="refresh">Try again</Button>
+        </EmptyState.Actions>
+      </EmptyState>
+    );
+  };
+
   const fetchData = (options) => {
     const {
       page,
@@ -248,6 +265,17 @@ const customCode = `
     const searchedData = filteredData.filter(d => onSearch(d, searchTerm));
     const sortedData = sortData(schema, searchedData, sortingList);
     setFormattedData(sortedData);
+
+    if (page === 3) {
+    
+      setErrorState(true);
+
+      return new Promise((resolve, reject) => {
+        window.setTimeout(() => {
+          reject('Some error occured');
+        }, 2000);
+      });
+    }
 
     if (page && pageSize) {
       return new Promise(resolve => {
@@ -312,6 +340,8 @@ const customCode = `
             globalActionRenderer : globalActionTrigger,
             allowSelectAll: true,
           }}
+          error={errorState}
+          errorTemplate={errorTemplate}
           withCheckbox={true}
           enableRowVirtualization={true}
           enablePreFetch={true}

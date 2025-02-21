@@ -759,6 +759,11 @@ export class Table extends React.Component<TableProps, TableState> {
         return res.data;
       } catch (error) {
         console.error('Error fetching data:', error);
+        this.setState({
+          loading: false,
+          error: true,
+          errorType: 'FAILED_TO_FETCH',
+        });
         return [];
       }
     }
