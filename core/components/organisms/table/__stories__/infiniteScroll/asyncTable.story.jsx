@@ -266,17 +266,6 @@ const customCode = `
     const sortedData = sortData(schema, searchedData, sortingList);
     setFormattedData(sortedData);
 
-    if (page === 3) {
-    
-      setErrorState(true);
-
-      return new Promise((resolve, reject) => {
-        window.setTimeout(() => {
-          reject('Some error occured');
-        }, 2000);
-      });
-    }
-
     if (page && pageSize) {
       return new Promise(resolve => {
         window.setTimeout(() => {
@@ -343,7 +332,7 @@ const customCode = `
           error={errorState}
           errorTemplate={errorTemplate}
           withCheckbox={true}
-          enableRowVirtualization={true}
+          enableRowVirtualization={false}
           enablePreFetch={true}
           withPagination={false}
           virtualRowOptions={{ buffer: 5, visibleRows: 10 }}

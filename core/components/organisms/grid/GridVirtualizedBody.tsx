@@ -17,6 +17,7 @@ export interface GridVirtualBodyProps {
   enablePreFetch?: GridProps['enablePreFetch'];
   onScroll?: GridProps['onScroll'];
   updateVirtualData: GridProps['updateVirtualData'];
+  enableRowVirtualization?: GridProps['enableRowVirtualization'];
 }
 
 export const GridVirtualizedBody = (props: GridVirtualBodyProps) => {
@@ -38,6 +39,7 @@ export const GridVirtualizedBody = (props: GridVirtualBodyProps) => {
     enablePreFetch,
     onScroll,
     updateVirtualData,
+    enableRowVirtualization,
   } = props;
 
   const { buffer, visibleRows } = virtualRowOptions;
@@ -61,10 +63,6 @@ export const GridVirtualizedBody = (props: GridVirtualBodyProps) => {
         gridBodyEl.scrollLeft = gridHeadEl.scrollLeft;
       });
     }
-
-    console.log('mounted dd', currentPage, 'hasMoreData', hasMoreData);
-
-    // fetchNextRows();
 
     return () => {
       if (gridBodyEl) {
@@ -110,6 +108,13 @@ export const GridVirtualizedBody = (props: GridVirtualBodyProps) => {
     standard: 40,
     compressed: 32,
     tight: 24,
+  };
+
+  const getArrayList = () => {
+    if (loading && !data.length) {
+      return [...Array(dataLength).map((x) => x)];
+    }
+    return data;
   };
 
   const fetchNextRows = React.useCallback(async () => {
@@ -198,7 +203,11 @@ export const GridVirtualizedBody = (props: GridVirtualBodyProps) => {
   return (
     <div className={styles['Grid-body']}>
       {isLoadingMore && <ProgressBar state="indeterminate" className={styles['Grid-progress-bar']} size="small" />}
-      {memoizedVirtualScroll}
+      {enableRowVirtualization
+        ? memoizedVirtualScroll
+        : getArrayList().map((item, i) => {
+            return renderRow(i, item);
+          })}
       {isLoadingMore && <ProgressBar className="position-absolute bottom-0" state="indeterminate" size="small" />}
     </div>
   );

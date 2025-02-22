@@ -10,7 +10,7 @@ import classNames from 'classnames';
 import { GridProvider } from './GridContext';
 import defaultProps from './defaultProps';
 import styles from '@css/components/grid.module.css';
-import { GridVirtualizedBody } from './GridVirtualizedBody';
+// import { GridVirtualizedBody } from './GridVirtualizedBody';
 
 export type SortType = 'asc' | 'desc' | 'unsort';
 export type Pinned = 'left' | 'right' | 'unpin';
@@ -636,7 +636,7 @@ export class Grid extends React.Component<GridProps, GridState> {
                 reorderColumn={this.reorderColumn.bind(this)}
               />
             )}
-            {!enableRowVirtualization ? (
+            {/* {!enableRowVirtualization ? (
               <GridBody
                 key={`${page}`}
                 schema={schema}
@@ -644,19 +644,20 @@ export class Grid extends React.Component<GridProps, GridState> {
                 updatePrevPageInfo={this.updatePrevPageInfo.bind(this)}
                 onSelect={this.onSelect.bind(this)}
               />
-            ) : (
-              <GridVirtualizedBody
-                key={`${page}`}
-                schema={schema}
-                prevPageInfo={prevPageInfo}
-                updatePrevPageInfo={this.updatePrevPageInfo.bind(this)}
-                onSelect={this.onSelect.bind(this)}
-                virtualRowOptions={virtualRowOptions}
-                preFetchOptions={preFetchOptions}
-                enablePreFetch={enablePreFetch}
-                updateVirtualData={this.props.updateVirtualData}
-              />
-            )}
+            ) : ( */}
+            <GridBody
+              key={`${page}`}
+              schema={schema}
+              prevPageInfo={prevPageInfo}
+              updatePrevPageInfo={this.updatePrevPageInfo.bind(this)}
+              onSelect={this.onSelect.bind(this)}
+              enableRowVirtualization={enableRowVirtualization}
+              virtualRowOptions={virtualRowOptions}
+              preFetchOptions={preFetchOptions}
+              enablePreFetch={enablePreFetch}
+              updateVirtualData={this.props.updateVirtualData}
+            />
+            {/* )} */}
           </GridProvider>
         )}
       </div>
