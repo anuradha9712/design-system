@@ -74,7 +74,7 @@ export const GridVirtualizedBody = (props: GridVirtualBodyProps) => {
   }, []);
 
   React.useEffect(() => {
-    if (data.length === fetchRowsCount) {
+    if (data.length === fetchRowsCount && enablePreFetch) {
       console.log('>>>bbbb aaaa Fetching next rows', data.length, data);
       fetchNextRows();
     }
@@ -89,8 +89,6 @@ export const GridVirtualizedBody = (props: GridVirtualBodyProps) => {
     : withPagination
     ? Math.min(totalRecords, pageSize)
     : totalRecords;
-
-  console.log('dataLength>>', dataLength, 'data', data);
 
   const renderRow = React.useCallback(
     (rowIndex: number, item?: object) => {
