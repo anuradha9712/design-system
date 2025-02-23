@@ -39,8 +39,8 @@ export const asyncTable = () => {
           }}
           withCheckbox={true}
           withPagination={false}
-          enablePreFetch={true}
-          preFetchOptions={{
+          enableInfiniteScroll={true}
+          infiniteScrollOptions={{
             fetchRowsCount: 50,
             fetchThreshold: 'balanced',
           }}
@@ -336,8 +336,8 @@ const customCode = `
           withPagination={false}
           onSelect={(rowIndex, selected, selectedList, selectAll) => console.log(\`on-select: - rowIndex: \${ rowIndex } selected: \${ selected } selectedList: \${ JSON.stringify(selectedList) } selectAll: \${ selectAll } \`)}
           onPageChange={newPage => console.log(\`on-page-change:- \${newPage}\`)}
-          enablePreFetch={true}
-          preFetchOptions={{
+          enableInfiniteScroll={true}
+          infiniteScrollOptions={{
             fetchRowsCount: 50,
             fetchThreshold: 'balanced',
           }}

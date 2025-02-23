@@ -385,16 +385,38 @@ interface SharedTableProps extends BaseProps {
    */
   enableRowVirtualization?: GridProps['enableRowVirtualization'];
   /**
-   * Virtual Scroll Options
+   * Row Virtualization Options
    * <pre className="DocPage-codeBlock">
-   * VirtualScrollProps: {
-   *   preFetchRows: number;
-   *   buffer: number;
+   * VirtualRowProps: {
    *   visibleRows: number;
-   *   loadMoreThreshold: 'early' | 'balanced' | 'lazy' | 'at-end';
-   *   onScroll: (event: Event, scrollTop: number) => void;
+   *   buffer: number;
    * }
    * </pre>
+   *
+   * <br />
+   * <br />
+   *
+   * | Name | Description | Default |
+   * | --- | --- | --- |
+   * | visibleRows | Number of rows to be rendered within the visible viewport | 200 |
+   * | buffer | Number of additional rows to render before and after the visible rows | 10 |
+   *
+   */
+  virtualRowOptions?: GridProps['virtualRowOptions'];
+  /**
+   * Enable infinite scroll of rows in case of async table & without pagination
+   */
+  enableInfiniteScroll?: GridProps['enableInfiniteScroll'];
+  /**
+   * Infinite Scroll Options
+   * <pre className="DocPage-codeBlock">
+   * InfiniteScrollProps: {
+   *   fetchRowsCount: number;
+   *   fetchThreshold: 'early' | 'balanced' | 'lazy' | 'at-end';
+   * }
+   * </pre>
+   *
+   * **fetchThreshold Values:**
    *
    * | Name | Value |
    * | --- | --- |
@@ -404,20 +426,18 @@ interface SharedTableProps extends BaseProps {
    * | at-end | 0 |
    *
    * <br />
-   * <br />
    *
    * | Name | Description | Default |
    * | --- | --- | --- |
-   * | preFetchRows | Number of rows to Pre-fetch at a time in case of async table | 50 |
-   * | buffer | Number of additional rows to render before and after the visible rows | 10 |
-   * | visibleRows | Number of rows to be rendered within the visible viewport | 20 |
-   * | loadMoreThreshold | the distance from the end of the scrollable content at which new data should start fetching in case of async table | balanced |
-   * | onScroll | Callback to be called on scroll | |
+   * | fetchRowsCount | Number of rows to Pre-fetch at a time in case of async table | 200 |
+   * | fetchThreshold | the distance from the end of the scrollable content at which new data should start fetching in case of async table | balanced |
    *
    */
-  virtualRowOptions?: GridProps['virtualRowOptions'];
-  enablePreFetch?: GridProps['enablePreFetch'];
-  preFetchOptions?: GridProps['preFetchOptions'];
+  infiniteScrollOptions?: GridProps['infiniteScrollOptions'];
+  /**
+   * Callback to be triggered on scroll
+   */
+  onScroll?: GridProps['onScroll'];
 }
 
 export type SyncTableProps = SharedTableProps & TableSyncProps;
@@ -475,7 +495,7 @@ export const defaultProps = {
   searchDebounceDuration: 750,
   pageJumpDebounceDuration: 750,
   errorTemplate: defaultErrorTemplate,
-  preFetchOptions: {
+  infiniteScrollOptions: {
     fetchRowsCount: 50,
     fetchThreshold: 'balanced',
   },
@@ -587,7 +607,7 @@ export class Table extends React.Component<TableProps, TableState> {
     }
   };
 
-  updateVirtualData = async (props: { page: number; rowsCount: number }) => {
+  fetchDataOnScroll = async (props: { page: number; rowsCount: number }) => {
     const { sortingList, filterList, searchTerm } = this.state;
 
     const { fetchData, uniqueColumnName } = this.props;
@@ -657,8 +677,8 @@ export class Table extends React.Component<TableProps, TableState> {
       data: dataProp,
       onSearch,
       uniqueColumnName,
-      enablePreFetch,
-      preFetchOptions,
+      enableInfiniteScroll,
+      infiniteScrollOptions,
     } = this.props;
 
     const { async, page, sortingList, filterList, searchTerm } = this.state;
@@ -667,13 +687,13 @@ export class Table extends React.Component<TableProps, TableState> {
 
     const opts: FetchDataOptions = {
       page,
-      pageSize: enablePreFetch && preFetchOptions ? preFetchOptions.fetchRowsCount : pageSize,
+      pageSize: enableInfiniteScroll && infiniteScrollOptions ? infiniteScrollOptions.fetchRowsCount : pageSize,
       sortingList,
       filterList,
       searchTerm,
     };
 
-    if (!withPagination && !enablePreFetch) {
+    if (!withPagination && !enableInfiniteScroll) {
       delete opts.page;
       delete opts.pageSize;
     }
@@ -1014,8 +1034,9 @@ export class Table extends React.Component<TableProps, TableState> {
       uniqueColumnName,
       checkboxAlignment,
       virtualRowOptions,
-      enablePreFetch,
-      preFetchOptions,
+      enableInfiniteScroll,
+      infiniteScrollOptions,
+      onScroll,
     } = this.props;
 
     const baseProps = extractBaseProps(this.props);
@@ -1081,11 +1102,12 @@ export class Table extends React.Component<TableProps, TableState> {
             errorTemplate={errorTemplate && errorTemplate({ errorType: this.state.errorType })}
             onRowClick={onRowClick}
             showFilters={filterPosition === 'GRID'}
-            updateVirtualData={this.updateVirtualData}
+            fetchDataOnScroll={this.fetchDataOnScroll}
             virtualRowOptions={virtualRowOptions}
             enableRowVirtualization={this.props.enableRowVirtualization}
-            enablePreFetch={enablePreFetch}
-            preFetchOptions={preFetchOptions}
+            enableInfiniteScroll={enableInfiniteScroll}
+            infiniteScrollOptions={infiniteScrollOptions}
+            onScroll={onScroll}
           />
         </div>
         {withPagination && !this.state.loading && !this.state.error && totalPages > 1 && (

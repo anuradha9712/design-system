@@ -13,10 +13,10 @@ export interface GridBodyProps {
   prevPageInfo: GridState['prevPageInfo'];
   updatePrevPageInfo: updatePrevPageInfoFunction;
   virtualRowOptions: GridProps['virtualRowOptions'];
-  preFetchOptions: GridProps['preFetchOptions'];
-  enablePreFetch?: GridProps['enablePreFetch'];
+  infiniteScrollOptions: GridProps['infiniteScrollOptions'];
+  enableInfiniteScroll?: GridProps['enableInfiniteScroll'];
   onScroll?: GridProps['onScroll'];
-  updateVirtualData?: GridProps['updateVirtualData'];
+  fetchDataOnScroll?: GridProps['fetchDataOnScroll'];
   enableRowVirtualization?: GridProps['enableRowVirtualization'];
 }
 
@@ -36,10 +36,10 @@ export const GridBody = (props: GridBodyProps) => {
     updatePrevPageInfo,
     onSelect,
     virtualRowOptions,
-    preFetchOptions,
-    enablePreFetch,
+    infiniteScrollOptions,
+    enableInfiniteScroll,
     onScroll,
-    updateVirtualData,
+    fetchDataOnScroll,
     enableRowVirtualization,
   } = props;
 
@@ -49,7 +49,7 @@ export const GridBody = (props: GridBodyProps) => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [hasMoreData, setHasMoreData] = React.useState(true);
   const endReached = React.useRef(false);
-  const { fetchRowsCount, fetchThreshold } = preFetchOptions;
+  const { fetchRowsCount, fetchThreshold } = infiniteScrollOptions;
 
   React.useEffect(() => {
     const gridBodyEl = ref!.querySelector('.Grid-body');
@@ -71,7 +71,7 @@ export const GridBody = (props: GridBodyProps) => {
   }, []);
 
   React.useEffect(() => {
-    if (data.length === fetchRowsCount && enablePreFetch) {
+    if (data.length === fetchRowsCount && enableInfiniteScroll) {
       fetchNextRows();
     }
   }, [data]);
@@ -116,12 +116,12 @@ export const GridBody = (props: GridBodyProps) => {
   };
 
   const fetchNextRows = React.useCallback(async () => {
-    const { fetchRowsCount } = preFetchOptions || {};
+    const { fetchRowsCount } = infiniteScrollOptions || {};
 
-    if (updateVirtualData && !isLoadingMore && hasMoreData) {
+    if (fetchDataOnScroll && !isLoadingMore && hasMoreData) {
       setIsLoadingMore(true);
       try {
-        const dataList = await updateVirtualData?.({ page: currentPage + 1, rowsCount: fetchRowsCount });
+        const dataList = await fetchDataOnScroll?.({ page: currentPage + 1, rowsCount: fetchRowsCount });
         if (dataList?.length === 0) {
           setHasMoreData(false);
         }
@@ -140,8 +140,8 @@ export const GridBody = (props: GridBodyProps) => {
   };
 
   const onScrollHandler = (event: Event, listRef: HTMLElement) => {
-    if (enablePreFetch && preFetchOptions && !withPagination) {
-      const { fetchThreshold } = preFetchOptions;
+    if (enableInfiniteScroll && infiniteScrollOptions && !withPagination) {
+      const { fetchThreshold } = infiniteScrollOptions;
 
       const { scrollTop, scrollHeight, clientHeight } = listRef;
 

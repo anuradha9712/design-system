@@ -41,8 +41,8 @@ export const withVirtualization = () => {
           withPagination={false}
           virtualRowOptions={{ buffer: 10, visibleRows: 20 }}
           enableRowVirtualization={true}
-          enablePreFetch={true}
-          preFetchOptions={{
+          enableInfiniteScroll={true}
+          infiniteScrollOptions={{
             fetchRowsCount: 50,
             fetchThreshold: 'balanced',
           }}
@@ -340,8 +340,8 @@ const customCode = `
           onPageChange={newPage => console.log(\`on-page-change:- \${newPage}\`)}
           virtualRowOptions={{ buffer: 10, visibleRows: 20 }}
           enableRowVirtualization={true}
-          enablePreFetch={true}
-          preFetchOptions={{
+          enableInfiniteScroll={true}
+          infiniteScrollOptions={{
             fetchRowsCount: 50,
             fetchThreshold: 'balanced',
           }}

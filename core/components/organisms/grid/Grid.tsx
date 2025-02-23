@@ -169,7 +169,7 @@ export interface VirtualRowProps {
   buffer?: number;
 }
 
-export interface PreFetchProps {
+export interface InfiniteScrollProps {
   /**
    * Number of rows to Pre-fetch at a time in case of async table
    */
@@ -178,10 +178,6 @@ export interface PreFetchProps {
    * the distance from the end of the scrollable content at which new data should start fetching in case of async table.
    */
   fetchThreshold: thresholdTypes;
-  /**
-   * Callback to be called to get the updated data
-   */
-  fetchNewData?: (props: { page: number; rowsCount: number }) => Promise<Data>;
 }
 
 export interface GridProps extends BaseProps {
@@ -331,18 +327,21 @@ export interface GridProps extends BaseProps {
    */
   virtualRowOptions: VirtualRowProps;
   /**
-   * Enable pre-fetching of rows in case of async table & without pagination
+   * Enable infinite scroll of rows in case of async table & without pagination
    */
-  enablePreFetch?: boolean;
+  enableInfiniteScroll?: boolean;
   /**
-   * Pre-fetching Options
+   * Infinite Scroll Options
    */
-  preFetchOptions: PreFetchProps;
+  infiniteScrollOptions: InfiniteScrollProps;
   /**
    * Callback to be triggered on scroll
    */
   onScroll?: (event: Event) => void;
-  updateVirtualData?: (props: { page: number; rowsCount: number }) => Promise<Data>;
+  /**
+   * Fetch Data Function to be called on scroll when threshold is reached in case of async table
+   */
+  fetchDataOnScroll?: (props: { page: number; rowsCount: number }) => Promise<Data>;
 }
 
 export interface GridState {
@@ -567,9 +566,11 @@ export class Grid extends React.Component<GridProps, GridState> {
       loading,
       loaderSchema,
       virtualRowOptions,
-      preFetchOptions,
-      enablePreFetch,
+      infiniteScrollOptions,
+      enableInfiniteScroll,
       enableRowVirtualization,
+      onScroll,
+      fetchDataOnScroll,
     } = this.props;
 
     const schema = getSchema(this.props.schema, loading, loaderSchema);
@@ -616,9 +617,10 @@ export class Grid extends React.Component<GridProps, GridState> {
               onSelect={this.onSelect.bind(this)}
               enableRowVirtualization={enableRowVirtualization}
               virtualRowOptions={virtualRowOptions}
-              preFetchOptions={preFetchOptions}
-              enablePreFetch={enablePreFetch}
-              updateVirtualData={this.props.updateVirtualData}
+              infiniteScrollOptions={infiniteScrollOptions}
+              enableInfiniteScroll={enableInfiniteScroll}
+              onScroll={onScroll}
+              fetchDataOnScroll={fetchDataOnScroll}
             />
           </GridProvider>
         )}
