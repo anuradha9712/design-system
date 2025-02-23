@@ -51,8 +51,6 @@ export const GridBody = (props: GridVirtualBodyProps) => {
   const endReached = React.useRef(false);
   const { fetchRowsCount, fetchThreshold } = preFetchOptions;
 
-  // const currentPage = React.useRef(1);
-
   React.useEffect(() => {
     const gridBodyEl = ref!.querySelector('.Grid-body');
     const gridHeadEl = ref!.querySelector('.Grid-head');
@@ -74,7 +72,6 @@ export const GridBody = (props: GridVirtualBodyProps) => {
 
   React.useEffect(() => {
     if (data.length === fetchRowsCount && enablePreFetch) {
-      console.log('>>>bbbb aaaa Fetching next rows', data.length, data);
       fetchNextRows();
     }
   }, [data]);
@@ -119,24 +116,16 @@ export const GridBody = (props: GridVirtualBodyProps) => {
   };
 
   const fetchNextRows = React.useCallback(async () => {
-    console.log('>>>aaa Fetching next rows currentPage', currentPage, 'prevData', data);
-    const {
-      fetchRowsCount,
-      // fetchNewData
-    } = preFetchOptions || {};
+    const { fetchRowsCount } = preFetchOptions || {};
 
-    // if (fetchNewData && !isLoadingMore && hasMoreData) {
     if (updateVirtualData && !isLoadingMore && hasMoreData) {
       setIsLoadingMore(true);
       try {
-        // const dataList = await fetchNewData({ page: currentPage.current + 1, fetchRowsCount });
-        // const dataList = await fetchNewData({ page: currentPage + 1, rowsCount: fetchRowsCount });
         const dataList = await updateVirtualData?.({ page: currentPage + 1, rowsCount: fetchRowsCount });
         if (dataList?.length === 0) {
           setHasMoreData(false);
         }
         setCurrentPage((prevPage) => prevPage + 1);
-        // currentPage.current = currentPage.current + 1;
       } finally {
         setIsLoadingMore(false);
       }
@@ -186,19 +175,9 @@ export const GridBody = (props: GridVirtualBodyProps) => {
         totalLength={dataLength}
         renderItem={renderRow}
         onScroll={onScrollHandler}
-        // enablePreFetch={enablePreFetch}
-        // preFetchOptions={preFetchOptions}
-        // fetchThreshold={fetchThreshold}
-        // fetchNewData={fetchNextRows}
       />
     ),
-    [
-      dataLength,
-      renderRow,
-      // fetchNextRows,
-      minRowHeight,
-      size,
-    ]
+    [dataLength, renderRow, minRowHeight, size]
   );
 
   const handleOnScroll = (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
@@ -209,13 +188,13 @@ export const GridBody = (props: GridVirtualBodyProps) => {
 
   return (
     <div className={styles['Grid-body']} onScroll={(event) => handleOnScroll(event)} ref={listRef}>
-      {isLoadingMore && <ProgressBar state="indeterminate" className={styles['Grid-progress-bar']} size="small" />}
+      {/* {isLoadingMore && <ProgressBar state="indeterminate" className={styles['Grid-progress-bar']} size="small" />} */}
       {enableRowVirtualization
         ? memoizedVirtualScroll
         : getArrayList().map((item, i) => {
             return renderRow(i, item);
           })}
-      {isLoadingMore && <ProgressBar className="position-absolute bottom-0" state="indeterminate" size="small" />}
+      {isLoadingMore && <ProgressBar state="indeterminate" className="position-absolute bottom-0" size="small" />}
     </div>
   );
 };

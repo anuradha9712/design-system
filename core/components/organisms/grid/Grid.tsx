@@ -159,33 +159,6 @@ export type Data = RowData[];
 export type Schema = ColumnSchema[];
 export type thresholdTypes = 'early' | 'balanced' | 'lazy' | 'at-end';
 
-// export interface VirtualScrollProps {
-//   /**
-//    * Number of rows to Pre-fetch at a time in case of async table
-//    */
-//   preFetchRows: number;
-//   /**
-//    * Number of additional rows to render before and after the visible rows.
-//    */
-//   buffer?: number;
-//   /**
-//    * Number of rows to be rendered within the visible viewport.
-//    */
-//   visibleRows?: number;
-//   /**
-//    * the distance from the end of the scrollable content at which new data should start fetching in case of async table.
-//    */
-//   loadMoreThreshold: thresholdTypes;
-//   /**
-//    * Callback to be called on scroll
-//    */
-//   onScroll?: (event: Event, scrollTop: number) => void;
-//   /**
-//    *
-//    */
-//   // maxDataLimit: number;
-// }
-
 export interface VirtualRowProps {
   /**
    * Number of rows to be rendered within the visible viewport.
@@ -636,15 +609,6 @@ export class Grid extends React.Component<GridProps, GridState> {
                 reorderColumn={this.reorderColumn.bind(this)}
               />
             )}
-            {/* {!enableRowVirtualization ? (
-              <GridBody
-                key={`${page}`}
-                schema={schema}
-                prevPageInfo={prevPageInfo}
-                updatePrevPageInfo={this.updatePrevPageInfo.bind(this)}
-                onSelect={this.onSelect.bind(this)}
-              />
-            ) : ( */}
             <GridBody
               key={`${page}`}
               schema={schema}
@@ -657,7 +621,6 @@ export class Grid extends React.Component<GridProps, GridState> {
               enablePreFetch={enablePreFetch}
               updateVirtualData={this.props.updateVirtualData}
             />
-            {/* )} */}
           </GridProvider>
         )}
       </div>
