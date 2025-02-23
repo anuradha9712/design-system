@@ -188,7 +188,6 @@ export const GridBody = (props: GridBodyProps) => {
 
   return (
     <div className={styles['Grid-body']} onScroll={(event) => handleOnScroll(event)} ref={listRef}>
-      {/* {isLoadingMore && <ProgressBar state="indeterminate" className={styles['Grid-progress-bar']} size="small" />} */}
       {enableRowVirtualization
         ? memoizedVirtualScroll
         : getArrayList().map((item, i) => {

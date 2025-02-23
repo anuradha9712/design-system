@@ -23,7 +23,7 @@ interface VirtualScrollProps extends BaseProps {
 const VirtualScroll = (props: VirtualScrollProps) => {
   const {
     buffer = 10,
-    length = 20,
+    length = 200,
     offset: initialOffset = 0,
     minItemHeight,
     totalLength,
