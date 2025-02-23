@@ -10,7 +10,6 @@ import classNames from 'classnames';
 import { GridProvider } from './GridContext';
 import defaultProps from './defaultProps';
 import styles from '@css/components/grid.module.css';
-// import { GridVirtualizedBody } from './GridVirtualizedBody';
 
 export type SortType = 'asc' | 'desc' | 'unsort';
 export type Pinned = 'left' | 'right' | 'unpin';

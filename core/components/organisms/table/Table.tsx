@@ -438,7 +438,6 @@ interface TableState {
   loading: TableProps['loading'];
   error: TableProps['error'];
   errorType?: TableProps['errorType'];
-  startOffset: number;
 }
 
 const defaultErrorTemplate = (props: ErrorTemplateProps) => {
@@ -479,15 +478,7 @@ export const defaultProps = {
   preFetchOptions: {
     fetchRowsCount: 50,
     fetchThreshold: 'balanced',
-    // fetchNewData: this.updateVirtualData,
   },
-  // virtualRowOptions: {
-  //   preFetchRows: 50,
-  //   buffer: 10,
-  //   visibleRows: 20,
-  //   loadMoreThreshold: 0,
-  //   maxDataLimit: 500,
-  // },
 };
 
 export class Table extends React.Component<TableProps, TableState> {
@@ -503,7 +494,6 @@ export class Table extends React.Component<TableProps, TableState> {
     const async = 'fetchData' in this.props;
     const data = props.data || [];
     const schema = props.schema || [];
-    // this.updateVirtualData = this.updateVirtualData.bind(this);
 
     this.state = {
       async,
@@ -519,12 +509,7 @@ export class Table extends React.Component<TableProps, TableState> {
       errorType: props.errorType,
       selectAll: getSelectAll([]),
       searchTerm: undefined,
-      startOffset: 0,
     };
-
-    // if (props.preFetchOptions && !props.preFetchOptions.fetchNewData) {
-    //   props.preFetchOptions.fetchNewData = this.updateVirtualData.bind(this);
-    // }
 
     this.debounceUpdate = debounce(props.searchDebounceDuration, this.updateDataFn);
   }
@@ -534,14 +519,6 @@ export class Table extends React.Component<TableProps, TableState> {
   }
 
   componentDidUpdate(prevProps: TableProps, prevState: TableState) {
-    console.log('prevvvvstate', prevState);
-
-    // if (prevProps.preFetchOptions !== this.props.preFetchOptions) {
-    //   if (this.props.preFetchOptions && !this.props.preFetchOptions.fetchNewData) {
-    //     this.props.preFetchOptions.fetchNewData = this.updateVirtualData;
-    //   }
-    // }
-
     if (!this.state.async) {
       if (prevProps.error !== this.props.error) {
         const { data = [], schema = [] } = this.props;
@@ -590,17 +567,9 @@ export class Table extends React.Component<TableProps, TableState> {
       prevState.searchTerm !== this.state.searchTerm
     ) {
       if (!this.props.loading) {
-        console.log('>>>aaaa componentDidUpdate', this.props.loading);
         const searchUpdate = prevState.searchTerm !== this.state.searchTerm;
         this.updateData(searchUpdate);
       }
-
-      // else if (this.props.enableRowVirtualization && this.state.searchTerm === '') {
-      //   this.updateVirtualData({
-      //     page: 1,
-      //     preFetchRows: 120,
-      //   });
-      // }
     }
   }
 

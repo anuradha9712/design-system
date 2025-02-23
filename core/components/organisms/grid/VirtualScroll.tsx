@@ -10,8 +10,6 @@ export const isElementInView = (container: HTMLElement, element: Element) => {
   return elementHeight - (containerTop - elementTop) > 0;
 };
 
-// type thresholdTypes = 'early' | 'balanced' | 'lazy' | 'at-end';
-
 interface VirtualScrollProps extends BaseProps {
   buffer?: number;
   length?: number;
@@ -20,7 +18,6 @@ interface VirtualScrollProps extends BaseProps {
   totalLength: number;
   renderItem: (index: number, item?: object) => React.ReactElement;
   onScroll?: (event: Event, element: HTMLElement) => void;
-  // loadMoreThreshold?: thresholdTypes;
 }
 
 const VirtualScroll = (props: VirtualScrollProps) => {
@@ -32,7 +29,6 @@ const VirtualScroll = (props: VirtualScrollProps) => {
     totalLength,
     renderItem,
     onScroll,
-    // loadMoreThreshold = 'balanced',
     ...rest
   } = props;
 
@@ -41,13 +37,6 @@ const VirtualScroll = (props: VirtualScrollProps) => {
   const [init, setInit] = useState(false);
   const listRef = useRef<HTMLDivElement | null>(null);
   const lastScrollTop = useRef(0);
-  // const endReached = useRef(false);
-
-  // const thresholdMapper = {
-  //   early: 0.5,
-  //   balanced: 0.75,
-  //   lazy: 0.9,
-  // };
 
   useEffect(() => {
     updateOffset(initialOffset);
@@ -95,10 +84,7 @@ const VirtualScroll = (props: VirtualScrollProps) => {
     (event) => {
       if (listRef.current) {
         const el = listRef.current as HTMLElement;
-        const {
-          scrollTop,
-          // scrollHeight, clientHeight
-        } = el;
+        const { scrollTop } = el;
         const direction = Math.floor(scrollTop - lastScrollTop.current);
 
         if (direction === 0) return;
@@ -107,6 +93,7 @@ const VirtualScroll = (props: VirtualScrollProps) => {
         let newOffset = offset;
         let newAvgRowHeight = avgRowHeight;
         const start = Math.min(offset, buffer);
+
         // cursor scrolls down
         if (direction > 0) {
           if (offset < totalLength - length) {
@@ -145,33 +132,9 @@ const VirtualScroll = (props: VirtualScrollProps) => {
 
         lastScrollTop.current = scrollTop;
         if (onScroll) onScroll(event, el);
-
-        // const hasEndReached = loadMoreThreshold === 'at-end' && scrollTop + clientHeight >= scrollHeight;
-        // const hasThresholdReached =
-        //   loadMoreThreshold !== 'at-end' &&
-        //   scrollTop + clientHeight >= scrollHeight * thresholdMapper[loadMoreThreshold];
-
-        // // Check if user has scrolled to the threshold
-        // if (hasEndReached || hasThresholdReached) {
-        //   if (!endReached.current && fetchNewData) {
-        //     endReached.current = true;
-        //     fetchNewData();
-        //   }
-        // } else if (!hasEndReached && !hasThresholdReached) {
-        //   endReached.current = false;
-        // }
       }
     },
-    [
-      offset,
-      avgRowHeight,
-      buffer,
-      length,
-      minItemHeight,
-      totalLength,
-      onScroll,
-      // fetchNewData
-    ]
+    [offset, avgRowHeight, buffer, length, minItemHeight, totalLength, onScroll]
   );
 
   const renderItems = (start: number, end: number) => {

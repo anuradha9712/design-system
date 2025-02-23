@@ -7,7 +7,7 @@ import { GridProps } from '@/index.type';
 import VirtualScroll from './VirtualScroll';
 import { ProgressBar } from '@/index';
 
-export interface GridVirtualBodyProps {
+export interface GridBodyProps {
   schema: Schema;
   onSelect: onSelectFn;
   prevPageInfo: GridState['prevPageInfo'];
@@ -16,11 +16,11 @@ export interface GridVirtualBodyProps {
   preFetchOptions: GridProps['preFetchOptions'];
   enablePreFetch?: GridProps['enablePreFetch'];
   onScroll?: GridProps['onScroll'];
-  updateVirtualData: GridProps['updateVirtualData'];
+  updateVirtualData?: GridProps['updateVirtualData'];
   enableRowVirtualization?: GridProps['enableRowVirtualization'];
 }
 
-export const GridBody = (props: GridVirtualBodyProps) => {
+export const GridBody = (props: GridBodyProps) => {
   const context = React.useContext(GridContext);
 
   const { data, ref, loading, error, withPagination, page, pageSize, totalRecords, errorTemplate, size } = context;
