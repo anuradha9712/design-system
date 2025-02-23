@@ -38,11 +38,13 @@ export const asyncTable = () => {
             allowSelectAll: true,
           }}
           withCheckbox={true}
+          pageSize={50}
+          page={1}
           withPagination={false}
-          enablePreFetch={true}
-          preFetchOptions={{
-            fetchRowsCount: 50,
-            fetchThreshold: 'balanced',
+          enableRowVirtualization={true}
+          virtualRowOptions={{
+            visibleRows: 30,
+            buffer: 15,
           }}
         />
       </Card>
@@ -333,14 +335,14 @@ const customCode = `
           error={errorState}
           errorTemplate={errorTemplate}
           withCheckbox={true}
+          enableRowVirtualization={true}
+          virtualRowOptions={{
+            visibleRows: 30,
+            buffer: 15,
+          }}
           withPagination={false}
           onSelect={(rowIndex, selected, selectedList, selectAll) => console.log(\`on-select: - rowIndex: \${ rowIndex } selected: \${ selected } selectedList: \${ JSON.stringify(selectedList) } selectAll: \${ selectAll } \`)}
           onPageChange={newPage => console.log(\`on-page-change:- \${newPage}\`)}
-          enablePreFetch={true}
-          preFetchOptions={{
-            fetchRowsCount: 50,
-            fetchThreshold: 'balanced',
-          }}
         />
       </Card>
     </div>
@@ -349,7 +351,7 @@ const customCode = `
 `;
 
 export default {
-  title: 'Components/Table/Infinite Scroll/Async Table',
+  title: 'Components/Table/Virtualization/Async Table',
   component: Table,
   parameters: {
     docs: {

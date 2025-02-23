@@ -46,6 +46,11 @@ export const syncTable = () => {
           }}
           withPagination={false}
           onPageChange={(newPage) => action(`on-page-change:- ${newPage}`)()}
+          enableRowVirtualization={true}
+          virtualRowOptions={{
+            visibleRows: 30,
+            buffer: 15,
+          }}
         />
       </Card>
     </div>
@@ -196,10 +201,14 @@ const customCode = `() => {
             );
           }}
           withCheckbox={true}
-          enableRowVirtualization={true}
           onSelect={(rowIndex, selected, selectedList, selectAll) => console.log(\`on-select:- rowIndex: \${rowIndex} selected: \${selected} selectedList: \${JSON.stringify(selectedList)} selectAll: \${selectAll}\`)}
           withPagination={false}
           onPageChange={newPage => console.log(\`on-page-change:- \${newPage}\`)}
+          enableRowVirtualization={true}
+          virtualRowOptions={{
+            visibleRows: 30,
+            buffer: 15,
+          }}
         />
       </Card>
     </div>
@@ -208,7 +217,7 @@ const customCode = `() => {
 `;
 
 export default {
-  title: 'Components/Table/Infinite Scroll/Sync Table',
+  title: 'Components/Table/Virtualization/Sync Table',
   component: Table,
   parameters: {
     docs: {

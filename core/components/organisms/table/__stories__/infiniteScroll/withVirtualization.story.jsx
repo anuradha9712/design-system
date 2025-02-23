@@ -6,7 +6,7 @@ import { AsyncTable, SyncTable } from '../_common_/types';
 import { fetchData } from '@/components/organisms/grid/__stories__/_common_/infiniteData/fetchData';
 import { action } from '@/utils/action';
 
-export const asyncTable = () => {
+export const withVirtualization = () => {
   const selectionActionRenderer = (selectedData, selectAll) => {
     action('selectedData', selectedData, 'selectAll', selectAll)();
     return (
@@ -39,6 +39,8 @@ export const asyncTable = () => {
           }}
           withCheckbox={true}
           withPagination={false}
+          virtualRowOptions={{ buffer: 10, visibleRows: 20 }}
+          enableRowVirtualization={true}
           enablePreFetch={true}
           preFetchOptions={{
             fetchRowsCount: 50,
@@ -336,6 +338,8 @@ const customCode = `
           withPagination={false}
           onSelect={(rowIndex, selected, selectedList, selectAll) => console.log(\`on-select: - rowIndex: \${ rowIndex } selected: \${ selected } selectedList: \${ JSON.stringify(selectedList) } selectAll: \${ selectAll } \`)}
           onPageChange={newPage => console.log(\`on-page-change:- \${newPage}\`)}
+          virtualRowOptions={{ buffer: 10, visibleRows: 20 }}
+          enableRowVirtualization={true}
           enablePreFetch={true}
           preFetchOptions={{
             fetchRowsCount: 50,
@@ -349,7 +353,7 @@ const customCode = `
 `;
 
 export default {
-  title: 'Components/Table/Infinite Scroll/Async Table',
+  title: 'Components/Table/Infinite Scroll/With Virtualization',
   component: Table,
   parameters: {
     docs: {

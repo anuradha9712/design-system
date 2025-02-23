@@ -6,7 +6,7 @@ import { AsyncTable, SyncTable } from '../_common_/types';
 import { fetchData } from '@/components/organisms/grid/__stories__/_common_/infiniteData/fetchData';
 import { action } from '@/utils/action';
 
-export const asyncTable = () => {
+export const withPagination = () => {
   const selectionActionRenderer = (selectedData, selectAll) => {
     action('selectedData', selectedData, 'selectAll', selectAll)();
     return (
@@ -38,11 +38,13 @@ export const asyncTable = () => {
             allowSelectAll: true,
           }}
           withCheckbox={true}
-          withPagination={false}
-          enablePreFetch={true}
-          preFetchOptions={{
-            fetchRowsCount: 50,
-            fetchThreshold: 'balanced',
+          pageSize={50}
+          page={1}
+          withPagination={true}
+          enableRowVirtualization={true}
+          virtualRowOptions={{
+            visibleRows: 30,
+            buffer: 15,
           }}
         />
       </Card>
@@ -276,7 +278,7 @@ const customCode = `
           resolve({
             searchTerm,
             schema,
-            count: slicedData.length,
+            count: sortedData.length,
             data: slicedData,
           });
         }, 2000);
@@ -333,14 +335,15 @@ const customCode = `
           error={errorState}
           errorTemplate={errorTemplate}
           withCheckbox={true}
-          withPagination={false}
+          enableRowVirtualization={true}
+          virtualRowOptions={{
+            visibleRows: 30,
+            buffer: 15,
+          }}
+          withPagination={true}
+          pageSize={80}
           onSelect={(rowIndex, selected, selectedList, selectAll) => console.log(\`on-select: - rowIndex: \${ rowIndex } selected: \${ selected } selectedList: \${ JSON.stringify(selectedList) } selectAll: \${ selectAll } \`)}
           onPageChange={newPage => console.log(\`on-page-change:- \${newPage}\`)}
-          enablePreFetch={true}
-          preFetchOptions={{
-            fetchRowsCount: 50,
-            fetchThreshold: 'balanced',
-          }}
         />
       </Card>
     </div>
@@ -349,7 +352,7 @@ const customCode = `
 `;
 
 export default {
-  title: 'Components/Table/Infinite Scroll/Async Table',
+  title: 'Components/Table/Virtualization/With Pagination',
   component: Table,
   parameters: {
     docs: {
