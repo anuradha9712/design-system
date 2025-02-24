@@ -571,6 +571,8 @@ export class Grid extends React.Component<GridProps, GridState> {
       enableRowVirtualization,
       onScroll,
       fetchDataOnScroll,
+      error,
+      errorTemplate,
     } = this.props;
 
     const schema = getSchema(this.props.schema, loading, loaderSchema);
@@ -609,6 +611,9 @@ export class Grid extends React.Component<GridProps, GridState> {
                 reorderColumn={this.reorderColumn.bind(this)}
               />
             )}
+            {!loading &&
+              error &&
+              (errorTemplate ? (typeof errorTemplate === 'function' ? errorTemplate({}) : errorTemplate) : null)}
             <GridBody
               key={`${page}`}
               schema={schema}

@@ -23,12 +23,8 @@ export interface GridBodyProps {
 export const GridBody = (props: GridBodyProps) => {
   const context = React.useContext(GridContext);
 
-  const { data, ref, loading, error, withPagination, page, pageSize, totalRecords, errorTemplate, size } = context;
+  const { data, ref, loading, withPagination, page, pageSize, totalRecords, size } = context;
   const listRef = React.useRef<HTMLDivElement | null>(null);
-
-  if (!loading && error) {
-    return errorTemplate ? (typeof errorTemplate === 'function' ? errorTemplate({}) : errorTemplate) : null;
-  }
 
   const {
     schema,
