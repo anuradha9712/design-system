@@ -179,6 +179,14 @@ export interface InfiniteScrollProps {
    * the distance from the end of the scrollable content at which new data should start fetching in case of async table.
    */
   fetchThreshold: thresholdTypes;
+  /**
+   * Error Renderer to be displayed in case of async table when fetch new data fails
+   */
+  fetchErrorRenderer?: (fetchNextRowsFn: () => Promise<void>) => React.ReactNode;
+  /**
+   * Retry Renderer to be displayed when loading new data after fetch fails
+   */
+  retryFetchRenderer?: () => React.ReactNode;
 }
 
 export interface GridProps extends BaseProps {

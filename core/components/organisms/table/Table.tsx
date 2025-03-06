@@ -414,6 +414,8 @@ interface SharedTableProps extends BaseProps {
    * InfiniteScrollProps: {
    *   fetchRowsCount: number;
    *   fetchThreshold: 'early' | 'balanced' | 'lazy' | 'at-end';
+   *   fetchErrorRenderer?: (fetchNextRowsFn: () => Promise<void>) => React.ReactNode;
+   *   retryFetchRenderer?: () => React.ReactNode;
    * }
    * </pre>
    *
@@ -432,6 +434,8 @@ interface SharedTableProps extends BaseProps {
    * | --- | --- | --- |
    * | fetchRowsCount | Number of rows to Pre-fetch at a time in case of async table | 200 |
    * | fetchThreshold | the distance from the end of the scrollable content at which new data should start fetching in case of async table | balanced |
+   * | fetchErrorRenderer | Error Renderer to be displayed in case of async table when fetch new data fails | |
+   * | retryFetchRenderer | Retry Renderer to be displayed when loading new data after fetch fails | |
    *
    */
   infiniteScrollOptions?: GridProps['infiniteScrollOptions'];

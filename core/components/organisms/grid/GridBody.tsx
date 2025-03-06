@@ -47,7 +47,7 @@ export const GridBody = (props: GridBodyProps) => {
   const [error, setError] = React.useState(false);
   const [retryDataFetch, setRetryDataFetch] = React.useState(false);
   const endReached = React.useRef(false);
-  const { fetchRowsCount, fetchThreshold } = infiniteScrollOptions;
+  const { fetchRowsCount, fetchThreshold, fetchErrorRenderer, retryFetchRenderer } = infiniteScrollOptions;
 
   React.useEffect(() => {
     const gridBodyEl = ref!.querySelector('.Grid-body');
@@ -202,6 +202,10 @@ export const GridBody = (props: GridBodyProps) => {
   };
 
   const errorTemplate = () => {
+    if (fetchErrorRenderer) {
+      return fetchErrorRenderer(retryRowsFetch);
+    }
+
     return (
       <div className="d-flex justify-content-center align-items-center my-5">
         <Text appearance="subtle">Failed to load data. Please try again.</Text>
@@ -213,6 +217,10 @@ export const GridBody = (props: GridBodyProps) => {
   };
 
   const retryFetchTemplate = () => {
+    if (retryFetchRenderer) {
+      return retryFetchRenderer();
+    }
+
     return (
       <div className="d-flex justify-content-center align-items-center my-5">
         <Text appearance="subtle">Loading data, please wait...</Text>
