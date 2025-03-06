@@ -5,7 +5,7 @@ import GridContext from './GridContext';
 import styles from '@css/components/grid.module.css';
 import { GridProps } from '@/index.type';
 import VirtualList from './VirtualList';
-import { ProgressBar } from '@/index';
+import { ProgressBar, Button, Text } from '@/index';
 
 export interface GridBodyProps {
   schema: Schema;
@@ -44,6 +44,8 @@ export const GridBody = (props: GridBodyProps) => {
   const [isLoadingMore, setIsLoadingMore] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(2);
   const [hasMoreData, setHasMoreData] = React.useState(true);
+  const [error, setError] = React.useState(false);
+  const [retryDataFetch, setRetryDataFetch] = React.useState(false);
   const endReached = React.useRef(false);
   const { fetchRowsCount, fetchThreshold } = infiniteScrollOptions;
 
@@ -65,12 +67,6 @@ export const GridBody = (props: GridBodyProps) => {
       }
     };
   }, []);
-
-  // React.useEffect(() => {
-  //   if (data.length === fetchRowsCount && enableInfiniteScroll) {
-  //     fetchNextRows();
-  //   }
-  // }, [data]);
 
   const totalPages = Math.ceil(totalRecords / pageSize);
   const isLastPage = withPagination && page === totalPages;
@@ -114,7 +110,7 @@ export const GridBody = (props: GridBodyProps) => {
   const fetchNextRows = React.useCallback(async () => {
     const { fetchRowsCount } = infiniteScrollOptions || {};
 
-    if (fetchDataOnScroll && !isLoadingMore && hasMoreData) {
+    if (fetchDataOnScroll && !isLoadingMore && hasMoreData && !error) {
       setIsLoadingMore(true);
       try {
         const dataList = await fetchDataOnScroll?.({ page: currentPage + 1, rowsCount: fetchRowsCount });
@@ -122,11 +118,14 @@ export const GridBody = (props: GridBodyProps) => {
           setHasMoreData(false);
         }
         setCurrentPage((prevPage) => prevPage + 1);
+        setError(false);
+      } catch (error) {
+        setError(true);
       } finally {
         setIsLoadingMore(false);
       }
     }
-  }, [isLoadingMore, hasMoreData, currentPage, fetchRowsCount]);
+  }, [isLoadingMore, hasMoreData, currentPage, fetchRowsCount, error]);
 
   const thresholdMapper: Record<typeof fetchThreshold, number> = {
     early: 0.5,
@@ -182,6 +181,48 @@ export const GridBody = (props: GridBodyProps) => {
     }
   };
 
+  const retryRowsFetch = async () => {
+    setError(false);
+    setRetryDataFetch(true);
+    setIsLoadingMore(true);
+
+    try {
+      const dataList = await fetchDataOnScroll?.({ page: currentPage + 1, rowsCount: fetchRowsCount });
+      if (dataList?.length === 0) {
+        setHasMoreData(false);
+      }
+      setCurrentPage((prevPage) => prevPage + 1);
+      setError(false);
+    } catch (error) {
+      setError(true);
+    } finally {
+      setIsLoadingMore(false);
+      setRetryDataFetch(false);
+    }
+  };
+
+  const errorTemplate = () => {
+    return (
+      <div className="d-flex justify-content-center align-items-center my-5">
+        <Text appearance="subtle">Failed to load data. Please try again.</Text>
+        <Button size="tiny" icon="refresh" onClick={retryRowsFetch} className="ml-6">
+          Try again
+        </Button>
+      </div>
+    );
+  };
+
+  const retryFetchTemplate = () => {
+    return (
+      <div className="d-flex justify-content-center align-items-center my-5">
+        <Text appearance="subtle">Loading data, please wait...</Text>
+        <Button size="tiny" icon="refresh" disabled={isLoadingMore} className="ml-6">
+          Try again
+        </Button>
+      </div>
+    );
+  };
+
   return (
     <div className={styles['Grid-body']} onScroll={(event) => handleOnScroll(event)} ref={listRef}>
       {enableRowVirtualization
@@ -189,6 +230,8 @@ export const GridBody = (props: GridBodyProps) => {
         : getArrayList().map((item, i) => {
             return renderRow(i, item);
           })}
+      {error && errorTemplate()}
+      {retryDataFetch && retryFetchTemplate()}
       {isLoadingMore && <ProgressBar state="indeterminate" className="position-absolute bottom-0" size="small" />}
     </div>
   );
