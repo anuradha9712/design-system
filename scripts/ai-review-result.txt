@@ -1,0 +1,91 @@
+### Suggestions for Improvements
+
+1. **Consistent Naming Conventions**:
+   - Ensure consistent naming conventions across the codebase. For example, the `_activated` property should follow the same naming pattern as `_selected` and `_expandNestedRow`.
+
+2. **Component Abstraction**:
+   - Consider abstracting the repeated logic for rendering cell groups into a separate component to improve readability and maintainability.
+
+3. **Documentation**:
+   - Add comments to explain the purpose of the new `_activated` property and how it affects the grid's behavior.
+
+### Style Guide Violations
+
+1. **Consistent Indentation**:
+   - Ensure consistent indentation throughout the code. For example, the nested `return` statement in `GridRow` has inconsistent indentation.
+
+2. **Class Names**:
+   - Use consistent class naming conventions. For example, `w-100` and `bg-light` should follow the same pattern as other class names like `Grid-cellGroup--pinned`.
+
+### Code Smells or Edge Cases
+
+1. **Conditional Rendering**:
+   - The conditional rendering logic for `pinnedClasses` and `classes` in `GridRow` can be simplified to avoid redundancy.
+
+2. **Edge Case Handling**:
+   - Ensure that the new `_activated` property is handled correctly in all scenarios, including edge cases where the property might be `undefined` or `null`.
+
+3. **Snapshot Tests**:
+   - Update the snapshot tests to reflect the changes made in the code. Ensure that the snapshots are up-to-date and accurately represent the current state of the components.
+
+### Detailed Code Review
+
+#### Grid.tsx
+
+```typescript
+export type RowData = Record\u003cstring, any\u003e \u0026 {
+  _selected?: boolean;
+  disabled?: boolean;
+  _expandNestedRow?: boolean;
+  _activated?: boolean; // Ensure consistent naming conventions
+};
+```
+
+#### GridHead.tsx
+
+```typescript
+export const GridHead = (props: GridHeadProps) =\u003e {
+  if (currSchema.length) {
+    const classes = classNames({
+      [styles['Grid-cellGroup']]: true,
+      'w-100': !pinned, // Ensure consistent class naming conventions
+      [styles['Grid-cellGroup--pinned']]: pinned,
+      [styles[`Grid-cellGroup--pinned-${pinned}`]]: pinned,
+      [styles['Grid-cellGroup--main']]: !pinned,
+    });
+  }
+};
+```
+
+#### GridRow.tsx
+
+```typescript
+export const GridRow = (props: GridRowProps) =\u003e {
+  const rowClasses = classNames(styles['Grid-row'], styles['Grid-row--body'], {
+    [styles['Grid-row--selected']]: data._selected,
+    [styles['Grid-row--disabled']]: data.disabled,
+    [styles['Grid-row--activated']]: data._activated,
+  });
+
+  const onClickHandler = React.useCallback(() =\u003e {
+    // Add comments to explain the purpose of the onClickHandler
+  }, [data, onClick]);
+
+  if (currSchema.length) {
+    const classes = classNames({
+      [styles['Grid-cellGroup']]: true,
+      [styles['Grid-cellWrapper--pinned']]: pinned,
+      [styles[`Grid-cellWrapper--pinned-${pinned}`]]: pinned,
+      [styles['Grid-cellGroup--main']]: !pinned,
+    });
+
+    const pinnedClasses = classNames({
+      'w-100': !pinned,
+      'bg-light': pinned,
+      [styles['Grid-cellGroup--pinned']]: pinned,
+      [styles[`Grid-cellGroup--pinned-${pinned}`]]: pinned,
+    });
+
+    return (
+      \u003cdiv className={pinnedClasses}\u003e
+        \u003cdiv className={classes} data-test=\

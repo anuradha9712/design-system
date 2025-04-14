@@ -1,0 +1,80 @@
+### Suggestions for Improvements:
+
+1. **Consistent Naming Conventions**:
+   - Ensure that the naming conventions for CSS classes and variables are consistent throughout the codebase. For example, `Grid-cellWrapper--pinned` and `Grid-cellGroup--pinned` should follow a consistent naming pattern.
+
+2. **Component Decomposition**:
+   - The `GridRow` component has a lot of nested logic and JSX. Consider breaking it down into smaller, more manageable components. This will improve readability and maintainability.
+
+3. **TypeScript Types**:
+   - Ensure that the TypeScript types are comprehensive and cover all possible cases. For instance, the `RowData` type could be more specific than `Record\u003cstring, any\u003e`.
+
+### Style Guide Violations:
+
+1. **Consistent Indentation**:
+   - Ensure consistent indentation throughout the code. For example, in `GridRow.tsx`, the indentation for the nested `div` elements is inconsistent.
+
+2. **CSS Class Names**:
+   - Follow a consistent naming convention for CSS classes. For example, use either `Grid-cellGroup--pinned` or `Grid-cellWrapper--pinned`, but not both.
+
+3. **Commenting**:
+   - Ensure that comments are used consistently and provide meaningful context. For example, the comment in `Table.tsx` should explain why `_activated` is added and how it affects the component.
+
+### Code Smells or Edge Cases:
+
+1. **Hardcoded Values**:
+   - Avoid hardcoding values like `w-100` and `bg-light` directly in the JSX. Instead, use variables or constants that can be easily updated.
+
+2. **Complex Conditional Logic**:
+   - The conditional logic for determining class names and rendering elements is quite complex. Consider simplifying this logic or breaking it into smaller functions.
+
+3. **Snapshot Tests**:
+   - The snapshot test for `Grid.test.tsx.snap` shows a significant amount of HTML structure. Ensure that the snapshots are meaningful and not overly verbose. Consider using more specific assertions instead of relying solely on snapshots.
+
+4. **Edge Cases**:
+   - Ensure that edge cases are handled, such as when `currSchema` is empty or when `pinned` has unexpected values. Add appropriate error handling and default cases.
+
+### Specific Code Review Comments:
+
+1. **Grid.tsx**:
+   ```typescript
+   export type RowData = Record\u003cstring, any\u003e \u0026 {
+     _selected?: boolean;
+     disabled?: boolean;
+     _expandNestedRow?: boolean;
+     _activated?: boolean;
+   };
+   ```
+   - Consider using more specific types instead of `Record\u003cstring, any\u003e`.
+
+2. **GridHead.tsx**:
+   ```typescript
+   const classes = classNames({
+     [styles['Grid-cellGroup']]: true,
+     'w-100': !pinned,
+     [styles['Grid-cellGroup--pinned']]: pinned,
+     [styles[`Grid-cellGroup--pinned-${pinned}`]]: pinned,
+     [styles['Grid-cellGroup--main']]: !pinned,
+   });
+   ```
+   - Ensure that the class names follow a consistent naming convention.
+
+3. **GridRow.tsx**:
+   ```typescript
+   const rowClasses = classNames(styles['Grid-row'], styles['Grid-row--body'], {
+     [styles['Grid-row--selected']]: data._selected,
+     [styles['Grid-row--disabled']]: data.disabled,
+     [styles['Grid-row--activated']]: data._activated,
+   });
+   ```
+   - Consider breaking down the `GridRow` component into smaller components for better readability.
+
+4. **Table.tsx**:
+   ```typescript
+   /**
+    *    \u003cpre\u003e
+    *    {
+    *      _selected?: boolean,
+    *      disabled?: boolean,
+    *      _expandNestedRow?: boolean,
+    *      _activated?: boolean,

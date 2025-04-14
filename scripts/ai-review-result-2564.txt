@@ -1,0 +1,15 @@
+### Suggestions for Improvements
+
+1. **Consistency in Naming Conventions:**
+   - Ensure consistent naming conventions for boolean properties. For example, `_activated` could be renamed to `isActivated` to follow the camelCase convention for boolean flags.
+
+2. **Documentation:**
+   - Add comments to explain the purpose of the newly added `_activated` property and how it should be used within the `GridRow` and `GridHead` components.
+
+3. **Code Duplication:**
+   - The `classNames` logic for `pinnedClasses` and `classes` in `GridRow.tsx` seems repetitive. Consider refactoring to avoid duplication.
+
+### Style Guide Violations
+
+1. **Inline Styles:**
+   - Avoid using inline styles (`style=\
