@@ -118,7 +118,7 @@ export const GridRow = (props: GridRowProps) => {
                   schema={s}
                   data={data}
                   expandedState={[expanded, setExpanded]}
-                  nestedRowData={nestedRowData}
+                  nestedRowData={nestedRowData as React.ReactNode}
                 />
               );
             })}
@@ -143,7 +143,7 @@ export const GridRow = (props: GridRowProps) => {
         {renderSchema(unpinnedSchema, !leftPinnedSchema.length && !!unpinnedSchema.length)}
         {renderSchema(rightPinnedSchema, false, 'right')}
       </div>
-      {nestedRows && expanded && <div className={styles['Grid-nestedRow']}>{nestedRowData}</div>}
+      {nestedRows && expanded && <div className={styles['Grid-nestedRow']}>{nestedRowData as React.ReactNode}</div>}
     </div>
   );
 };

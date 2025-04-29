@@ -15,6 +15,7 @@ export interface ParagraphProps extends BaseProps, BaseHtmlProps<HTMLParagraphEl
   children: React.ReactNode;
   /**
    * State of `Paragraph`
+   * @default default
    */
   appearance?: ParagraphAppearance;
   /**
@@ -43,8 +44,5 @@ export const Paragraph = React.forwardRef<HTMLParagraphElement, ParagraphProps>(
 });
 
 Paragraph.displayName = 'Paragraph';
-Paragraph.defaultProps = {
-  appearance: 'default',
-};
 
 export default Paragraph;
