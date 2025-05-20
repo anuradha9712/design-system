@@ -4,7 +4,7 @@ import UnreadMessage from './unreadMessage';
 import NewMessage from './newMessage';
 import TypingIndicator from './typingIndicator';
 import ChatBubble from './chatBubble';
-import ChatInput from './ChatInput';
+import ChatInput from './chatInput/ChatInput';
 import { BaseProps } from '@/utils/types';
 
 export interface ChatProps extends BaseProps {
