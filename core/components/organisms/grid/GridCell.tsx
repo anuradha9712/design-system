@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { Avatar, Text, Placeholder, PlaceholderParagraph, Icon, StatusHint, Tooltip, MetaList } from '@/index';
+import { Avatar, Text, Placeholder, PlaceholderParagraph, Icon, StatusHint, Tooltip } from '@/index';
 import { StatusHintProps, TextProps } from '@/index.type';
 import { ColumnSchema, RowData, GridSize } from './Grid';
 import { translateData } from './utility';
@@ -108,7 +108,9 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({ text, searchTerm, cla
     <span className={className}>
       {parts.map((part, i) =>
         regex.test(part) ? (
-          <mark key={i}>{part}</mark>
+          <mark key={i} className="GridCell-mark--default">
+            {part}
+          </mark>
         ) : (
           <Text key={i} className={className} {...rest}>
             {part}
@@ -168,23 +170,44 @@ const renderMetaList = (props: CellProps & { searchTerm?: string }) => {
   const { metaList } = cellData;
 
   if (metaList) {
-    // Pre-process the metaList to highlight search terms
-    const processedMetaList = metaList.map((list) => {
-      if (!searchTerm || !list) return { label: list };
+    const processedMetaList = metaList.map((list, index) => {
+      const content =
+        searchTerm && list ? (
+          list.split(new RegExp(`(${searchTerm})`, 'gi')).map((part, i) =>
+            new RegExp(searchTerm, 'i').test(part) ? (
+              <mark key={i} className="GridCell-mark--metaList">
+                {part}
+              </mark>
+            ) : (
+              <Text key={i} appearance="subtle" size="small">
+                {part}
+              </Text>
+            )
+          )
+        ) : (
+          <Text appearance="subtle" size="small">
+            {list}
+          </Text>
+        );
 
-      const regex = new RegExp(`(${searchTerm})`, 'gi');
-      const parts = list.split(regex);
-
-      const highlightedLabel = (
-        <span>{parts.map((part, i) => (regex.test(part) ? <mark key={i}>{part}</mark> : part))}</span>
+      return (
+        <div key={list} className="ellipsis d-flex align-items-center">
+          <div className="ellipsis d-flex align-items-center">{content}</div>
+          {index < metaList.length - 1 && (
+            <Icon
+              name="fiber_manual_record"
+              size={4}
+              className={styles['GridCell-metaSeparator']}
+              appearance="disabled"
+            />
+          )}
+        </div>
       );
-
-      return { label: highlightedLabel };
     });
 
     return (
       <div className={styles['GridCell-metaList']} data-test="DesignSystem-GridCell-metaList">
-        <MetaList list={processedMetaList} size="small" />
+        {processedMetaList}
       </div>
     );
   }
