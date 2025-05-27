@@ -68,6 +68,7 @@ interface TableSyncProps {
    *        cellRenderer?: React.FunctionComponent\<GridCellProps\>;
    *        align?: 'left' | 'right' | 'center';
    *        verticalAlign?: 'top' | 'center' | 'bottom';
+   *        highlightCell?: boolean;
    *    }
    *
    *    GridCellProps: {
@@ -112,6 +113,7 @@ interface TableSyncProps {
    * | cellRenderer | Custom Cell Renderer | |
    * | align | Align cell content<br>**Align applicable only for following cellTypes:<br>DEFAULT, AVATAR, ICON, STATUS_HINT** | "left" |
    * | verticalAlign | Vertical align cell content | "center" |
+   * | highlightCell | Highlight cell content on search | |
    */
   /* tslint:enable */
   schema: GridProps['schema'];
@@ -443,6 +445,13 @@ interface SharedTableProps extends BaseProps {
    * Callback to be triggered on scroll
    */
   onScroll?: GridProps['onScroll'];
+  /**
+   * Function to create custom regex pattern for highlighting matched text in cells.
+   * If not provided, will use default case-insensitive match.
+   * @param searchTerm - The current search term
+   * @returns RegExp to use for highlighting
+   */
+  highlightRegex?: (searchTerm: string) => RegExp;
 }
 
 export type SyncTableProps = SharedTableProps & TableSyncProps;
@@ -1043,6 +1052,7 @@ export class Table extends React.Component<TableProps, TableState> {
       enableInfiniteScroll,
       infiniteScrollOptions,
       onScroll,
+      highlightRegex,
     } = this.props;
 
     const baseProps = extractBaseProps(this.props);
@@ -1051,7 +1061,7 @@ export class Table extends React.Component<TableProps, TableState> {
 
     const classes = className ? ` ${className}` : '';
 
-    const { totalRecords } = this.state;
+    const { totalRecords, searchTerm } = this.state;
     const totalPages = getTotalPages(totalRecords, pageSize);
     const tableClass = classNames(tableStyles['Table'], classes);
 
@@ -1115,6 +1125,8 @@ export class Table extends React.Component<TableProps, TableState> {
             enableInfiniteScroll={enableInfiniteScroll}
             infiniteScrollOptions={infiniteScrollOptions}
             onScroll={onScroll}
+            searchTerm={searchTerm}
+            highlightRegex={highlightRegex}
           />
         </div>
         {withPagination && !this.state.loading && !this.state.error && totalPages > 1 && (
