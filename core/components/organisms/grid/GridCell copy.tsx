@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { Avatar, Text, Placeholder, PlaceholderParagraph, Icon, StatusHint, Tooltip, MetaList } from '@/index';
+import { Avatar, Text, Placeholder, PlaceholderParagraph, Icon, StatusHint, Tooltip } from '@/index';
 import { StatusHintProps, TextProps } from '@/index.type';
 import { ColumnSchema, RowData, GridSize } from './Grid';
 import { translateData } from './utility';
@@ -168,23 +168,18 @@ const renderMetaList = (props: CellProps & { searchTerm?: string }) => {
   const { metaList } = cellData;
 
   if (metaList) {
-    // Pre-process the metaList to highlight search terms
-    const processedMetaList = metaList.map((list) => {
-      if (!searchTerm || !list) return { label: list };
-
-      const regex = new RegExp(`(${searchTerm})`, 'gi');
-      const parts = list.split(regex);
-
-      const highlightedLabel = (
-        <span>{parts.map((part, i) => (regex.test(part) ? <mark key={i}>{part}</mark> : part))}</span>
-      );
-
-      return { label: highlightedLabel };
-    });
-
     return (
       <div className={styles['GridCell-metaList']} data-test="DesignSystem-GridCell-metaList">
-        <MetaList list={processedMetaList} size="small" />
+        {metaList.map((list, index) => (
+          <HighlightedText
+            key={index}
+            text={list}
+            searchTerm={searchTerm}
+            className="ellipsis d-flex align-items-center"
+            appearance={'subtle'}
+            size="small"
+          />
+        ))}
       </div>
     );
   }

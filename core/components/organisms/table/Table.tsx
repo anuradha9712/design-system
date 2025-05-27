@@ -1051,7 +1051,7 @@ export class Table extends React.Component<TableProps, TableState> {
 
     const classes = className ? ` ${className}` : '';
 
-    const { totalRecords } = this.state;
+    const { totalRecords, searchTerm } = this.state;
     const totalPages = getTotalPages(totalRecords, pageSize);
     const tableClass = classNames(tableStyles['Table'], classes);
 
@@ -1115,6 +1115,7 @@ export class Table extends React.Component<TableProps, TableState> {
             enableInfiniteScroll={enableInfiniteScroll}
             infiniteScrollOptions={infiniteScrollOptions}
             onScroll={onScroll}
+            searchTerm={searchTerm}
           />
         </div>
         {withPagination && !this.state.loading && !this.state.error && totalPages > 1 && (

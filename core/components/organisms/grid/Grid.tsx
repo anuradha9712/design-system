@@ -351,6 +351,10 @@ export interface GridProps extends BaseProps {
    * Fetch Data Function to be called on scroll when threshold is reached in case of async table
    */
   fetchDataOnScroll?: (props: { page: number; rowsCount: number }) => Promise<Data>;
+  /**
+   * Search term to highlight in cells
+   */
+  searchTerm?: string;
 }
 
 export interface GridState {
