@@ -164,6 +164,31 @@ const renderTitle = (props: CellProps & { searchTerm?: string }) => {
   return null;
 };
 
+const getMetaContent = ({ searchTerm, list }: { searchTerm?: string; list: string }) => {
+  if (searchTerm && list) {
+    return list.split(new RegExp(`(${searchTerm})`, 'gi')).map((part, i) => {
+      if (new RegExp(searchTerm, 'i').test(part)) {
+        return (
+          <mark key={i} className="GridCell-mark--metaList">
+            {part}
+          </mark>
+        );
+      }
+      return (
+        <Text key={i} appearance="subtle" size="small" className="white-space-pre">
+          {part}
+        </Text>
+      );
+    });
+  }
+
+  return (
+    <Text appearance="subtle" size="small" className="white-space-pre">
+      {list}
+    </Text>
+  );
+};
+
 const renderMetaList = (props: CellProps & { searchTerm?: string }) => {
   const { cellData, searchTerm } = props;
 
@@ -171,24 +196,24 @@ const renderMetaList = (props: CellProps & { searchTerm?: string }) => {
 
   if (metaList) {
     const processedMetaList = metaList.map((list, index) => {
-      const content =
-        searchTerm && list ? (
-          list.split(new RegExp(`(${searchTerm})`, 'gi')).map((part, i) =>
-            new RegExp(searchTerm, 'i').test(part) ? (
-              <mark key={i} className="GridCell-mark--metaList">
-                {part}
-              </mark>
-            ) : (
-              <Text key={i} appearance="subtle" size="small" className="white-space-pre">
-                {part}
-              </Text>
-            )
-          )
-        ) : (
-          <Text appearance="subtle" size="small" className="white-space-pre">
-            {list}
-          </Text>
-        );
+      const content = getMetaContent({ searchTerm, list });
+      // searchTerm && list ? (
+      //   list.split(new RegExp(`(${searchTerm})`, 'gi')).map((part, i) =>
+      //     new RegExp(searchTerm, 'i').test(part) ? (
+      //       <mark key={i} className="GridCell-mark--metaList">
+      //         {part}
+      //       </mark>
+      //     ) : (
+      //       <Text key={i} appearance="subtle" size="small" className="white-space-pre">
+      //         {part}
+      //       </Text>
+      //     )
+      //   )
+      // ) : (
+      //   <Text appearance="subtle" size="small" className="white-space-pre">
+      //     {list}
+      //   </Text>
+      // );
 
       return (
         <div key={list} className="ellipsis d-flex align-items-center">
