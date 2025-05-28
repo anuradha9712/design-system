@@ -179,10 +179,20 @@ const renderTitle = (props: CellProps) => {
   return null;
 };
 
-const getMetaContent = ({ searchTerm, list }: { searchTerm?: string; list: string }) => {
+const getMetaContent = ({
+  searchTerm,
+  list,
+  highlightRegex,
+}: {
+  searchTerm?: string;
+  list: string;
+  highlightRegex?: (searchTerm: string) => RegExp;
+}) => {
   if (searchTerm && list) {
-    return list.split(new RegExp(`(${searchTerm})`, 'gi')).map((part, i) => {
-      if (new RegExp(searchTerm, 'i').test(part)) {
+    const regex = highlightRegex ? highlightRegex(searchTerm) : new RegExp(`(${searchTerm})`, 'gi');
+
+    return list.split(regex).map((part, i) => {
+      if (regex.test(part)) {
         return (
           <mark key={i} className="GridCell-mark--metaList">
             {part}
@@ -204,32 +214,14 @@ const getMetaContent = ({ searchTerm, list }: { searchTerm?: string; list: strin
   );
 };
 
-const renderMetaList = (props: CellProps & { searchTerm?: string }) => {
-  const { cellData, searchTerm } = props;
+const renderMetaList = (props: CellProps) => {
+  const { cellData, searchTerm, highlightRegex } = props;
 
   const { metaList } = cellData;
 
   if (metaList) {
     const processedMetaList = metaList.map((list, index) => {
-      const content = getMetaContent({ searchTerm, list });
-      // searchTerm && list ? (
-      //   list.split(new RegExp(`(${searchTerm})`, 'gi')).map((part, i) =>
-      //     new RegExp(searchTerm, 'i').test(part) ? (
-      //       <mark key={i} className="GridCell-mark--metaList">
-      //         {part}
-      //       </mark>
-      //     ) : (
-      //       <Text key={i} appearance="subtle" size="small" className="white-space-pre">
-      //         {part}
-      //       </Text>
-      //     )
-      //   )
-      // ) : (
-      //   <Text appearance="subtle" size="small" className="white-space-pre">
-      //     {list}
-      //   </Text>
-      // );
-
+      const content = getMetaContent({ searchTerm, list, highlightRegex });
       return (
         <div key={list} className="ellipsis d-flex align-items-center">
           <div className="ellipsis d-flex align-items-center">{content}</div>
