@@ -355,6 +355,13 @@ export interface GridProps extends BaseProps {
    * Search term to highlight in cells
    */
   searchTerm?: string;
+  /**
+   * Function to create custom regex pattern for highlighting matched text in cells.
+   * If not provided, will use default case-insensitive match.
+   * @param searchTerm - The current search term
+   * @returns RegExp to use for highlighting
+   */
+  highlightRegex?: (searchTerm: string) => RegExp;
 }
 
 export interface GridState {

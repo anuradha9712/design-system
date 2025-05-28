@@ -443,6 +443,13 @@ interface SharedTableProps extends BaseProps {
    * Callback to be triggered on scroll
    */
   onScroll?: GridProps['onScroll'];
+  /**
+   * Function to create custom regex pattern for highlighting matched text in cells.
+   * If not provided, will use default case-insensitive match.
+   * @param searchTerm - The current search term
+   * @returns RegExp to use for highlighting
+   */
+  highlightRegex?: (searchTerm: string) => RegExp;
 }
 
 export type SyncTableProps = SharedTableProps & TableSyncProps;
@@ -1043,6 +1050,7 @@ export class Table extends React.Component<TableProps, TableState> {
       enableInfiniteScroll,
       infiniteScrollOptions,
       onScroll,
+      highlightRegex,
     } = this.props;
 
     const baseProps = extractBaseProps(this.props);
@@ -1116,6 +1124,7 @@ export class Table extends React.Component<TableProps, TableState> {
             infiniteScrollOptions={infiniteScrollOptions}
             onScroll={onScroll}
             searchTerm={searchTerm}
+            highlightRegex={highlightRegex}
           />
         </div>
         {withPagination && !this.state.loading && !this.state.error && totalPages > 1 && (

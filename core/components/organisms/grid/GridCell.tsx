@@ -90,9 +90,10 @@ interface HighlightedTextProps {
   className?: string;
   appearance?: TextProps['appearance'];
   size?: TextProps['size'];
+  highlightRegex?: (searchTerm: string) => RegExp;
 }
 
-const HighlightedText: React.FC<HighlightedTextProps> = ({ text, searchTerm, className, ...rest }) => {
+const HighlightedText: React.FC<HighlightedTextProps> = ({ text, searchTerm, className, highlightRegex, ...rest }) => {
   if (!searchTerm || !text) {
     return (
       <Text className={className} {...rest}>
@@ -101,7 +102,7 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({ text, searchTerm, cla
     );
   }
 
-  const regex = new RegExp(`(${searchTerm})`, 'gi');
+  const regex = highlightRegex ? highlightRegex(searchTerm) : new RegExp(`(${searchTerm})`, 'gi');
   const parts = text.split(regex);
 
   return (
@@ -143,10 +144,12 @@ export interface GridCellProps extends PartialCellProps {
 type CellProps = {
   tooltip?: boolean;
   cellData: CellData;
+  highlightRegex?: (searchTerm: string) => RegExp;
+  searchTerm?: string;
 };
 
-const renderTitle = (props: CellProps & { searchTerm?: string }) => {
-  const { tooltip, cellData, searchTerm } = props;
+const renderTitle = (props: CellProps) => {
+  const { tooltip, cellData, searchTerm, highlightRegex } = props;
 
   const children = cellData.title;
 
@@ -154,11 +157,23 @@ const renderTitle = (props: CellProps & { searchTerm?: string }) => {
     if (tooltip) {
       return (
         <Tooltip tooltip={children} position={'top-start'} triggerClass="w-100 overflow-hidden">
-          <HighlightedText text={children} searchTerm={searchTerm} className="w-100 ellipsis" />
+          <HighlightedText
+            text={children}
+            searchTerm={searchTerm}
+            className="w-100 ellipsis"
+            highlightRegex={highlightRegex}
+          />
         </Tooltip>
       );
     }
-    return <HighlightedText text={children} searchTerm={searchTerm} className="w-100 ellipsis" />;
+    return (
+      <HighlightedText
+        text={children}
+        searchTerm={searchTerm}
+        className="w-100 ellipsis"
+        highlightRegex={highlightRegex}
+      />
+    );
   }
 
   return null;
@@ -297,9 +312,11 @@ export const GridCell = (props: GridCellProps) => {
   const data = !loading ? translateData(schema, props.data) : {};
   const context = React.useContext(GridContext);
 
-  const { searchTerm } = context;
+  const { searchTerm, highlightRegex } = context;
 
   const { name, cellType = 'DEFAULT', align = 'left', tooltip } = schema;
+
+  // console.log('cell schema', schema, 'data', data);
 
   const cellData = data[name];
 
@@ -360,7 +377,7 @@ export const GridCell = (props: GridCellProps) => {
           {loading ? (
             <PlaceholderParagraph length="medium" data-test="DesignSystem-GridCell-placeHolder" />
           ) : (
-            renderTitle({ tooltip, cellData, searchTerm })
+            renderTitle({ tooltip, cellData, searchTerm, highlightRegex })
           )}
         </div>
       );
@@ -375,7 +392,7 @@ export const GridCell = (props: GridCellProps) => {
             </>
           ) : (
             <>
-              {renderTitle({ tooltip, cellData, searchTerm })}
+              {renderTitle({ tooltip, cellData, searchTerm, highlightRegex })}
               {renderMetaList({ cellData, searchTerm })}
             </>
           )}
@@ -403,7 +420,7 @@ export const GridCell = (props: GridCellProps) => {
       return (
         <div className={`${cellClass}   `} data-test="DesignSystem-GridCell-avatarWithText">
           {size !== 'tight' && renderAvatar({ cellData })}
-          {renderTitle({ tooltip, cellData, searchTerm })}
+          {renderTitle({ tooltip, cellData, searchTerm, highlightRegex })}
         </div>
       );
 
@@ -420,7 +437,7 @@ export const GridCell = (props: GridCellProps) => {
         <div className={avatarWithTextCellClass} data-test="DesignSystem-GridCell-avatarWithMetaList">
           {size !== 'tight' && renderAvatar({ cellData })}
           <div className={styles['GridCell-metaListWrapper']}>
-            {renderTitle({ tooltip, cellData, searchTerm })}
+            {renderTitle({ tooltip, cellData, searchTerm, highlightRegex })}
             {renderMetaList({ cellData, searchTerm })}
           </div>
         </div>
