@@ -179,13 +179,13 @@ const renderMetaList = (props: CellProps & { searchTerm?: string }) => {
                 {part}
               </mark>
             ) : (
-              <Text key={i} appearance="subtle" size="small">
+              <Text key={i} appearance="subtle" size="small" className="white-space-pre">
                 {part}
               </Text>
             )
           )
         ) : (
-          <Text appearance="subtle" size="small">
+          <Text appearance="subtle" size="small" className="white-space-pre">
             {list}
           </Text>
         );
