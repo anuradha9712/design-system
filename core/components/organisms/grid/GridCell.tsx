@@ -289,7 +289,7 @@ const renderIcon = (props: CellProps) => {
 };
 
 const renderStatusHint = (props: CellProps) => {
-  const { cellData } = props;
+  const { cellData, searchTerm, highlightRegex, highlightCell } = props;
 
   const { statusAppearance } = cellData;
 
@@ -298,7 +298,14 @@ const renderStatusHint = (props: CellProps) => {
   if (children) {
     return (
       <StatusHint appearance={statusAppearance} className="overflow-hidden">
-        {children}
+        <HighlightedText
+          text={children}
+          searchTerm={searchTerm}
+          className="w-100 ellipsis"
+          highlightRegex={highlightRegex}
+          highlightCell={highlightCell}
+        />
+        {/* {children} */}
       </StatusHint>
     );
   }
@@ -464,7 +471,7 @@ export const GridCell = (props: GridCellProps) => {
               <PlaceholderParagraph length="large" />
             </Placeholder>
           ) : (
-            renderStatusHint({ cellData })
+            renderStatusHint({ cellData, searchTerm, highlightRegex, highlightCell })
           )}
         </div>
       );
