@@ -111,7 +111,7 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({
       <span className={className}>
         {parts.map((part, i) =>
           regex.test(part) ? (
-            <mark key={i} className="GridCell-mark--default">
+            <mark key={i} className="GridCell-mark--default" data-test="DesignSystem-GridCell-mark">
               {part}
             </mark>
           ) : (
