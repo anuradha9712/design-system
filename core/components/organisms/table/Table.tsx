@@ -68,6 +68,7 @@ interface TableSyncProps {
    *        cellRenderer?: React.FunctionComponent\<GridCellProps\>;
    *        align?: 'left' | 'right' | 'center';
    *        verticalAlign?: 'top' | 'center' | 'bottom';
+   *        highlightCell?: boolean;
    *    }
    *
    *    GridCellProps: {
@@ -112,6 +113,7 @@ interface TableSyncProps {
    * | cellRenderer | Custom Cell Renderer | |
    * | align | Align cell content<br>**Align applicable only for following cellTypes:<br>DEFAULT, AVATAR, ICON, STATUS_HINT** | "left" |
    * | verticalAlign | Vertical align cell content | "center" |
+   * | highlightCell | Highlight cell content on search | |
    */
   /* tslint:enable */
   schema: GridProps['schema'];

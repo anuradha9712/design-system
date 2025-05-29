@@ -145,6 +145,10 @@ export type ColumnSchema = {
    * Show tooltip on hover
    */
   tooltip?: boolean;
+  /**
+   * Highlight Cell
+   */
+  highlightCell?: boolean;
 };
 
 export type RowData = Record<string, any> & {

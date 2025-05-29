@@ -85,9 +85,11 @@ export const highlightSearch = () => {
       displayName: 'Name',
       width: '30%',
       cellType: 'WITH_META_LIST',
+      highlightCell: true,
       translate: (a) => ({
         title: a.name,
         metaList: [`${a.recipients} recipients`],
+        highlightCell: true,
       }),
       sorting: false,
     },
@@ -170,16 +172,17 @@ export const highlightSearch = () => {
         }
         headerOptions={{
           withSearch: true,
+          searchPlaceholder: 'Search by name or recipient',
         }}
         onSearch={(currData, searchTerm) => {
           return currData.filter(
             (d) =>
-              d.firstName.toLowerCase().match(searchTerm.toLowerCase()) ||
-              d.lastName.toLowerCase().match(searchTerm.toLowerCase()) ||
-              d.name.toLowerCase().match(searchTerm.toLowerCase())
+              d.name.toLowerCase().startsWith(searchTerm.toLowerCase()) ||
+              d.recipients.toString().toLowerCase().startsWith(searchTerm.toLowerCase())
           );
         }}
         withPagination={true}
+        withCheckbox={true}
         paginationType="basic"
         pageSize={4}
         onPageChange={(newPage) => action(`on-page-change:- ${newPage}`)()}
@@ -205,10 +208,12 @@ const customCode = `
       displayName: 'Name',
       width: '30%',
       cellType: 'WITH_META_LIST',
+      highlightCell: true,
       sorting: false,
       translate: a => ({
         title: a.name,
-        metaList: [\`\${a.recipients} recipients\`]
+        metaList: [\`\${a.recipients} recipients\`],
+        highlightCell: true,
       }),
     },
     {
@@ -284,19 +289,21 @@ const customCode = `
           console.log(\`on-select:- rowIndex: \${rowIndex} selected: \${selected} selectedList: \${JSON.stringify(selectedList)} selectAll: \${selectAll}\`)
         }
         headerOptions={{
-          withSearch: true
+          withSearch: true,
+          searchPlaceholder: 'Search by name or recipient',
         }}
         filterList={{
           status: ['In Progress', 'Scheduled', 'Draft', 'Failed']
         }}
         onSearch={(currData, searchTerm) => {
-          return currData.filter(d =>
-            d.firstName.toLowerCase().match(searchTerm.toLowerCase())
-            || d.lastName.toLowerCase().match(searchTerm.toLowerCase())
-            || d.name.toLowerCase().match(searchTerm.toLowerCase())
+          return currData.filter(
+            (d) =>
+              d.name.toLowerCase().startsWith(searchTerm.toLowerCase()) ||
+              d.recipients.toString().toLowerCase().startsWith(searchTerm.toLowerCase())
           );
         }}
         withPagination={true}
+        withCheckbox={true}
         paginationType="basic"
         pageSize={4}
         highlightRegex={(searchTerm) => new RegExp(\`^(\${searchTerm})\`, 'gi')}
@@ -314,7 +321,7 @@ export default {
     docs: {
       docPage: {
         customCode,
-        title: 'Resource Table',
+        title: 'Highlight Search In Table',
         props: {
           components: { AsyncTable, SyncTable },
         },
