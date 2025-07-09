@@ -1,11 +1,11 @@
-import * as React from 'react';
-import { TSaraSparkleStates, TBaseHtmlProps } from '../common.type';
 import { Player } from '@lottiefiles/react-lottie-player';
+import classNames from 'classnames';
+import * as React from 'react';
+import { TBaseHtmlProps, TSaraSparkleStates } from '../common.type';
 import AIIcon from './assets/AI-Icon.svg';
 import Listening from './assets/AI-Listening.json';
 import AIProcessingLong from './assets/AI-Processing-Long.json';
 import AIProcessingShort from './assets/AI-Processing.json';
-import classNames from 'classnames';
 
 export interface SaraSparkleProps extends TBaseHtmlProps<HTMLDivElement> {
   /**
@@ -60,7 +60,19 @@ export const SaraSparkle = (props: SaraSparkleProps) => {
 
   return (
     <div data-test="DesignSystem-AI-Sara-Sparkle" className={className} {...rest}>
-      <Player autoplay loop src={(state && stateMapping[state]) || Listening} style={{ height: size, width: size }} />
+      {window &&
+        document &&
+        typeof window !== 'undefined' &&
+        typeof document !== 'undefined' &&
+        typeof window !== null &&
+        typeof document !== null && (
+          <Player
+            autoplay
+            loop
+            src={(state && stateMapping[state]) || Listening}
+            style={{ height: size, width: size }}
+          />
+        )}
     </div>
   );
 };

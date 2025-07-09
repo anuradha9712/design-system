@@ -10,7 +10,9 @@ import {
   ButtonProps,
   Message,
   Menu,
-  InlineMessage
+  InlineMessage,
+  Sara,
+  SaraSparkle,
 } from '@innovaccer/design-system';
 
 const MyComponent: React.FC = () => {
@@ -175,6 +177,12 @@ const UserManagementTable: React.FC = () => {
           </Menu.List>
         </Menu>
         <InlineMessage appearance="alert" description="There are two new referral requests." />
+        <Button>Click me</Button>
+        <Sara state="resting" />
+        <SaraSparkle
+          size={64}
+          state="long-processing"
+        />
       </Column>
     </Row>
   );

@@ -15,7 +15,7 @@
 
     <!-- Don't use this in production: -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="index.js"></script>
+    <script src="index.umd.js"></script>
   </head>
 
   <body>
@@ -23,7 +23,7 @@
 
     <script type="text/babel">
       console.log('InnovaccerDesignSystem', InnovaccerDesignSystem);
-      const { Icon, GridCell, Table, Message, Menu, InlineMessage } = InnovaccerDesignSystem;
+      const { Icon, GridCell, Table, Message, Menu, InlineMessage, Sara, SaraSparkle, Button } = InnovaccerDesignSystem;
 
       const MyTable = () => {
         const data = [
@@ -927,6 +927,12 @@
               </Menu.List>
             </Menu>
             <InlineMessage appearance="alert" description="There are two new referral requests." />
+            <SaraSparkle
+          size={64}
+          state="long-processing"
+        />
+        <Sara state="resting" />
+        <Button>Click me</Button>
           </div>
         );
       }

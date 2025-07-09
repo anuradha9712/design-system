@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { TSaraStates, TBaseHtmlProps } from '../common.type';
+import { TBaseHtmlProps, TSaraStates } from '../common.type';
+// import Player from '../utils/LottiePlayer';
 import { Player } from '@lottiefiles/react-lottie-player';
+import classNames from 'classnames';
 import AIResting from './assets/AI-Resting.json';
 import AILogo from './assets/AI-Sara.svg';
-import classNames from 'classnames';
 
 export interface SaraProps extends TBaseHtmlProps<HTMLDivElement> {
   /**
@@ -52,7 +53,14 @@ export const Sara = (props: SaraProps) => {
 
   return (
     <div data-test="DesignSystem-AI-Sara" className={className} {...rest}>
-      <Player autoplay={true} loop src={AIResting} style={{ height: size, width: size }} />
+      {window &&
+        document &&
+        typeof window !== 'undefined' &&
+        typeof document !== 'undefined' &&
+        typeof window !== null &&
+        typeof document !== null && (
+          <Player autoplay={true} loop src={AIResting} style={{ height: size, width: size }} />
+        )}
     </div>
   );
 };
