@@ -91,6 +91,12 @@ import {
   TimePicker,
   TextField,
   Table,
+  AIButton,
+  Sara,
+  SaraSparkle,
+  AIIconButton,
+  AIChip,
+  AIResponse
 } from '@innovaccer/design-system';
 import '@innovaccer/design-system/css';
 
@@ -806,6 +812,21 @@ function Test() {
       width: '25%',
     },
   ];
+
+  const [selectedList, setSelectedList] = React.useState({
+    pin: false,
+    like: false,
+    dislike: false,
+  });
+
+  const metaDataRenderer = () => {
+    return (
+      <Text appearance="subtle" size="small" weight="medium">
+        1:00 PM
+      </Text>
+    );
+  };
+
 
   return (
     <div className="p-8 w-100 bg-secondary-lighter">
@@ -2079,6 +2100,96 @@ function Test() {
           />
         </Card>
       </div>
+
+      <Heading>AI Components</Heading>
+
+      {/* AI Components */}
+      <AIButton className="m-2">
+        AI Button
+      </AIButton>
+      
+      <AIButton withSparkle={false}>No Sparkle</AIButton>
+
+      <Sara state="resting" className="m-2" />
+      <Sara className="m-2" />
+
+      <SaraSparkle className="m-2" />
+
+      <SaraSparkle
+        size={64}
+        state="listening"
+      />
+
+      <SaraSparkle
+        size={64}
+        state="short-processing"
+      />
+
+      <SaraSparkle
+        size={64}
+        state="long-processing"
+      />
+
+      <AIChip
+        className="m-2"
+        icon="edit_note"
+        label="AI chip"
+      />
+
+      <AIIconButton
+        className="m-2"
+        icon="import_contacts"
+        tooltip="Import Contacts"
+      />      
+
+      <AIResponse showAvatar={true} metaData={metaDataRenderer} className="m-2">
+        <AIResponse.Body>
+          <Text>Hello, would you like to book an appointment with your cardiologist?</Text>
+        </AIResponse.Body>
+
+        <AIResponse.ActionBar>
+          <div className="d-flex">
+            <AIResponse.Button
+              icon="push_pin"
+              className="mr-3"
+              selected={selectedList.pin}
+              onClick={() => setSelectedList({ ...selectedList, pin: !selectedList.pin })}
+            >
+              Pin
+            </AIResponse.Button>
+            <AIResponse.Button icon="content_copy" iconType="rounded">Copy</AIResponse.Button>
+          </div>
+
+          <div className="d-flex align-items-center">
+            <AIResponse.Button icon="sync" className="mr-3" tooltip="Regenerate" />
+            <AIResponse.Button
+              icon="thumb_up"
+              iconType="outlined"
+              className="mr-3"
+              tooltip="Good Response"
+              selected={selectedList.like && !selectedList.dislike}
+              onClick={() => setSelectedList({ ...selectedList, like: !selectedList.like, dislike: false })}
+            />
+            <AIResponse.Button
+              icon="thumb_down"
+              iconType="outlined"
+              className="mr-3"
+              tooltip="Bad Response"
+              selected={selectedList.dislike && !selectedList.like}
+              onClick={() => setSelectedList({ ...selectedList, dislike: !selectedList.dislike, like: false })}
+            />
+
+            <Menu className="m-2 p-4 bg-primary" trigger={<Menu.Trigger className="AIResponse-menu-button" appearance="transparent" size="tiny" />}>
+              <Menu.List>
+                <Menu.Item>Share</Menu.Item>
+                <Menu.Item>View source</Menu.Item>
+                <Menu.Item>Report a problem</Menu.Item>
+              </Menu.List>
+            </Menu>
+          </div>
+        </AIResponse.ActionBar>
+      </AIResponse>
+
     </div>
   );
 }
