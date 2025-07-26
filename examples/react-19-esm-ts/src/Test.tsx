@@ -1522,7 +1522,7 @@ function Test() {
         Legend
       </Legend>
 
-      <Link href="http://innovaccer.com" onClick={function () {}} target="_blank">
+      <Link href="http://innovaccer.com" onClick={function () {}} target="_blank" className="m-2">
         Read more
       </Link>
 
@@ -1593,7 +1593,7 @@ function Test() {
       </Pills>
 
       <Placeholder imageSize="large" className="m-2">
-        <PlaceholderImage />
+        <PlaceholderImage className="m-2" />
 
         <PlaceholderParagraph className="m-2" />
         <PlaceholderParagraph />
@@ -1672,7 +1672,7 @@ function Test() {
         <Chat.DateSeparator className="m-2" date="May 21, 2024" />
         <Chat.NewMessage className="m-2" text="2 New Messages" />
         <Chat.UnreadMessage className="m-2" text="2 Unread Messages" />
-        <Chat.TypingIndicator text="Joy, Jeff and Thomas are typing..." />
+        <Chat.TypingIndicator className="m-2" text="Joy, Jeff and Thomas are typing..." />
       </Chat>
 
       <ChipInput
@@ -1814,12 +1814,12 @@ function Test() {
       </div>
 
       <div className="w-25">
-        <InputMask icon="calendar_month" mask={dateMask} validators={dateValidator} placeholder="mm/dd/yyyy" />
+        <InputMask className="m-2" icon="calendar_month" mask={dateMask} validators={dateValidator} placeholder="mm/dd/yyyy" />
       </div>
 
       <KeyValuePair className="d-flex mt-8">
         <KeyValuePair.Key className="mr-7" icon="call" label="Phone" />
-        <KeyValuePair.Value value="(555) 555-5555" />
+        <KeyValuePair.Value className="m-2" value="(555) 555-5555" />
       </KeyValuePair>
 
       <div>
@@ -1892,7 +1892,7 @@ function Test() {
         </Sidesheet>
       </div>
 
-      <Stepper steps={steps} active={active5} completed={1} onChange={onChange5} />
+      <Stepper className="m-2" steps={steps} active={active5} completed={1} onChange={onChange5} />
 
       <Tabs activeIndex={activeIndex6} onTabChange={onTabChangeHandler} className="mb-6" headerClassName="pl-3">
         <Tab label="All" count={15} className="pl-6">
@@ -2069,6 +2069,7 @@ function Test() {
             data={tableData}
             schema={schema1}
             showMenu={true}
+            className="m-2"
             withHeader={true}
             withPagination={true}
             pageSize={4}
