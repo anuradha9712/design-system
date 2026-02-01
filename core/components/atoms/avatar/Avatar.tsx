@@ -178,9 +178,17 @@ export const Avatar = (props: AvatarProps) => {
   };
 
   const renderAvatar = () => {
+    const avatarLabel = firstName || lastName ? `${firstName || ''} ${lastName || ''}`.trim() : undefined;
+    const ariaLabel = avatarLabel ? (presence ? `${avatarLabel} - ${presence}` : avatarLabel) : undefined;
+
     if (children && typeof children !== 'string') {
       return (
-        <span data-test="DesignSystem-AvatarWrapper" className={AvatarWrapperClassNames} role={role}>
+        <span
+          data-test="DesignSystem-AvatarWrapper"
+          className={AvatarWrapperClassNames}
+          role={role === 'presentation' && avatarLabel ? 'img' : role}
+          aria-label={ariaLabel}
+        >
           <AvatarProvider value={sharedProp}>
             <span
               data-test="DesignSystem-Avatar"
@@ -196,7 +204,12 @@ export const Avatar = (props: AvatarProps) => {
     }
 
     return (
-      <span data-test="DesignSystem-AvatarWrapper" className={AvatarWrapperClassNames} role={role}>
+      <span
+        data-test="DesignSystem-AvatarWrapper"
+        className={AvatarWrapperClassNames}
+        role={role === 'presentation' && avatarLabel ? 'img' : role}
+        aria-label={ariaLabel}
+      >
         <span
           data-test="DesignSystem-Avatar"
           {...baseProps}
@@ -205,7 +218,7 @@ export const Avatar = (props: AvatarProps) => {
         >
           <>
             {initials && (
-              <Text weight="medium" className={TextClassNames}>
+              <Text weight="medium" className={TextClassNames} aria-hidden="true">
                 {initials}
               </Text>
             )}
