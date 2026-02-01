@@ -36,7 +36,13 @@ export const Badge = (props: BadgeProps) => {
   );
 
   return (
-    <span data-test="DesignSystem-Badge" {...baseProps} className={classes} {...rest}>
+    <span
+      data-test="DesignSystem-Badge"
+      {...baseProps}
+      className={classes}
+      role={rest['aria-label'] ? 'status' : undefined}
+      {...rest}
+    >
       {children}
     </span>
   );
