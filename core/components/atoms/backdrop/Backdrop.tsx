@@ -80,6 +80,7 @@ export const Backdrop: React.FC<BackdropProps> = (props) => {
       {...baseProps}
       className={classes}
       style={{ zIndex: props.zIndex }}
+      aria-hidden="true"
     />,
     document.body
   );
