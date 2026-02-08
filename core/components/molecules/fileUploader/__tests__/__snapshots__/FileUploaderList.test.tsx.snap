@@ -11,6 +11,8 @@ exports[`FileUploaderList component
     <div
       class="FileUploaderItem"
       data-test="DesignSystem-FileUploader--Item"
+      role="button"
+      tabindex="0"
     >
       <div
         class="FileUploaderItem-file"
@@ -51,6 +53,7 @@ exports[`FileUploaderList component
             />
           </svg>
           <button
+            aria-label="Remove Audio File.mp3"
             class="Button Button--regular Button--regularSquare Button--transparent"
             data-test="DesignSystem-FileUploader--CancelButton"
             tabindex="0"
@@ -75,6 +78,8 @@ exports[`FileUploaderList component
     <div
       class="FileUploaderItem"
       data-test="DesignSystem-FileUploader--Item"
+      role="button"
+      tabindex="0"
     >
       <div
         class="FileUploaderItem-file"
@@ -89,6 +94,7 @@ exports[`FileUploaderList component
           class="d-flex align-items-center"
         >
           <button
+            aria-label="Remove Video File.mp4"
             class="Button Button--regular Button--regularSquare Button--transparent"
             data-test="DesignSystem-FileUploader--CancelButton"
             tabindex="0"
@@ -113,6 +119,8 @@ exports[`FileUploaderList component
     <div
       class="FileUploaderItem"
       data-test="DesignSystem-FileUploader--Item"
+      role="button"
+      tabindex="0"
     >
       <div
         class="FileUploaderItem-file"
@@ -127,6 +135,7 @@ exports[`FileUploaderList component
           class="d-flex align-items-center"
         >
           <button
+            aria-label="Retry upload for Image File.jpeg"
             class="Button Button--regular Button--regularSquare Button--transparent mr-2"
             data-test="DesignSystem-Button"
             tabindex="0"
@@ -146,6 +155,7 @@ exports[`FileUploaderList component
             </div>
           </button>
           <button
+            aria-label="Remove Image File.jpeg"
             class="Button Button--regular Button--regularSquare Button--transparent"
             data-test="DesignSystem-FileUploader--CancelButton"
             tabindex="0"
