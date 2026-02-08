@@ -129,7 +129,8 @@ export const Avatar = (props: AvatarProps) => {
 
   const avatarAriaLabel = props['aria-label'] || getAriaLabel();
   const avatarRole =
-    props['aria-label'] || firstName || lastName || (children && typeof children === 'string') ? 'img' : role;
+    props.role ||
+    (props['aria-label'] || firstName || lastName || (children && typeof children === 'string') ? 'img' : role);
 
   const AvatarAppearance =
     appearance || colors[(initials.charCodeAt(0) + (initials.charCodeAt(1) || 0)) % 8] || DefaultAppearance;
