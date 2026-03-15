@@ -249,6 +249,11 @@ const DropdownList = (props: OptionsProps) => {
     loadingOptions,
   } = props;
 
+  const triggerAriaLabel = props['aria-label']?.trim();
+  const triggerAriaLabelledBy = props['aria-labelledby'];
+  const resolvedOptionsAriaLabel =
+    optionsAriaLabel?.trim() || (triggerAriaLabel ? `${triggerAriaLabel} options` : menu ? 'Menu options' : 'Options');
+
   const baseProps = extractBaseProps(props);
 
   const dropdownRef = React.createRef<HTMLDivElement>();
@@ -626,7 +631,8 @@ const DropdownList = (props: OptionsProps) => {
         {selected.length > 0 && renderGroups(selectedSectionLabel, true)}
         <div
           role={menu ? 'menu' : 'listbox'}
-          aria-label={optionsAriaLabel}
+          aria-label={resolvedOptionsAriaLabel}
+          aria-labelledby={triggerAriaLabelledBy}
           aria-multiselectable={!menu && withCheckbox ? true : undefined}
         >
           {selected.map((option, index) => renderOptions(option, index))}
