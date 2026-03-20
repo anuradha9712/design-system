@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>MDS v4.21.0 Reel</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #06060f;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    font-family: system-ui, sans-serif;
+  }
+  #reel {
+    display: block;
+    width: 960px;
+    height: 540px;
+    border-radius: 14px;
+    box-shadow: 0 20px 70px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.06);
+  }
+  .controls { display: flex; gap: 12px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 22px; border-radius: 100px; font-size: 13px;
+    font-weight: 600; cursor: pointer; border: none; font-family: inherit;
+    transition: opacity .15s, transform .15s;
+  }
+  .btn:hover { opacity: .85; transform: translateY(-1px); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  .btn-primary { background: linear-gradient(135deg,#2563eb,#7c3aed); color:#fff; box-shadow: 0 4px 20px rgba(37,99,235,.35); }
+  .btn-ghost   { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); color: #f0f0ff; }
+  #status { font-size: 12px; color: #8888aa; }
+  .dot { width:7px;height:7px;border-radius:50%;background:#ef4444;display:inline-block;animation:blink 1s infinite; }
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+</style>
+</head>
+<body>
+
+<canvas id="reel" width="1920" height="1080"></canvas>
+<div class="controls">
+  <button class="btn btn-ghost" onclick="restartPreview()">↺ Restart</button>
+  <button class="btn btn-primary" id="dlBtn" onclick="exportReel()">⬇ Download Reel</button>
+</div>
+<div id="status">1920×1080 · Clean canvas export · No browser UI</div>
+
+<script>
+const canvas = document.getElementById('reel');
+const ctx    = canvas.getContext('2d');
+const W = 1920, H = 1080;
+const SLIDE_DUR = 7;
+const N = 7;
+const TOTAL = N * SLIDE_DUR;
+
+let startTime = null, rafId = null;
+
+// ── Preload real MDS component screenshots ──
+const imgs = {};
+['stepper','buttons','vnav','hnav'].forEach(name => {
+  const img = new Image();
+  img.src = `./img/${name}.png`;
+  imgs[name] = img;
+});
+
+// ── Easing ──
+const clamp  = (v,a,b) => Math.max(a, Math.min(b, v));
+const easeOut = t => 1 - Math.pow(1 - clamp(t,0,1), 3);
+const easeIn  = t => Math.pow(clamp(t,0,1), 2);
+const fadeIn  = (t,f=0.2) => easeOut(clamp(t/f, 0,1));
+const fadeOut = (t,f=0.18)=> easeIn(clamp((1-t)/f, 0,1));
+const fi      = (t,f=0.2) => Math.min(fadeIn(t,f), fadeOut(t,f));
+
+// ── Polyfill roundRect ──
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r){
+    this.beginPath();
+    this.moveTo(x+r,y); this.lineTo(x+w-r,y); this.arcTo(x+w,y,x+w,y+r,r);
+    this.lineTo(x+w,y+h-r); this.arcTo(x+w,y+h,x+w-r,y+h,r);
+    this.lineTo(x+r,y+h); this.arcTo(x,y+h,x,y+h-r,r);
+    this.lineTo(x,y+r); this.arcTo(x,y,x+r,y,r); this.closePath();
+  };
+}
+
+// ── Helpers ──
+function rr(x,y,w,h,r){ ctx.beginPath(); ctx.roundRect(x,y,w,h,r); }
+
+function radBg(cx,cy,r,inner,outer){
+  const g = ctx.createRadialGradient(cx,cy,0,cx,cy,r);
+  g.addColorStop(0,inner); g.addColorStop(1,outer);
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+}
+
+function linGrad(c1,c2,x1,x2){
+  const g = ctx.createLinearGradient(x1,0,x2,0);
+  g.addColorStop(0,c1); g.addColorStop(1,c2); return g;
+}
+
+function gradText(text,x,y,c1,c2,font,align='center'){
+  ctx.font = font; ctx.textAlign = align; ctx.textBaseline = 'middle';
+  const m  = ctx.measureText(text);
+  const gx = align==='center' ? x-m.width/2 : x;
+  ctx.fillStyle = linGrad(c1,c2,gx,gx+m.width);
+  ctx.fillText(text,x,y);
+}
+
+function pill(cx,cy,text,bg,tc,fs=28,px=36,py=16){
+  ctx.font = `600 ${fs}px Inter,system-ui`;
+  const tw = ctx.measureText(text).width;
+  const pw = tw+px*2, ph = fs+py*2;
+  rr(cx-pw/2,cy-ph/2,pw,ph,ph/2);
+  ctx.fillStyle=bg; ctx.fill();
+  ctx.fillStyle=tc; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(text,cx,cy);
+}
+
+function tag(cx,cy,text,a=1){
+  ctx.save(); ctx.globalAlpha=a;
+  ctx.font='600 22px Inter,system-ui';
+  const tw=ctx.measureText(text).width;
+  const pw=tw+28, ph=44;
+  rr(cx-pw/2,cy-ph/2,pw,ph,10);
+  ctx.fillStyle='rgba(167,139,250,.12)'; ctx.fill();
+  ctx.strokeStyle='rgba(167,139,250,.28)'; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle='#c4b5fd'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(text,cx,cy); ctx.restore();
+}
+
+function card(x,y,w,h,r=16){
+  rr(x,y,w,h,r);
+  ctx.fillStyle='rgba(19,19,31,.96)'; ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,.07)'; ctx.lineWidth=1.5; ctx.stroke();
+}
+
+function drawSceneImage(img, x, y, maxW, maxH) {
+  if (!img || !img.complete || !img.naturalWidth) return;
+  ctx.save();
+  const scale = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight);
+  const dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
+  ctx.drawImage(img, x + (maxW - dw) / 2, y + (maxH - dh) / 2, dw, dh);
+  ctx.restore();
+}
+
+function divider(){
+  ctx.fillStyle='rgba(255,255,255,.08)';
+  ctx.fillRect(W/2-1, 60, 2, H-120);
+}
+
+// Left col center / right col center
+const LC = W*0.25, RC = W*0.75;
+const LX = 120, RX = W/2+50, CW = W/2-170;
+
+// ── SLIDE 0 — Intro ──────────────────────────────────
+function slide0(t){
+  ctx.fillStyle='#0a0a12'; ctx.fillRect(0,0,W,H);
+  radBg(W/2,H/2,1000,'rgba(20,12,80,.85)','rgba(10,10,18,0)');
+  const pulse = .7+.3*Math.sin(t*Math.PI*5);
+  radBg(W/2,H/2,600*pulse,`rgba(37,99,235,${.14*fi(t)})`,'transparent');
+
+  const a = fi(t);
+  ctx.save(); ctx.globalAlpha=a;
+
+  // Badge
+  ctx.globalAlpha = a*easeOut(clamp(t/.18,0,1));
+  pill(W/2,H*.18,'🚀  NEW RELEASE','rgba(0,112,243,.18)','#60a5fa',26,38,14);
+
+  // MDS
+  ctx.globalAlpha = a*easeOut(clamp((t-.05)/.2,0,1));
+  gradText('MDS',W/2,H*.38,'#ffffff','#818cf8','900 220px Inter,system-ui');
+
+  // v4.21.0
+  ctx.globalAlpha = a*easeOut(clamp((t-.12)/.2,0,1));
+  gradText('v4.21.0',W/2,H*.54,'#60a5fa','#a78bfa','800 90px Inter,system-ui');
+
+  // Tagline
+  ctx.globalAlpha = a*easeOut(clamp((t-.2)/.2,0,1));
+  ctx.font='500 32px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='#8888aa';
+  ctx.fillText('Masala Design System  ·  Accessibility-first  ·  WCAG 2.2 AA  ·  March 2026',W/2,H*.66);
+
+  // Pills in a row
+  ctx.globalAlpha = a*easeOut(clamp((t-.3)/.2,0,1));
+  [['30+  Components updated',W/2-420],['40+  A11y improvements',W/2],['12+  Docs updated',W/2+420]]
+    .forEach(([l,cx])=> pill(cx,H*.82,l,'rgba(255,255,255,.06)','#f0f0ff',26,38,12));
+
+  ctx.restore();
+}
+
+// ── SLIDE 1 — A11y ──────────────────────────────────
+function slide1(t){
+  ctx.fillStyle='#0a0a12'; ctx.fillRect(0,0,W,H);
+  radBg(LC,H/2,700,'rgba(15,42,15,.85)','rgba(10,10,18,0)');
+  divider();
+
+  const a = fi(t);
+  ctx.save(); ctx.globalAlpha=a;
+
+  // ── LEFT: heading + icon ──
+  const floatY = Math.sin(t*Math.PI*4)*14;
+  const ir=72, ix=LC, iy=H*.22+floatY;
+  const ig=ctx.createRadialGradient(ix,iy,0,ix,iy,ir);
+  ig.addColorStop(0,'#16a34a'); ig.addColorStop(1,'#15803d');
+  rr(ix-ir,iy-ir,ir*2,ir*2,ir); ctx.fillStyle=ig; ctx.fill();
+  radBg(ix,iy,180,'rgba(22,163,74,.25)','transparent');
+  ctx.font='58px serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('♿',ix,iy);
+
+  ctx.globalAlpha = a*easeOut(clamp((t-.06)/.22,0,1));
+  gradText('Accessibility',LC,H*.42,'#ffffff','#86efac','800 72px Inter,system-ui');
+  gradText('at the Core',LC,H*.42+84,'#86efac','#ffffff','800 72px Inter,system-ui');
+
+  ctx.globalAlpha = a*easeOut(clamp((t-.15)/.2,0,1));
+  ctx.font='400 28px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillStyle='#8888aa';
+  ['Our biggest accessibility release yet —','WCAG 2.2 AA across the entire component library.']
+    .forEach((l,i)=> ctx.fillText(l,LC,H*.60+i*40));
+
+  ctx.globalAlpha = a*easeOut(clamp((t-.24)/.2,0,1));
+  rr(LC-240,H*.73-26,480,52,12);
+  ctx.fillStyle='rgba(22,163,74,.15)'; ctx.fill();
+  ctx.strokeStyle='rgba(22,163,74,.4)'; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.font='700 28px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='#86efac'; ctx.fillText('✅  WCAG 2.2 AA Compliant',LC,H*.73);
+
+  // ── RIGHT: component chips ──
+  const comps=['Modal','Tabs','Slider','Stepper','Chip','VerticalNav','HorizontalNav',
+               'Sidesheet','Calendar','Listbox','Switch','Link','AI Button','Input','Select','Dropzone',
+               'Dropdown','Textarea','DatePicker','Breadcrumbs'];
+  const cols=4, cw=180, ch=46, gx=18;
+  const tw=(cols*cw+(cols-1)*gx);
+  const startX=RC-tw/2;
+  const startY=H*.12, endY=H*.88;
+  const rows=Math.ceil(comps.length/cols);
+  const stepY=(endY-startY)/(rows-1);
+  comps.forEach((name,i)=>{
+    const da=easeOut(clamp((t-.28-i*.022)/.15,0,1));
+    const row=Math.floor(i/cols), col=i%cols;
+    const cx=startX+col*(cw+gx)+cw/2;
+    const cy=startY+row*stepY;
+    tag(cx,cy,name,a*da);
+  });
+
+  ctx.restore();
+}
+
+// ── SLIDE 2 — Keyboard Nav ──────────────────────────
+function slide2(t){
+  ctx.fillStyle='#0a0a12'; ctx.fillRect(0,0,W,H);
+  radBg(LC,H/2,700,'rgba(30,16,64,.85)','rgba(10,10,18,0)');
+  divider();
+
+  const a = fi(t);
+  ctx.save(); ctx.globalAlpha=a;
+
+  // ── LEFT ──
+  ctx.font='700 24px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='#a78bfa'; ctx.fillText('⌨️  KEYBOARD NAVIGATION',LC,H*.14);
+
+  gradText('Navigate with',LC,H*.25,'#ffffff','#a78bfa','800 70px Inter,system-ui');
+  gradText('just a keyboard',LC,H*.25+80,'#a78bfa','#818cf8','800 70px Inter,system-ui');
+
+  [['🎚️','Slider','Arrow keys adjust value precisely'],
+   ['🪜','Stepper','Arrow · Home · End (WAI-ARIA)'],
+   ['🗂️','VerticalNav','Full WAI-ARIA tree keyboard support'],
+  ].forEach(([icon,name,desc],i)=>{
+    const ia=easeOut(clamp((t-.14-i*.1)/.2,0,1));
+    ctx.save(); ctx.globalAlpha=a*ia;
+    const iy=H*.50+i*108;
+    card(LX,iy-38,CW,78,14);
+    ctx.font='38px serif'; ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillText(icon,LX+22,iy);
+    ctx.font='700 30px Inter,system-ui'; ctx.fillStyle='#f0f0ff'; ctx.fillText(name,LX+80,iy-12);
+    ctx.font='400 22px Inter,system-ui'; ctx.fillStyle='#8888aa'; ctx.fillText(desc,LX+80,iy+20);
+    ctx.restore();
+  });
+
+  // ── RIGHT: Real MDS Stepper screenshot ──
+  card(RX,H*.10,CW,H*.82,16);
+  ctx.font='600 20px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='rgba(129,140,248,.55)'; ctx.fillText('LIVE COMPONENT · MDS STEPPER',RC,H*.10+30);
+
+  const sfX=RX+40, sfY=H*.10+58, sfW=CW-80, sfH=220;
+  rr(sfX,sfY,sfW,sfH,12);
+  ctx.fillStyle='rgba(10,10,18,.95)'; ctx.fill();
+  ctx.strokeStyle='rgba(129,140,248,.3)'; ctx.lineWidth=1.5; ctx.stroke();
+  drawSceneImage(imgs.stepper, sfX+12, sfY+12, sfW-24, sfH-24);
+
+  const activeStep = (Math.floor(t*SLIDE_DUR/1.6)%4)+1;
+  const steplabels2=['Start','Details','Review','Done'];
+  ctx.font='600 24px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='#a78bfa'; ctx.fillText('Active: Step '+activeStep+' — '+steplabels2[activeStep-1],RC,sfY+sfH+44);
+
+  // Keys
+  const keysY=H*.64;
+  ctx.font='700 22px Inter,system-ui'; ctx.fillStyle='#8888aa'; ctx.textAlign='center';
+  ctx.fillText('Keyboard shortcuts',RC,keysY-52);
+  let kx=RC-180;
+  [['◀',false],['▶',activeStep<4],['Home',false],['End',activeStep===4]].forEach(([k,act])=>{
+    ctx.font='700 22px Inter,system-ui';
+    const kw=ctx.measureText(k).width+40, kh=52;
+    rr(kx,keysY-kh/2,kw,kh,8);
+    ctx.fillStyle=act?'rgba(124,58,237,.9)':'rgba(30,30,46,.9)'; ctx.fill();
+    ctx.strokeStyle=act?'#9f6cff':'rgba(255,255,255,.18)'; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.fillStyle='#f0f0ff'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(k,kx+kw/2,keysY); kx+=kw+12;
+  });
+
+  // Desc
+  ctx.font='500 26px Inter,system-ui'; ctx.textAlign='center'; ctx.fillStyle='#8888aa';
+  ['Also: Tabs, HorizontalNav, Sidesheet,','Dropzone, Switch — all keyboard-accessible.']
+    .forEach((l,i)=> ctx.fillText(l,RC,H*.79+i*36));
+
+  ctx.restore();
+}
+
+// ── SLIDE 3 — Focus States ──────────────────────────
+function slide3(t){
+  ctx.fillStyle='#0a0a12'; ctx.fillRect(0,0,W,H);
+  radBg(LC,H/2,700,'rgba(26,10,46,.85)','rgba(10,10,18,0)');
+  divider();
+
+  const a = fi(t);
+  ctx.save(); ctx.globalAlpha=a;
+
+  // ── LEFT ──
+  ctx.font='700 24px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='#c084fc'; ctx.fillText('🎯  FOCUS MANAGEMENT',LC,H*.14);
+
+  gradText('Consistent',LC,H*.26,'#ffffff','#c084fc','800 68px Inter,system-ui');
+  gradText('focus rings',LC,H*.26+76,'#f472b6','#c084fc','800 68px Inter,system-ui');
+  gradText('everywhere',LC,H*.26+152,'#ffffff','#f0f0ff','800 68px Inter,system-ui');
+
+  ctx.globalAlpha=a*easeOut(clamp((t-.2)/.25,0,1));
+  [['Button, LinkButton, Link','outline-based focus ring'],
+   ['Input, Textarea, MetricInput','updated focus state'],
+   ['Chip, AIChip','new outline + background colors'],
+   ['Modal, Sidesheet','focus trap added'],
+  ].forEach(([title,sub],i)=>{
+    const ry=H*.60+i*68;
+    ctx.font='600 24px Inter,system-ui'; ctx.textAlign='left'; ctx.textBaseline='middle';
+    ctx.fillStyle='#e0e0ff'; ctx.fillText('·  '+title,LX+20,ry);
+    ctx.font='400 20px Inter,system-ui'; ctx.fillStyle='#8888aa';
+    ctx.fillText('   '+sub,LX+20,ry+26);
+  });
+
+  // ── RIGHT: Real MDS Button/Input/Chip screenshot ──
+  const cardTop=H*.08, cardH=H*.84;
+  card(RX,cardTop,CW,cardH,16);
+  ctx.font='600 20px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='rgba(192,132,252,.55)'; ctx.fillText('LIVE COMPONENT · MDS FOCUS STATES',RC,cardTop+30);
+
+  const sfX2=RX+40, sfY2=cardTop+58, sfW2=CW-80;
+  const bImg=imgs.buttons;
+  const sfH2=(bImg.complete&&bImg.naturalWidth)?Math.min(560,(bImg.naturalHeight/bImg.naturalWidth)*sfW2):380;
+  rr(sfX2,sfY2,sfW2,sfH2,12);
+  ctx.fillStyle='rgba(10,10,18,.95)'; ctx.fill();
+  ctx.strokeStyle='rgba(192,132,252,.3)'; ctx.lineWidth=1.5; ctx.stroke();
+  drawSceneImage(imgs.buttons, sfX2+12, sfY2+12, sfW2-24, sfH2-24);
+
+  // Focus cycling indicator
+  const focusIdx = Math.floor(t*SLIDE_DUR/1.2)%4;
+  const focusNames=['Primary Button','Ghost Button','Input Field','Action Chip'];
+  const focusCY=sfY2+sfH2+52;
+  pill(RC,focusCY,'🎯  Focus: '+focusNames[focusIdx],'rgba(192,132,252,.12)','#c084fc',24,32,12);
+
+  ctx.font='500 22px Inter,system-ui'; ctx.textAlign='center'; ctx.fillStyle='#8888aa';
+  ['Button · Input · Chip · Link — unified focus ring','3px outline-based, meets WCAG 3:1 contrast ratio']
+    .forEach((l,i)=> ctx.fillText(l,RC,focusCY+54+i*34));
+
+  ctx.restore();
+}
+
+function drawFocusEl(cx,cy,type,focused,label,bg,ring){
+  ctx.save();
+  const w=420,h=80,r=type==='chip'?40:10;
+  if(focused){
+    rr(cx-w/2-5,cy-h/2-5,w+10,h+10,r+4);
+    ctx.strokeStyle=ring; ctx.lineWidth=2.5; ctx.stroke();
+    const rg=ctx.createRadialGradient(cx,cy,0,cx,cy,w/2);
+    rg.addColorStop(0,ring+'22'); rg.addColorStop(1,'transparent');
+    ctx.fillStyle=rg; ctx.fill();
+  }
+  rr(cx-w/2,cy-h/2,w,h,type==='chip'?h/2:r);
+  if(bg){ ctx.fillStyle=bg; ctx.fill(); }
+  else if(type==='ghost-btn'){ ctx.fillStyle='rgba(255,255,255,.05)'; ctx.fill(); ctx.strokeStyle='rgba(255,255,255,.2)'; ctx.lineWidth=1.5; ctx.stroke(); }
+  else if(type==='input')   { ctx.fillStyle='rgba(255,255,255,.05)'; ctx.fill(); ctx.strokeStyle=focused?ring:'rgba(255,255,255,.15)'; ctx.lineWidth=focused?2:1.5; ctx.stroke(); }
+  else if(type==='chip')    { ctx.fillStyle='rgba(167,139,250,.12)'; ctx.fill(); ctx.strokeStyle='rgba(167,139,250,.3)'; ctx.lineWidth=1.5; ctx.stroke(); }
+  ctx.font=`${type==='link'?'500':'600'} 26px Inter,system-ui`;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle=type==='chip'?'#c4b5fd':type==='link'?'#60a5fa':'#f0f0ff';
+  ctx.fillText(label,cx,cy);
+  if(type==='link'){ const tw=ctx.measureText(label).width; ctx.fillRect(cx-tw/2,cy+16,tw,2); }
+  ctx.restore();
+}
+
+// ── SLIDE 4 — Navigation ────────────────────────────
+function slide4(t){
+  ctx.fillStyle='#0a0a12'; ctx.fillRect(0,0,W,H);
+  radBg(LC,H/2,700,'rgba(15,26,46,.85)','rgba(10,10,18,0)');
+  divider();
+
+  const a = fi(t);
+  ctx.save(); ctx.globalAlpha=a;
+
+  // ── LEFT: heading + features ──
+  ctx.font='700 24px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='#38bdf8'; ctx.fillText('🧭  NAVIGATION & COMPONENTS',LC,H*.14);
+
+  gradText('Smarter',LC,H*.26,'#ffffff','#38bdf8','800 70px Inter,system-ui');
+  gradText('Navigation',LC,H*.26+80,'#38bdf8','#818cf8','800 70px Inter,system-ui');
+
+  [['📅','Calendar','WCAG 2.2 color tokens for 4.5:1 contrast'],
+   ['🤖','AI Button & Response','Outline focus ring · A11y changes'],
+   ['📝','EditableInput','Space key behavior updated'],
+   ['🔀','Switch · Dropzone','Keyboard accessibility improvements'],
+  ].forEach(([icon,name,desc],i)=>{
+    const ia=easeOut(clamp((t-.18-i*.08)/.2,0,1));
+    ctx.save(); ctx.globalAlpha=a*ia;
+    const iy=H*.50+i*100;
+    card(LX,iy-34,CW,70,12);
+    ctx.font='34px serif'; ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillText(icon,LX+20,iy);
+    ctx.font='700 28px Inter,system-ui'; ctx.fillStyle='#f0f0ff'; ctx.fillText(name,LX+70,iy-11);
+    ctx.font='400 20px Inter,system-ui'; ctx.fillStyle='#8888aa'; ctx.fillText(desc,LX+70,iy+18);
+    ctx.restore();
+  });
+
+  // ── RIGHT: Real MDS VerticalNav + HorizontalNav screenshots ──
+  const nvCardY=H*.10, nvCardH=H*.52;
+  card(RX,nvCardY,CW,nvCardH,16);
+  ctx.font='600 20px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='rgba(56,189,248,.55)'; ctx.fillText('LIVE COMPONENT · MDS VERTICAL NAV',RC,nvCardY+30);
+
+  const nfX=RX+30, nfY=nvCardY+58, nfW=CW-60, nfMaxH=nvCardH-80;
+  rr(nfX,nfY,nfW,nfMaxH,10);
+  ctx.fillStyle='rgba(10,10,18,.95)'; ctx.fill();
+  ctx.strokeStyle='rgba(56,189,248,.3)'; ctx.lineWidth=1.5; ctx.stroke();
+  drawSceneImage(imgs.vnav, nfX+8, nfY+8, nfW-16, nfMaxH-16);
+
+  // HorizontalNav card
+  const hnCardY=nvCardY+nvCardH+16;
+  card(RX,hnCardY,CW,100,16);
+  ctx.font='600 16px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='rgba(56,189,248,.4)'; ctx.fillText('HORIZONTAL NAV',RC,hnCardY+20);
+  drawSceneImage(imgs.hnav, RX+20, hnCardY+32, CW-40, 58);
+
+  // Kbd hint
+  const hintY=hnCardY+120;
+  let kx=RX+30;
+  [['↑','Nav'],['↓','Nav'],['↵','Select'],['Space','Toggle']].forEach(([k,hint])=>{
+    ctx.font='700 20px Inter,system-ui';
+    const kw=ctx.measureText(k).width+32, kh=44;
+    rr(kx,hintY-kh/2,kw,kh,7);
+    ctx.fillStyle='rgba(30,30,46,.95)'; ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.18)'; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.fillStyle='#f0f0ff'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(k,kx+kw/2,hintY);
+    ctx.font='500 16px Inter,system-ui'; ctx.fillStyle='#8888aa';
+    ctx.fillText(hint,kx+kw/2,hintY+32);
+    kx+=kw+20;
+  });
+
+  ctx.restore();
+}
+
+// ── SLIDE 5 — Stats ─────────────────────────────────
+function slide5(t){
+  ctx.fillStyle='#0a0a12'; ctx.fillRect(0,0,W,H);
+  radBg(W/2,H*.35,900,'rgba(26,16,64,.85)','rgba(10,10,18,0)');
+
+  const a = fi(t);
+  ctx.save(); ctx.globalAlpha=a;
+
+  ctx.font='700 24px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='#a78bfa'; ctx.fillText('📚  DOCUMENTATION & STATS',W/2,H*.12);
+
+  gradText('12+ components got Accessibility docs',W/2,H*.23,'#ffffff','#a78bfa','800 62px Inter,system-ui');
+
+  // Stat cards row
+  const cardW=360, cardH=190, gap=40;
+  const totalW=3*cardW+2*gap, sx=W/2-totalW/2;
+  [['40+','A11y Commits'],['12','Docs Updated'],['11','Bug Fixes']].forEach(([num,label],i)=>{
+    const sa=easeOut(clamp((t-.1-i*.08)/.28,0,1));
+    ctx.save(); ctx.globalAlpha=a*sa;
+    const cx=sx+i*(cardW+gap);
+    card(cx,H*.34,cardW,cardH,18);
+    const displayNum=Math.round(parseInt(num)*easeOut(clamp((t-.1-i*.08)/.4,0,1)));
+    const display=num.includes('+')?displayNum+'+':String(displayNum);
+    ctx.font='900 80px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    const ng=linGrad('#60a5fa','#a78bfa',cx,cx+cardW);
+    ctx.fillStyle=ng; ctx.fillText(display,cx+cardW/2,H*.34+88);
+    ctx.font='600 22px Inter,system-ui'; ctx.fillStyle='#8888aa';
+    ctx.fillText(label.toUpperCase(),cx+cardW/2,H*.34+150);
+    ctx.restore();
+  });
+
+  // Doc chips - 6 cols
+  const docs=['Input','LinkButton','Icons','Select','Radio','Badges','Links','Chips','Breadcrumbs','Checkbox','Inline Edit','Calendar'];
+  const dcols=6, dcw=220, dch=48, dgx=20, dgy=14;
+  const dtw=dcols*dcw+(dcols-1)*dgx;
+  docs.forEach((d,i)=>{
+    const da=easeOut(clamp((t-.3-i*.025)/.18,0,1));
+    const row=Math.floor(i/dcols), col=i%dcols;
+    const dx=W/2-dtw/2+col*(dcw+dgx)+dcw/2;
+    const dy=H*.63+row*(dch+dgy);
+    tag(dx,dy,'📦  '+d,a*da);
+  });
+
+  // Bottom note
+  ctx.globalAlpha=a*easeOut(clamp((t-.5)/.2,0,1));
+  ctx.font='500 24px Inter,system-ui'; ctx.textAlign='center'; ctx.fillStyle='#8888aa';
+  ctx.fillText('Each doc includes usage guidelines, keyboard interactions, contrast ratios & ARIA patterns',W/2,H*.88);
+
+  ctx.restore();
+}
+
+// ── SLIDE 6 — Outro ─────────────────────────────────
+function slide6(t){
+  ctx.fillStyle='#0a0a12'; ctx.fillRect(0,0,W,H);
+  radBg(W/2,H/2,1000,'rgba(10,10,64,.95)','rgba(10,10,18,0)');
+  const pulse=.7+.3*Math.sin(t*Math.PI*4);
+  radBg(W/2,H/2,700*pulse,`rgba(124,58,237,${.18*fadeIn(t,.25)})`,'transparent');
+
+  const a = fadeIn(t,.22);
+  ctx.save(); ctx.globalAlpha=a;
+
+  ctx.globalAlpha=a*easeOut(clamp(t/.2,0,1));
+  ctx.font='700 24px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='#8888aa'; ctx.fillText('MASALA DESIGN SYSTEM  ·  INNOVACCER',W/2,H*.20);
+
+  ctx.globalAlpha=a*easeOut(clamp((t-.08)/.3,0,1));
+  gradText('Build for everyone.',W/2,H*.40,'#ffffff','#60a5fa','900 120px Inter,system-ui');
+
+  ctx.globalAlpha=a*easeOut(clamp((t-.18)/.25,0,1));
+  ctx.font='500 34px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='#8888aa'; ctx.fillText('Accessible. Consistent. Beautiful.',W/2,H*.54);
+
+  ctx.globalAlpha=a*easeOut(clamp((t-.26)/.25,0,1));
+  rr(W/2-200,H*.62-26,400,52,12);
+  ctx.fillStyle='rgba(129,140,248,.15)'; ctx.fill();
+  ctx.strokeStyle='rgba(129,140,248,.35)'; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.font='700 26px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='#818cf8'; ctx.fillText('v4.21.0 — Released March 2026',W/2,H*.62);
+
+  // CTA row
+  ctx.globalAlpha=a*easeOut(clamp((t-.35)/.25,0,1));
+  const bw=380,bh=72,br=16;
+  const b1x=W/2-bw-16, b2x=W/2+16, by=H*.73;
+  const bg=ctx.createLinearGradient(b1x,0,b1x+bw,0);
+  bg.addColorStop(0,'#2563eb'); bg.addColorStop(1,'#7c3aed');
+  rr(b1x,by,bw,bh,br); ctx.fillStyle=bg; ctx.fill();
+  ctx.font='700 28px Inter,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='#fff'; ctx.fillText('🔗  View Storybook',b1x+bw/2,by+bh/2);
+
+  rr(b2x,by,bw,bh,br);
+  ctx.fillStyle='rgba(255,255,255,.05)'; ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,.15)'; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle='#f0f0ff'; ctx.fillText('📋  Full Changelog',b2x+bw/2,by+bh/2);
+
+  ctx.globalAlpha=a*easeOut(clamp((t-.5)/.25,0,1))*.6;
+  ctx.font='500 22px Inter,system-ui'; ctx.fillStyle='#8888aa';
+  ctx.fillText('#MDS  #A11y  #WCAG22  #DesignSystem',W/2,H*.89);
+
+  ctx.restore();
+}
+
+// ── Draw loop ────────────────────────────────────────
+const SLIDES=[slide0,slide1,slide2,slide3,slide4,slide5,slide6];
+
+function draw(ts){
+  if(startTime===null) startTime=ts;
+  const elapsed=(ts-startTime)/1000;
+  const looped=elapsed%TOTAL;
+  const idx=Math.min(Math.floor(looped/SLIDE_DUR),N-1);
+  const t=(looped%SLIDE_DUR)/SLIDE_DUR;
+  SLIDES[idx](t);
+
+  // Slide dots
+  for(let i=0;i<N;i++){
+    const dx=W/2-(N-1)*18+i*36, dy=H-24;
+    ctx.beginPath(); ctx.arc(dx,dy,i===idx?6:4,0,Math.PI*2);
+    ctx.fillStyle=i===idx?'rgba(255,255,255,.9)':'rgba(255,255,255,.25)';
+    ctx.fill();
+  }
+
+  // Progress bar
+  const pct=looped/TOTAL;
+  ctx.fillStyle='rgba(255,255,255,.08)'; ctx.fillRect(0,H-4,W,4);
+  const pg=ctx.createLinearGradient(0,0,W,0);
+  pg.addColorStop(0,'#2563eb'); pg.addColorStop(1,'#7c3aed');
+  ctx.fillStyle=pg; ctx.fillRect(0,H-4,W*pct,4);
+
+  rafId=requestAnimationFrame(draw);
+}
+
+// ── Export (direct canvas capture — no browser UI) ──
+async function exportReel(){
+  const btn=document.getElementById('dlBtn');
+  const status=document.getElementById('status');
+  btn.disabled=true; btn.textContent='⏺ Recording…';
+  status.innerHTML='<span class="dot"></span> Recording — ~49s, please wait…';
+
+  cancelAnimationFrame(rafId);
+  startTime=null;
+
+  const stream=canvas.captureStream(30);
+  const chunks=[];
+  const mime=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
+    ?'video/webm;codecs=vp9':'video/webm';
+  const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:10_000_000});
+  rec.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
+  rec.onstop=()=>{
+    stream.getTracks().forEach(t=>t.stop());
+    const blob=new Blob(chunks,{type:'video/webm'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url; a.download='mds-v4.21.0-reel.webm'; a.click();
+    URL.revokeObjectURL(url);
+    btn.disabled=false; btn.textContent='✅ Downloaded!';
+    status.textContent='Saved! Convert to MP4: ffmpeg -i mds-v4.21.0-reel.webm mds-v4.21.0-reel.mp4';
+    setTimeout(()=>{
+      btn.textContent='⬇ Download Reel';
+      status.textContent='1920×1080 · Clean canvas export · No browser UI';
+    },8000);
+    startTime=null; requestAnimationFrame(draw);
+  };
+  rec.start(100);
+  requestAnimationFrame(draw);
+  setTimeout(()=>{if(rec.state==='recording')rec.stop();},(TOTAL+2)*1000);
+}
+
+function restartPreview(){
+  cancelAnimationFrame(rafId);
+  startTime=null;
+  requestAnimationFrame(draw);
+}
+
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>

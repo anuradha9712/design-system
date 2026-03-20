@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Component Capture</title>
+<link rel="stylesheet" href="./mds.css" />
+<script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+<script src="./mds.umd.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a12; font-family: 'Inter', system-ui, sans-serif; }
+
+  .scene {
+    width: 860px;
+    padding: 40px 48px;
+    background: rgba(19,19,31,.96);
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 16px;
+    margin: 20px;
+    display: inline-block;
+  }
+
+  /* Force dark-mode-friendly overrides on MDS components */
+  .scene .Button, .scene button {
+    filter: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- SCENE 1: Stepper -->
+<div class="scene" id="scene-stepper" style="width:760px;padding:32px 40px;">
+  <div id="root-stepper"></div>
+</div>
+
+<!-- SCENE 2: Button focus states -->
+<div class="scene" id="scene-buttons" style="width:560px;padding:40px 48px;background:rgba(19,19,31,.98);">
+  <div id="root-buttons" style="display:flex;flex-direction:column;gap:20px;align-items:center;"></div>
+</div>
+
+<!-- SCENE 3: VerticalNav -->
+<div class="scene" id="scene-vnav" style="width:340px;padding:0;">
+  <div id="root-vnav"></div>
+</div>
+
+<!-- SCENE 4: HorizontalNav -->
+<div class="scene" id="scene-hnav" style="width:760px;padding:0;background:rgba(19,19,31,.98);">
+  <div id="root-hnav"></div>
+</div>
+
+<script>
+const {
+  Stepper, Button, Input, Chip,
+  VerticalNav, HorizontalNav, Text, Icon
+} = window.InnovaccerDesignSystem;
+
+const e = React.createElement;
+
+// ── SCENE 1: Stepper ──────────────────────────────────
+const stepperSteps = [
+  { label: 'Patient Info', value: 'patient' },
+  { label: 'Medical History', value: 'medical' },
+  { label: 'Review', value: 'review' },
+  { label: 'Submit', value: 'submit' },
+];
+
+ReactDOM.render(
+  e(Stepper, {
+    steps: stepperSteps,
+    active: 2,
+    completed: 1,
+    onChange: () => {}
+  }),
+  document.getElementById('root-stepper')
+);
+
+// ── SCENE 2: Buttons ──────────────────────────────────
+ReactDOM.render(
+  e('div', { style: { display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'stretch', width: '100%' } },
+    e(Button, { appearance: 'primary', size: 'large', style: { width: '100%' } }, 'Save Changes'),
+    e(Button, { appearance: 'basic', size: 'large', style: { width: '100%' } }, 'Cancel'),
+    e(Input, { placeholder: 'Patient name...', size: 'large', style: { width: '100%' } }),
+    e(Chip, { label: 'Critical', type: 'action', clearButton: true }),
+  ),
+  document.getElementById('root-buttons')
+);
+
+// ── SCENE 3: VerticalNav ──────────────────────────────
+const navItems = [
+  {
+    name: 'Dashboard',
+    label: 'Dashboard',
+    icon: 'dashboard',
+    link: '/',
+    group: '',
+  },
+  {
+    name: 'Patients',
+    label: 'Patients',
+    icon: 'people',
+    link: '/patients',
+    group: '',
+  },
+  {
+    name: 'Analytics',
+    label: 'Analytics',
+    icon: 'bar_chart',
+    link: '/analytics',
+    group: '',
+  },
+  {
+    name: 'Settings',
+    label: 'Settings',
+    icon: 'settings',
+    link: '/settings',
+    group: '',
+  },
+];
+
+ReactDOM.render(
+  e(VerticalNav, {
+    menus: navItems,
+    active: 'Dashboard',
+    expanded: true,
+    onClick: () => {},
+    style: { height: '280px' }
+  }),
+  document.getElementById('root-vnav')
+);
+
+// ── SCENE 4: HorizontalNav ────────────────────────────
+const hnavItems = [
+  { name: 'Overview', label: 'Overview' },
+  { name: 'Patients', label: 'Patients' },
+  { name: 'Visits', label: 'Visits' },
+  { name: 'Reports', label: 'Reports' },
+];
+
+ReactDOM.render(
+  e(HorizontalNav, {
+    menus: hnavItems,
+    active: 'Overview',
+    onClick: () => {},
+  }),
+  document.getElementById('root-hnav')
+);
+</script>
+</body>
+</html>
