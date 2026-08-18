@@ -77,6 +77,9 @@ export const Backdrop: React.FC<BackdropProps> = (props) => {
       data-test="DesignSystem-Backdrop"
       data-layer={true}
       data-opened={open}
+      // Portaled to document.body, so it sits outside the app root — keeps it in scope for
+      // `scoped.css`. Inert with the global stylesheet.
+      data-mds-root={true}
       {...baseProps}
       className={classes}
       style={{ zIndex: props.zIndex }}

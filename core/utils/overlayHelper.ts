@@ -3,6 +3,9 @@ export const getWrapperElement = (): Element => {
   if (element === null) {
     element = document.createElement('div');
     element.classList.add('Overlay-wrapper');
+    // Overlays are portaled to document.body, i.e. outside the app root. The marker keeps them
+    // in scope for the scoped stylesheet (`css/dist/scoped.css`); it is inert otherwise.
+    element.setAttribute('data-mds-root', 'true');
     document.body.appendChild(element);
   }
   return element;

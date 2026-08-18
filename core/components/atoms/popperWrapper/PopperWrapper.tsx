@@ -530,6 +530,9 @@ export class PopperWrapper extends React.Component<PopperWrapperProps, PopperWra
       style: childrenStyles,
       'data-placement': placement,
       'data-hide': outOfBoundaries,
+      // With appendToBody the popper is portaled to document.body, outside the app root. The
+      // marker keeps it in scope for the scoped stylesheet; it is inert otherwise.
+      'data-mds-root': true,
       onMouseEnter: this.handleMouseEnter,
       onMouseLeave: this.handleMouseLeave,
       onAnimationEnd: () => {

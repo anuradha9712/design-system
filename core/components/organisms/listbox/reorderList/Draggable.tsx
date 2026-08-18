@@ -754,6 +754,9 @@ class Draggable<Value = string> extends React.Component<IProps<Value>> {
                 ref: this.ghostRef,
                 style: ghostStyle,
                 onWheel: this.onWheel,
+                // The ghost is portaled to document.body, i.e. outside the app root. Keeps it in
+                // scope for `scoped.css`; inert with the global stylesheet.
+                'data-mds-root': true,
               },
               index: this.state.itemDragged,
               isDragged: !this.state.isClickAndFollow,

@@ -8,6 +8,11 @@ export interface IItemProps {
   onFocus?: () => void;
   style?: React.CSSProperties;
   ref?: React.RefObject<any>;
+  /**
+   * Set on the drag ghost only, which is portaled outside the app root. Keeps it in scope for the
+   * scoped stylesheet (`css/dist/scoped.css`); inert with the global stylesheet.
+   */
+  'data-mds-root'?: boolean;
 }
 
 export interface RenderItemParams<Value> {
